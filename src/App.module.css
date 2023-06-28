@@ -1,0 +1,27 @@
+.mainContainer {
+  overflow: hidden;
+}
+
+.containerFluid {
+  height: calc(
+          100vh - 120px
+  ); /* 56px (MainHeader) + 50px (BelowHeader) = 115px */
+  overflow: hidden;
+}
+
+.leftSidebarColumn {
+  overflow: auto;
+  height: 100%; /* Full height of the parent (.containerFluid) */
+  position: relative; /* This is added to create a new containing block for absolute positioning */
+}
+
+.documentViewerColumn {
+  overflow: auto;
+  height: 100%; /* Full height of the parent (.containerFluid) */
+  background-color: whitesmoke;
+  position: relative; /* This is added to create a new containing block for absolute positioning */
+}
+
+:global(.btn) {
+  border-radius: 0 !important;
+}

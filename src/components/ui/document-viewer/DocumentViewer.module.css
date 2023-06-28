@@ -1,0 +1,45 @@
+.fileViewer {
+  height: 100%;
+  position: absolute; /* This is to make sure the viewer stretches the full height of its parent */
+  width: calc(100% - 12px);
+  margin: 0 auto;
+  justify-content: center;
+  align-items: center;
+}
+
+.fileViewer canvas {
+  display: block;
+  margin: 10px auto;
+}
+
+.fileHtmlViewer {
+  width: 90%;
+  margin: 10px auto;
+  background-color: white;
+  padding: 20px;
+}
+
+.fileHtmlViewer img {
+  max-width: 100%;
+}
+
+.pageDivider {
+  border-bottom: 1px solid #ccc; /* Adjust as needed */
+}
+
+.fileViewerNoFile {
+  margin-top: 50px;
+  text-align: center;
+  text-shadow: 1px 1px transparent, -1px -1px black;
+}
+
+.fileViewerNoFile h1 {
+  background-color: #bbbbbb;
+  font-weight: bold;
+  font-size: 30px;
+  color: transparent;
+  text-shadow: 0 2px 3px rgba(255, 255, 255, 0.8);
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  background-clip: text;
+}

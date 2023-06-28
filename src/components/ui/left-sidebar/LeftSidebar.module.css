@@ -1,0 +1,34 @@
+.leftSidebar {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 120px); /* assuming you want the sidebar to be full height */
+}
+
+.leftSidebarDocItems {
+  border: none;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+  border-radius: unset;
+  font-size: 0.95em;
+}
+
+.leftSidebarDropdown {
+  margin-top: 10px
+}
+
+.leftSidebarDropdownCard {
+  cursor: pointer;
+}
+
+.leftSidebarDropdown, .leftSidebarDropdownCard {
+  border-radius: 0 !important;
+}
+
+.leftSidebarCardBody {
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+.leftSidebarDropdownCardHeader {
+  border-bottom: none;
+}

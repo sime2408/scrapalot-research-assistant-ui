@@ -1,0 +1,66 @@
+/* bootstrap overrides */
+.row {
+  height: 60px;
+  border-bottom: 1px solid whitesmoke;
+  box-shadow: 5px -33px 50px #888888;
+}
+
+.col {
+  padding: 8px;
+  overflow-y: unset;
+  border-right: 1px solid rgb(246, 246, 246);
+}
+
+.btn-check:checked + .btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check) + .btn:active {
+  border-color: transparent !important;
+}
+
+.btn-check:checked + .btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check) + .btn:active {
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+
+/* BelowHeader */
+
+.belowHeaderLangContainer {
+
+}
+
+.belowHeaderLangDropdown {
+  margin-right: 12px;
+}
+
+.belowHeaderLangDropdown button:focus,
+.belowHeaderLangDropdown button:active,
+.belowHeaderLangDropdown .dropdown-toggle:focus,
+.belowHeaderLangDropdown .dropdown-toggle:active {
+  box-shadow: none !important;
+  outline: 0 !important;
+  border: none !important;
+}
+
+.belowHeaderToolbar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.belowHeaderSearchBar, .belowHeaderToolbar, .belowHeaderAiChatbot {
+  display: flex;
+  align-items: center;
+}
+
+.belowHeaderSearchBarInput {
+  position: absolute;
+  right: 1px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: white;
+  border: none;
+  z-index: 5;
+}
+
+.belowHeaderAiChatbotTranslateChunks {
+  margin-left: auto;
+  justify-content: flex-end;
+}

@@ -1,0 +1,56 @@
+@import "~react-pdf/dist/esm/Page/TextLayer.css";
+@import "~react-pdf/dist/esm/Page/AnnotationLayer.css";
+@import '~bootstrap/dist/css/bootstrap.min.css';
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+/* react-pdf */
+
+.react-pdf__Page {
+  background: transparent !important;
+}
+
+.annotationLayer {
+  inset: 0;
+  margin: 0 auto !important;
+}
+
+.textLayer {
+  margin: 0 auto !important;
+}
+
+/* bootstrap */
+
+.container-fluid {
+  height: calc(100% - 150px);
+}
+
+.row {
+  height: 100%;
+}
+
+.col-md-3 {
+  height: 100%;
+  overflow-y: scroll;
+}
+
+.col-md-6 {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.col-md-3:last-child {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.modal-content {
+  border-radius: 0 !important;
+}
