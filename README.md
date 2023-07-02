@@ -1,6 +1,6 @@
-# Scrapalot Chat UI
+# Scrapalot Research Assistant
 
-Scrapalot Chat UI is a Web app for chatbot question-answering experience over your document database.
+Scrapalot Research Assistant is a Web app for chatbot question-answering experience over your document database.
 
 ## Discord server
 
