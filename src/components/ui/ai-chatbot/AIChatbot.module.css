@@ -39,20 +39,15 @@
 }
 
 .userMessage {
-  background-color: rgba(79, 181, 185, 0.1);
-  color: #4b4b4b;
   align-self: flex-end;
 }
 
 .aiMessage {
-  background-color: #f8f9fa;
-  color: #212529;
   border-radius: 10px;
 }
 
 .aiChatbotMessageToolbar {
   font-size: 12px;
-  color: #999;
   margin-top: 2px;
   text-align: right;
 }
@@ -75,4 +70,8 @@
 
 .aiChatbotInputMessage input {
   border-radius: 0;
+}
+
+.aiChatbotInputSendButton {
+  border-radius: 0 !important;
 }

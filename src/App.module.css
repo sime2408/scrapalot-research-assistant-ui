@@ -4,8 +4,9 @@
 
 .containerFluid {
   height: calc(
-          100vh - 120px
-  ); /* 56px (MainHeader) + 50px (BelowHeader) = 115px */
+          100vh - 118px
+  );
+  padding: 0 !important;
   overflow: hidden;
 }
 
@@ -13,13 +14,14 @@
   overflow: auto;
   height: 100%; /* Full height of the parent (.containerFluid) */
   position: relative; /* This is added to create a new containing block for absolute positioning */
+  padding-left: 20px;
 }
 
 .documentViewerColumn {
-  overflow: auto;
   height: 100%; /* Full height of the parent (.containerFluid) */
-  background-color: whitesmoke;
+  background-color: #f5f5f5;
   position: relative; /* This is added to create a new containing block for absolute positioning */
+  padding-left: 0;
 }
 
 :global(.btn) {

@@ -1,10 +1,11 @@
 .fileViewer {
   height: 100%;
   position: absolute; /* This is to make sure the viewer stretches the full height of its parent */
-  width: calc(100% - 12px);
+  width: 100%;
   margin: 0 auto;
   justify-content: center;
   align-items: center;
+  overflow: auto;
 }
 
 .fileViewer canvas {
@@ -12,11 +13,19 @@
   margin: 10px auto;
 }
 
+.filePdfViewer {
+
+}
+
+.fileEpubViewer {
+}
+
 .fileHtmlViewer {
-  width: 90%;
+  width: 80%;
   margin: 10px auto;
   background-color: white;
   padding: 20px;
+  color: black;
 }
 
 .fileHtmlViewer img {
@@ -38,7 +47,6 @@
   font-weight: bold;
   font-size: 30px;
   color: transparent;
-  text-shadow: 0 2px 3px rgba(255, 255, 255, 0.8);
   -webkit-background-clip: text;
   -moz-background-clip: text;
   background-clip: text;

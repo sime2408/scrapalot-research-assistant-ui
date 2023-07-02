@@ -1,14 +1,13 @@
 /* bootstrap overrides */
 .row {
   height: 60px;
-  border-bottom: 1px solid whitesmoke;
   box-shadow: 5px -33px 50px #888888;
+  border-bottom: 1px solid #e5e5e5;
 }
 
 .col {
   padding: 8px;
   overflow-y: unset;
-  border-right: 1px solid rgb(246, 246, 246);
 }
 
 .btn-check:checked + .btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check) + .btn:active {
@@ -58,6 +57,7 @@
   background: white;
   border: none;
   z-index: 5;
+  border-radius: 0 !important;
 }
 
 .belowHeaderAiChatbotTranslateChunks {

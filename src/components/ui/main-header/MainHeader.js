@@ -2,9 +2,12 @@ import React, {useEffect, useState} from "react";
 import {Button, Col, Dropdown, Form, Modal, Nav, Navbar, Row, Spinner} from "react-bootstrap";
 import axios from 'axios';
 
-import logo from '../../../static/img/logo-icon.png'; // telling webpack this JS file uses this image
+import styles from "./MainHeader.module.css"
+import themes from "../../themes/CustomThemeProvider.module.css"
 
-function MainHeader({onSelectDatabase, selectedDatabase, databases}) {
+import logo from '../../../static/img/logo-icon.png';
+
+function MainHeader({onSelectDatabase, selectedDatabase, databases, toggleTheme, darkMode}) {
     const [search, setSearch] = useState('');
     const [show, setShow] = useState(false);
     const [file, setFile] = useState(null);
@@ -14,12 +17,11 @@ function MainHeader({onSelectDatabase, selectedDatabase, databases}) {
 
     const handleClose = () => setShow(false);
     const handleShow = () => {
-        // Ensure the first database and its first collection are always selected when the modal opens.
-        const firstDatabase = databases[0];
-        if (firstDatabase) {
-            onSelectDatabase(firstDatabase.name);
-            setCurrentDatabaseCollections(firstDatabase.collections);
-            setSelectedCollection(firstDatabase.collections[0]?.name || null);
+        const databaseToSelect = databases.find(db => db.name === selectedDatabase) || databases[0];
+        if (databaseToSelect) {
+            onSelectDatabase(databaseToSelect.name);
+            setCurrentDatabaseCollections(databaseToSelect.collections);
+            setSelectedCollection(databaseToSelect.collections[0]?.name || null);
         }
         setShow(true);
     };
@@ -75,20 +77,20 @@ function MainHeader({onSelectDatabase, selectedDatabase, databases}) {
     }, [selectedDatabase, databases]);
 
     return (
-        <Navbar bg="light" expand="lg" className={'px-2'}>
-            <Navbar.Brand href="#home">
-                <img
-                    alt="Scrapalot Logo"
-                    src={logo}
-                    width="30"
-                    height="30"
-                    className={'d-inline-block align-top'}
+        <Navbar expand="lg" className={`'px-2' ${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemeDefault}`}>
+            <Navbar.Brand href="/">
+                <img style={{marginLeft: '8px'}}
+                     alt="Scrapalot Logo"
+                     src={logo}
+                     width="30"
+                     height="30"
+                     className={'d-inline-block align-top'}
                 />{" "}
-                Scrapalot
+                <span className={`${darkMode ? themes.darkThemeDefault : ''}`}>Scrapalot</span>
             </Navbar.Brand>
             <Dropdown className={'me-1'}>
-                <Dropdown.Toggle variant="light" id="dropdown-basic" as="div">
-                    <Button variant="light" style={{textAlign: 'right'}}>
+                <Dropdown.Toggle variant={darkMode ? "dark" : "light"} id="dropdown-basic" as="div">
+                    <Button variant={darkMode ? "dark" : "light"} style={{textAlign: 'right'}}>
                         {selectedDatabase || 'Select Database'}
                     </Button>
                 </Dropdown.Toggle>
@@ -111,8 +113,17 @@ function MainHeader({onSelectDatabase, selectedDatabase, databases}) {
             </Dropdown>
             <Navbar.Toggle aria-controls="basic-navbar-nav"/>
             <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="justify-content-end" style={{width: "100%"}}>
-                    <Button variant="outline-primary" className={'mx-1'} onClick={handleShow}>Upload</Button>
+
+                <div className={`${styles.mainHeaderThemeSwitcher}`}>
+                    {darkMode ? (
+                        <i className={`bi bi-brightness-high-fill ${styles.mainHeaderThemeSwitcherIconDark}`} onClick={toggleTheme}></i>
+                    ) : (
+                        <i className={`bi bi-moon-fill ${styles.mainHeaderThemeSwitcherIcon}`} onClick={toggleTheme}></i>
+                    )}
+                </div>
+
+                <Nav className="justify-content-end">
+                    <Button variant="outline-primary" className={'mx-3'} onClick={handleShow}>Upload</Button>
                 </Nav>
                 <Modal show={show} onHide={handleClose}>
                     <Modal.Header closeButton>
@@ -121,14 +132,14 @@ function MainHeader({onSelectDatabase, selectedDatabase, databases}) {
                     <Modal.Body>
                         <Form onSubmit={submitForm}>
                             <Form.Group controlId="formFile" className="mb-3">
-                                <Form.Label>Select a File</Form.Label>
+                                <Form.Label>Select a File (pdf, epub, docx)</Form.Label>
                                 <Form.Control type="file" accept=".pdf,.epub,.docx" onChange={handleFileChange}/>
                             </Form.Group>
                             <Row className={'mb-4'}>
                                 <Col>
                                     <Form.Group controlId="formDatabase">
                                         <Form.Label>Select a Database</Form.Label>
-                                        <Form.Control as="select" onChange={e => onSelectDatabase(e.target.value)}>
+                                        <Form.Control as="select" defaultValue={selectedDatabase} onChange={e => onSelectDatabase(e.target.value)}>
                                             {databases.map((db, index) =>
                                                 <option key={index} value={db.name}>{db.name}</option>
                                             )}

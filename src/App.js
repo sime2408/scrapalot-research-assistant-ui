@@ -4,48 +4,56 @@ import BelowHeader from "./components/ui/main-header/below-header/BelowHeader";
 import LeftSidebar from "./components/ui/left-sidebar/LeftSidebar";
 import DocumentViewer from "./components/ui/document-viewer/DocumentViewer";
 import AIChatbot from "./components/ui/ai-chatbot/AIChatbot";
+
 import debounce from 'lodash.debounce';
 import Cookies from 'js-cookie';
 
 
 import styles from "./App.module.css";
-import CustomSpinner from './components/utils/CustomSpinner';
+import themes from './components/themes/CustomThemeProvider.module.css';
 
 function App() {
 
-    // state variable for tracking loading status
-    const [isLoading, setIsLoading] = useState(false);
+    // application theme
+    const [darkMode, setDarkMode] = useState(() => {
+        const storedDarkMode = Cookies.get('scrapalot-dark-mode');
+        return storedDarkMode === 'true'; // Convert the cookie value to a boolean
+    });
 
-    // selected database / document
+    const toggleTheme = () => {
+        const updatedDarkMode = !darkMode;
+        setDarkMode(updatedDarkMode);
+        Cookies.set('scrapalot-dark-mode', updatedDarkMode.toString()); // Convert to string before setting the cookie
+    };
+
+    useEffect(() => {
+        Cookies.set('scrapalot-dark-mode', darkMode.toString()); // Convert to string before setting the cookie
+    }, [darkMode]);
+
+    // application locale
+    const [locale, setLocale] = useState(() => Cookies.get("scrapalot-locale") || "en");
+
+    useEffect(() => {
+        const handleStorageChange = () => {
+            const savedLocale = Cookies.get("scrapalot-locale");
+            if (savedLocale && savedLocale !== locale) {
+                setLocale(savedLocale);
+            }
+        };
+
+        window.addEventListener("storage", handleStorageChange);
+        return () => window.removeEventListener("storage", handleStorageChange);
+    }, [locale]);
+
+    // application database & documents
     const [selectedDocument, setSelectedDocument] = useState(null);
     const [selectedDatabase, setSelectedDatabase] = useState(Cookies.get('scrapalot-selected-db') || null);
     const [databases, setDatabases] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
 
-    // document viewer state
-    const [numPages, setNumPages] = useState(null);
-    const [zoomLevel, setZoomLevel] = useState(1.0);
-    const [currentPage, setCurrentPage] = useState(1);
-    // document viewer toolbar
-    const onNextPage = (updateInputPage) => {
-        setCurrentPage((prev) => {
-            const newPage = Math.min(numPages, prev + 1);
-            updateInputPage(newPage);
-            return newPage;
-        });
-    };
-    const onPreviousPage = (updateInputPage) => {
-        setCurrentPage((prev) => {
-            const newPage = Math.max(1, prev - 1);
-            updateInputPage(newPage);
-            return newPage;
-        });
-    };
-    const onZoomIn = () => setZoomLevel((prev) => Math.min(2.0, prev + 0.1));
-    const onZoomOut = () => setZoomLevel((prev) => Math.max(0.5, prev - 0.1));
-    // AI chatbot
+    // application AI chatbot messages
     const [messages, setMessages] = useState(() => {
-        const savedMessages = sessionStorage.getItem('scrapalot-chat-messages');
+        const savedMessages = localStorage.getItem('scrapalot-chat-messages');
         return savedMessages ? JSON.parse(savedMessages) : [];
     });
 
@@ -54,19 +62,11 @@ function App() {
         sessionStorage.removeItem('scrapalot-chat-messages');
     };
 
-    useEffect(() => {
-        const pageDiv = document.getElementById(`page_${currentPage}`);
-        if (pageDiv) {
-            pageDiv.scrollIntoView({behavior: 'smooth'});
-        }
-    }, [currentPage]);
-
-    // databases / collections retrieval
+    // API databases / collections retrieval
     const fetchDatabasesAndCollections = (url, retryCount = 5, interval = 2000) => {
         fetch(url)
             .then(response => response.json())
             .then(data => {
-                setIsLoading(false);
                 const transformedData = data.map(database => ({
                     name: database.database_name,
                     collections: database.collections
@@ -78,16 +78,31 @@ function App() {
                     console.log(`Retrying in ${interval}ms... (${retryCount} tries left)`);
                     setTimeout(() => fetchDatabasesAndCollections(url, retryCount - 1, interval), interval);
                 } else {
-                    setIsLoading(false);
                     console.error('Failed to fetch databases:', error);
                 }
-            }).finally(() => setIsLoading(false));
+            });
     };
 
     useEffect(() => {
-        setIsLoading(true);
         fetchDatabasesAndCollections(`${process.env.REACT_APP_API_BASE_URL}/databases`);
     }, []);
+
+    // what to do when user selects the database or documents
+
+    const handleSelectDatabase = (dbName) => {
+        setSelectedDatabase(dbName);
+        Cookies.set('scrapalot-selected-db', dbName, {expires: 7});
+    };
+
+    useEffect(() => {
+        setSelectedDocument(null);
+    }, [selectedDatabase]);
+
+    const handleSelectDocument = (document) => {
+        setSelectedDocument(document);
+    };
+
+    // search through documents
 
     const handleSearch = debounce((search) => {
         setSearchTerm(search);
@@ -97,73 +112,57 @@ function App() {
         handleSearch(search);
     }
 
-    const handleSelectDatabase = (dbName) => {
-        setSelectedDatabase(dbName);
-        Cookies.set('scrapalot-selected-db', dbName, {expires: 7});
-    };
-
-    const handleSelectDocument = (document) => {
-        setSelectedDocument(document);
-        if (document && document.name.split('.').pop() !== 'pdf') {
-            setNumPages(1);
-        } else {
-            // logic to get numPages for pdf document
-        }
-    };
-
     return (
         <div className={styles.mainContainer}>
             <MainHeader
                 onSelectDatabase={handleSelectDatabase}
                 selectedDatabase={selectedDatabase}
-                databases={databases}/>
+                databases={databases}
+                toggleTheme={toggleTheme}
+                darkMode={darkMode}/>
             <BelowHeader
+                setLocale={setLocale}
                 fileType={selectedDocument && selectedDocument.name ? selectedDocument.name.split('.').pop() : null}
                 onSearch={onSearch}
-                onNextPage={onNextPage}
-                onPreviousPage={onPreviousPage}
-                onZoomIn={onZoomIn}
-                onZoomOut={onZoomOut}
-                numPages={numPages} // pass numPages as a prop
-                setCurrentPage={setCurrentPage} // pass setCurrentPage as a prop
                 handleClearMessages={handleClearMessages}
+                darkMode={darkMode}
             />
             <div className={`container-fluid ${styles.containerFluid}`}>
                 <div className="row">
-                    <div className={`col-md-2 ${styles.leftSidebarColumn}`}>
+                    <div className={`col-md-2 ${styles.leftSidebarColumn} ${darkMode ? themes.darkThemeWithBottomBorderDefault : ''}`}>
                         <LeftSidebar
-                            selectedDocument={selectedDocument}
                             setSelectedDocument={setSelectedDocument}
                             onSelectDatabase={handleSelectDatabase}
                             selectedDatabase={selectedDatabase}
-                            searchTerm={searchTerm} // Pass searchTerm as a prop to LeftSidebar
+                            searchTerm={searchTerm}
                             databases={databases}
+                            darkMode={darkMode}
                         />
                     </div>
-                    <div className={`col-md-7 ${styles.documentViewerColumn}`}>
+                    <div className={`col-md-7 ${styles.documentViewerColumn} ${darkMode ? themes.darkThemePrimary : ''}`}>
                         <DocumentViewer
                             selectedDatabase={selectedDatabase}
                             selectedDocument={selectedDocument}
                             setSelectedDocument={handleSelectDocument}
-                            zoomLevel={zoomLevel}
-                            setNumPages={setNumPages}
+                            darkMode={darkMode}
                         />
                     </div>
-                    <div className="col-md-3">
+                    <div className={`col-md-3 ${darkMode ? themes.darkThemeSecondary : ''}`}
+                         style={darkMode ? {borderLeft: "1px solid #41494d"} : {borderLeft: "1px solid rgb(229 229 229)"}}>
                         <AIChatbot
-                            selectedDocument={selectedDocument}
+                            locale={locale}
+                            setLocale={setLocale}
+                            setSelectedDatabase={setSelectedDatabase}
                             setSelectedDocument={handleSelectDocument}
                             db_name={selectedDatabase}
                             db_collection_name={selectedDatabase}
                             messages={messages}
                             setMessages={setMessages}
+                            darkMode={darkMode}
                         />
                     </div>
                 </div>
             </div>
-            {isLoading &&
-                <CustomSpinner/>
-            }
         </div>
     );
 }

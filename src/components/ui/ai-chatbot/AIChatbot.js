@@ -1,17 +1,74 @@
 import React, {useEffect, useRef, useState} from "react";
-import {FormControl, InputGroup, Overlay, Spinner, Tooltip} from "react-bootstrap";
+import {FormControl, InputGroup, Overlay, OverlayTrigger, Spinner, Tooltip} from "react-bootstrap";
 import Cookies from "js-cookie";
 import axios from "axios";
 import styles from "./AIChatbot.module.css";
+import themes from '../../themes/CustomThemeProvider.module.css';
 import Footnote from "./Footnote";
 
 // MessagesList component
-function MessagesList({messages, selectedDocument, setSelectedDocument}) {
+function MessagesList({messages, setMessages, setSelectedDatabase, setSelectedDocument, darkMode}) {
+
+    const userBgColor = darkMode ? 'rgb(65 73 77)' : 'rgba(79, 181, 185, 0.1)';
+    const aiBgColor = darkMode ? 'rgb(92 102 108)' : '#f8f9fa';
+    const textColor = darkMode ? 'rgb(244 244 244)' : '#212529';
+
+    const handleDeleteMessage = (indexToDelete) => {
+        // Filter out the message at the given index
+        const newMessages = messages.filter((message, index) => index !== indexToDelete);
+        // Update state
+        setMessages(newMessages);
+        // Update localStorage
+        localStorage.setItem("scrapalot-chat-messages", JSON.stringify(newMessages));
+    };
+
+    const handleCopyToClipboard = (text) => {
+        navigator.clipboard.writeText(text).then(() => {
+            console.log('Text copied to clipboard');
+        }).catch(err => {
+            console.error('Could not copy text to clipboard: ', err);
+        });
+    };
+
+    const [speaking, setSpeaking] = useState(false);
+
+    const handleSpeak = (text, lang) => {
+        if (!speaking) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = lang;
+
+                if (window.speechSynthesis.getVoices().length === 0) {
+                    window.speechSynthesis.onvoiceschanged = function () {
+                        window.speechSynthesis.speak(utterance);
+                    };
+                } else {
+                    window.speechSynthesis.speak(utterance);
+                }
+
+                setSpeaking(true);
+
+                utterance.onend = () => {
+                    setSpeaking(false);
+                }
+            } else {
+                console.error("Your browser does not support text to speech.");
+            }
+        } else {
+            window.speechSynthesis.cancel();
+            setSpeaking(false);
+        }
+    };
+
     return (
         <div className={styles.aiChatbotMessagesList}>
             {messages.map((message, index) => (
                 <div
                     key={index}
+                    style={{
+                        backgroundColor: message.source === "user" ? userBgColor : aiBgColor,
+                        color: textColor,
+                    }}
                     className={`${styles.aiChatbotMessage} ${
                         message.source === "user" ? styles.userMessage : styles.aiMessage
                     }`}
@@ -30,7 +87,7 @@ function MessagesList({messages, selectedDocument, setSelectedDocument}) {
                                                 index={i + 1}
                                                 link={doc["link"]}
                                                 content={doc["content"]}
-                                                selectedDocument={selectedDocument}
+                                                setSelectedDatabase={setSelectedDatabase}
                                                 setSelectedDocument={setSelectedDocument}
                                             />
                                         ))}
@@ -38,26 +95,62 @@ function MessagesList({messages, selectedDocument, setSelectedDocument}) {
                             </>
                         )}
                     </div>
-                    <div className={styles.aiChatbotMessageToolbar}>
-                        <i className="bi bi-trash"></i>
-                        <i className="bi bi-clipboard"></i>
-                        <i className="bi bi-megaphone"></i>
-                        <i
-                            className={`bi ${
+                    <div className={`${styles.aiChatbotMessageToolbar}`} style={{color: textColor}}>
+                        <OverlayTrigger
+                            placement="top"
+                            overlay={
+                                <Tooltip id={`tooltip-bottom`}>
+                                    Delete Message
+                                </Tooltip>
+                            }
+                        >
+                            <i className="bi bi-trash" onClick={() => handleDeleteMessage(index)}></i>
+                        </OverlayTrigger>
+
+                        <OverlayTrigger
+                            placement="top"
+                            overlay={
+                                <Tooltip id={`tooltip-bottom`}>
+                                    Copy to Clipboard
+                                </Tooltip>
+                            }
+                        >
+                            <i className="bi bi-clipboard" onClick={() => handleCopyToClipboard(message.answer)}></i>
+                        </OverlayTrigger>
+
+                        <OverlayTrigger
+                            placement="top"
+                            overlay={
+                                <Tooltip id={`tooltip-bottom`}>
+                                    Speak Text
+                                </Tooltip>
+                            }
+                        >
+                            <i className="bi bi-megaphone" onClick={() => handleSpeak(message.answer, message.language)}></i>
+                        </OverlayTrigger>
+
+                        <OverlayTrigger
+                            placement="top"
+                            overlay={
+                                <Tooltip id={`tooltip-bottom`}>
+                                    {message.source === "user" ? "User Message" : "AI Message"}
+                                </Tooltip>
+                            }
+                        >
+                            <i className={`bi ${
                                 message.source === "user" ? "bi-person-fill" : "bi-robot"
-                            }`}
-                        ></i>
+                            }`}></i>
+                        </OverlayTrigger>
                     </div>
+
                 </div>
             ))}
         </div>
     );
 }
 
-function AIChatbot({selectedDocument, setSelectedDocument, db_name, db_collection_name, messages, setMessages}) {
+function AIChatbot({locale, setLocale, setSelectedDatabase, setSelectedDocument, db_name, db_collection_name, messages, setMessages, darkMode}) {
 
-    // Load the locale or set to 'en' by default
-    const [locale, setLocale] = useState(() => Cookies.get("scrapalot-locale") || "en");
     const [inputText, setInputText] = useState("");
     const [inputValid, setInputValid] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
@@ -76,22 +169,18 @@ function AIChatbot({selectedDocument, setSelectedDocument, db_name, db_collectio
 
         window.addEventListener("storage", handleStorageChange);
         return () => window.removeEventListener("storage", handleStorageChange);
-    }, [locale]);
+    }, [locale]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const sendMessage = async () => {
-        if (inputText.trim() !== "") {
-            const savedLocale = Cookies.get("scrapalot-locale");
-            if (savedLocale) {
-                setLocale(savedLocale);
-            }
+        // Declare and assign the value for savedLocale here
+        const savedLocale = Cookies.get("scrapalot-locale") || "en";
 
-            // Create a new message object
-            const newMessage = {answer: inputText, source: "user"};
+        if (inputText.trim() !== "") {
+            const newMessage = {answer: inputText, source: "user", language: locale};
 
             setMessages((prevMessages) => {
-                // Save the new messages to sessionStorage before updating state
                 const newMessages = [...prevMessages, newMessage];
-                sessionStorage.setItem("scrapalot-chat-messages", JSON.stringify(newMessages));
+                localStorage.setItem("scrapalot-chat-messages", JSON.stringify(newMessages));
                 return newMessages;
             });
 
@@ -101,17 +190,18 @@ function AIChatbot({selectedDocument, setSelectedDocument, db_name, db_collectio
                 database_name: db_name,
                 question: inputText,
                 collection_name: db_collection_name || db_name,
-                locale: Cookies.get("scrapalot-locale") || "en",
+                locale: savedLocale,
                 translate_chunks: Cookies.get("scrapalot-translate-chunks") === "true" || false,
             };
 
             try {
                 const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/query`, requestBody);
                 response.data["source"] = "ai"; // source property is now AI
+                response.data["language"] = savedLocale
 
                 setMessages((prevMessages) => {
                     const newMessages = [...prevMessages, response.data];
-                    sessionStorage.setItem("scrapalot-chat-messages", JSON.stringify(newMessages));
+                    localStorage.setItem("scrapalot-chat-messages", JSON.stringify(newMessages));
                     return newMessages;
                 });
             } catch (error) {
@@ -139,29 +229,38 @@ function AIChatbot({selectedDocument, setSelectedDocument, db_name, db_collectio
         }
     };
 
+    // dark theme backgrounds
+    const spinnerVariant = darkMode ? 'light' : 'dark';
+
     return (
         <div className={styles.aiChatbot}>
             <MessagesList
                 messages={messages}
-                selectedDocument={selectedDocument}
+                setMessages={setMessages}
+                setSelectedDatabase={setSelectedDatabase}
                 setSelectedDocument={setSelectedDocument}
+                darkMode={darkMode}
             />
             <div className={styles.aiChatbotInputMessageContainer}>
                 <InputGroup className={styles.aiChatbotInputMessage}>
-                    <FormControl
-                        placeholder="Ask a question"
-                        aria-label="Ask a question"
-                        value={inputText}
-                        onChange={(e) => setInputText(e.target.value)}
-                        onKeyDown={handleKeyDown} // Use onKeyDown event
-                        ref={inputRef}
+                    <FormControl placeholder="Ask a question"
+                                 aria-label="Ask a question"
+                                 value={inputText}
+                                 onChange={(e) => setInputText(e.target.value)}
+                                 onKeyDown={handleKeyDown} // Use onKeyDown event
+                                 ref={inputRef}
+                                 style={darkMode ? {backgroundColor: 'rgb(92 102 108)', color: 'white', borderColor: '#212529'} : {backgroundColor: ''}}
                     />
-                    <InputGroup.Text className={styles.sendButton} onClick={sendMessage}>
-                        <button ref={sendButtonRef} style={{border: "none", background: "none"}}>
+
+                    <InputGroup.Text
+                        style={darkMode ? {backgroundColor: 'rgb(92 102 108)', color: 'white', borderColor: '#212529'} : {backgroundColor: ''}}
+                        className={`${styles.aiChatbotInputSendButton} ${darkMode ? `${themes.darkThemeInputGroup} ${themes.darkThemeButtons}` : ''}`} onClick={sendMessage}>
+
+                        <button ref={sendButtonRef} style={{border: "none", background: 'none'}}>
                             {isLoading ? (
-                                <Spinner animation="border" variant="dark" size="sm"/>
+                                <Spinner animation="border" variant={spinnerVariant} size="sm"/>
                             ) : (
-                                <i className="bi bi-cursor-fill"></i>
+                                <i style={darkMode ? {color: 'white', borderColor: '#212529'} : {color: 'black'}} className="bi bi-cursor-fill"></i>
                             )}
                         </button>
                     </InputGroup.Text>

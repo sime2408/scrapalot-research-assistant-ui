@@ -1,0 +1,44 @@
+/* dark theme */
+body {
+  background-color: #212529;
+}
+
+.darkThemeInputGroup {
+  background-color: #212529 !important;
+}
+
+.darkThemeButtons button {
+  background-color: transparent !important;
+}
+
+.darkThemePrimary {
+  background-color: #212529 !important;
+  color: white !important;
+  /*border-bottom: 1px solid #1c2123 !important;*/
+  color-scheme: dark;
+}
+
+.darkThemeSecondary {
+  background-color: #343a40 !important;
+  color: white !important;
+  border-bottom: 1px solid #262a2e !important;
+  color-scheme: dark;
+}
+
+.darkThemeWithBottomBorderDefault {
+  border-bottom: 1px solid #212529 !important;
+}
+
+.darkThemeDefault,
+.darkThemeWithBottomBorderDefault {
+  background-color: #41494d !important;
+  color: #d5d5d5 !important;
+  color-scheme: dark;
+}
+
+.lightThemeDefault {
+  background-color: #f5f5f5;
+  color: black;
+  /*border-bottom: 1px solid rgb(246, 246, 246);*/
+  border-bottom: 1px solid rgb(229, 229, 229);
+}

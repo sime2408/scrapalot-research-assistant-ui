@@ -1,21 +1,24 @@
 import React, {useState} from 'react';
 import {Button, Modal} from 'react-bootstrap';
 
-const Footnote = ({index, link, content, selectedDocument, setSelectedDocument}) => {
+const Footnote = ({index, link, content, setSelectedDatabase, setSelectedDocument}) => {
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
-    const handleShow = (fileName) => {
+    const handleShow = (databaseName, fileName) => {
         setSelectedDocument({name: fileName});
+        setSelectedDatabase(databaseName)
         setShow(true);
     };
 
-    // Extract the file name from the link
-    const fileName = link.split('/').pop();
+    // Extract the database and file name from the link
+    const pathArray = link.split(new RegExp('\\\\|/'));
+    const fileName = pathArray.pop();
+    const databaseName = pathArray.pop();
 
     return (
         <>
-            <sup style={{cursor: 'pointer'}} className={'mt-1 me-1'} onClick={() => handleShow(fileName)}>
+            <sup style={{cursor: 'pointer'}} className={'mt-1 me-1'} onClick={() => handleShow(databaseName, fileName)}>
                 [{index}]
             </sup>
 

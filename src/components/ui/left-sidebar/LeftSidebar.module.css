@@ -12,6 +12,16 @@
   font-size: 0.95em;
 }
 
+.leftSidebarDocItems.card > .list-group:first-child {
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;;
+}
+
+.leftSidebarDocItems.card > .list-group:last-child {
+  border-bottom-right-radius: 0 !important;;
+  border-bottom-left-radius: 0 !important;;
+}
+
 .leftSidebarDropdown {
   margin-top: 10px
 }
