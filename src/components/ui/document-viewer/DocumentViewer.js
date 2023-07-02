@@ -68,11 +68,7 @@ function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument
 
     // PDF
 
-    interface ViewerWrapperProps {
-        fileUrl: string;
-    }
-
-    const ViewerWrapper: React.FC<ViewerWrapperProps> = ({fileUrl}) => {
+    const ViewerWrapper = ({fileUrl}) => {
 
         const defaultLayoutPluginInstance = defaultLayoutPlugin({
             thumbnailPlugin: {
