@@ -6,12 +6,14 @@ import styles from "./AIChatbot.module.css";
 import themes from '../../themes/CustomThemeProvider.module.css';
 import Footnote from "./Footnote";
 
-// MessagesList component
-function MessagesList({messages, setMessages, setSelectedDatabase, setSelectedDocument, onFootnoteClick, darkMode}) {
+function MessagesList({messages, setMessages, setSelectedDatabase, setSelectedDocument, handleFootnoteClick, footnoteContent, darkMode}) {
 
     const userBgColor = darkMode ? 'rgb(65 73 77)' : 'rgba(79, 181, 185, 0.1)';
     const aiBgColor = darkMode ? 'rgb(92 102 108)' : '#f8f9fa';
     const textColor = darkMode ? 'rgb(244 244 244)' : '#212529';
+
+    const [footnoteShowFullContent, setFootnoteShowFullContent] = useState(false);
+    const [footnoteLastClickedIndex, setFootnoteLastClickedIndex] = useState(null);
 
     const handleDeleteMessage = (indexToDelete) => {
         // Filter out the message at the given index
@@ -79,7 +81,7 @@ function MessagesList({messages, setMessages, setSelectedDatabase, setSelectedDo
                         ) : (
                             <>
                                 {message["answer"]} <br/>
-                                <div className={styles.aiMessageFootnote}>
+                                <div className={styles.aiMessageFootnote} style={{display: 'flex', flexWrap: 'wrap'}}>
                                     {message["source_documents"] &&
                                         message["source_documents"].map((doc, i) => (
                                             <Footnote
@@ -90,13 +92,28 @@ function MessagesList({messages, setMessages, setSelectedDatabase, setSelectedDo
                                                 page={doc["page"] || 0}
                                                 setSelectedDatabase={setSelectedDatabase}
                                                 setSelectedDocument={setSelectedDocument}
-                                                onFootnoteClick={onFootnoteClick}
+                                                handleFootnoteClick={(content, page) => handleFootnoteClick(content, page, index)}
+                                                lastClickedIndex={footnoteLastClickedIndex}
+                                                setLastClickedIndex={setFootnoteLastClickedIndex}
                                             />
                                         ))}
                                 </div>
                             </>
                         )}
                     </div>
+                    {message["source"] === "ai" && footnoteContent.messageIndex === index && (
+                        <div style={{fontSize: '0.80rem', fontStyle: 'italic', color: 'rgb(157 157 157)', marginTop: '0.2rem'}}>
+                            {footnoteShowFullContent ? footnoteContent.content : footnoteContent.content.slice(0, 150)}
+                            {footnoteContent.content.length > 200 && (
+                                <a href="#" onClick={(e) => {
+                                    e.preventDefault();
+                                    setFootnoteShowFullContent(!footnoteShowFullContent)
+                                }}>
+                                    {footnoteShowFullContent ? " Show less" : " Show more"}
+                                </a>
+                            )}
+                        </div>
+                    )}
                     <div className={`${styles.aiChatbotMessageToolbar}`} style={{color: textColor}}>
                         <OverlayTrigger
                             placement="top"
@@ -156,6 +173,7 @@ function AIChatbot({locale, setLocale, setSelectedDatabase, setSelectedDocument,
     const [inputText, setInputText] = useState("");
     const [inputValid, setInputValid] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
+    const [footnoteContent, setFootnoteContent] = useState({content: null, messageIndex: null});
 
     const inputRef = useRef(null); // Ref to track the input element
     const sendButtonRef = useRef(null); // New Ref for InputGroup.Text (send button)
@@ -231,6 +249,11 @@ function AIChatbot({locale, setLocale, setSelectedDatabase, setSelectedDocument,
         }
     };
 
+    const handleFootnoteClick = (content, pageNumber, messageIndex) => {
+        setFootnoteContent({content, messageIndex});
+        onFootnoteClick(pageNumber - 1); // subtract 1 because PDF.js uses zero-based index
+    };
+
     // dark theme backgrounds
     const spinnerVariant = darkMode ? 'light' : 'dark';
 
@@ -241,7 +264,8 @@ function AIChatbot({locale, setLocale, setSelectedDatabase, setSelectedDocument,
                 setMessages={setMessages}
                 setSelectedDatabase={setSelectedDatabase}
                 setSelectedDocument={setSelectedDocument}
-                onFootnoteClick={onFootnoteClick}
+                handleFootnoteClick={handleFootnoteClick}
+                footnoteContent={footnoteContent}
                 darkMode={darkMode}
             />
             <div className={styles.aiChatbotInputMessageContainer}>

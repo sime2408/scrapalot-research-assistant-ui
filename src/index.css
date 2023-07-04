@@ -12,12 +12,17 @@ body,
 
 ::-moz-selection { /* Code for Firefox */
   color: black;
-  background: #e7e7b5;
+  background: #fdc446;
 }
 
 ::selection {
   color: black;
-  background: #e7e7b5;
+  background: #fdc446;
+}
+
+a {
+  color: darkblue;
+  text-decoration: none !important;
 }
 
 /* react-pdf-viewer */

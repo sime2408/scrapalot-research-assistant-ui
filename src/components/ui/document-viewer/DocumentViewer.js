@@ -32,7 +32,7 @@ function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument
 
         return (
             <Viewer fileUrl={fileUrl}
-                    defaultScale={SpecialZoomLevel.PageFit}
+                    defaultScale={SpecialZoomLevel.PageWidth}
                     plugins={[defaultLayoutPluginInstance]}
                     initialPage={selectedDocumentInitialPage}
                     theme={darkMode ? "dark" : "light"}/>
