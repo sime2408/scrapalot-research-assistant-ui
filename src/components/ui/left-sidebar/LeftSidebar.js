@@ -4,7 +4,7 @@ import styles from "./LeftSidebar.module.css";
 import CustomToggle from '../../utils/CustomToggle';
 import themes from '../../themes/CustomThemeProvider.module.css';
 
-function LeftSidebar({setSelectedDocument, onSelectDatabase, selectedDatabase, searchTerm, databases, darkMode}) {
+function LeftSidebar({setSelectedDocument, onSelectDatabase, selectedDatabase, searchTerm, databases, setSelectedDocumentInitialPage, darkMode}) {
 
     // what happens when you click on the sidebar database/collection name
     const [openDatabase, setOpenDatabase] = useState('0');
@@ -84,11 +84,6 @@ function LeftSidebar({setSelectedDocument, onSelectDatabase, selectedDatabase, s
         switch (extension) {
             case 'pdf':
                 return 'bi bi-file-pdf-fill';
-            case 'doc':
-            case 'docx':
-                return 'bi bi-file-word-fill';
-            case 'epub':
-                return 'bi bi-book-fill';
             default:
                 return 'bi bi-file-earmark-text';
         }
@@ -130,6 +125,7 @@ function LeftSidebar({setSelectedDocument, onSelectDatabase, selectedDatabase, s
                                                                 className={`${styles.leftSidebarDocItems} ${darkMode ? themes.darkThemeWithBottomBorderDefault : ''}`}
                                                                 onClick={() => {
                                                                     setSelectedDocument(document); // Update the selected document
+                                                                    setSelectedDocumentInitialPage(0); // reset initial page
                                                                 }}
                                                             >
                                                                 <i className={determineFileTypeIcon(document.name)}/> {document.name}

@@ -50,6 +50,7 @@ function App() {
     const [selectedDatabase, setSelectedDatabase] = useState(Cookies.get('scrapalot-selected-db') || null);
     const [databases, setDatabases] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
+    const [selectedDocumentInitialPage, setSelectedDocumentInitialPage] = useState(0);
 
     // application AI chatbot messages
     const [messages, setMessages] = useState(() => {
@@ -59,7 +60,10 @@ function App() {
 
     const handleClearMessages = () => {
         setMessages([]);
-        sessionStorage.removeItem('scrapalot-chat-messages');
+        localStorage.removeItem('scrapalot-chat-messages');
+    };
+    const handleFootnoteClick = (pageNumber) => {
+        setSelectedDocumentInitialPage(pageNumber + 1); // Assuming pageNumber is zero-based
     };
 
     // API databases / collections retrieval
@@ -87,7 +91,7 @@ function App() {
         fetchDatabasesAndCollections(`${process.env.REACT_APP_API_BASE_URL}/databases`);
     }, []);
 
-    // what to do when user selects the database or documents
+    // what to do when a user selects the database or documents
 
     const handleSelectDatabase = (dbName) => {
         setSelectedDatabase(dbName);
@@ -136,6 +140,7 @@ function App() {
                             selectedDatabase={selectedDatabase}
                             searchTerm={searchTerm}
                             databases={databases}
+                            setSelectedDocumentInitialPage={setSelectedDocumentInitialPage}
                             darkMode={darkMode}
                         />
                     </div>
@@ -144,6 +149,7 @@ function App() {
                             selectedDatabase={selectedDatabase}
                             selectedDocument={selectedDocument}
                             setSelectedDocument={handleSelectDocument}
+                            selectedDocumentInitialPage={selectedDocumentInitialPage}
                             darkMode={darkMode}
                         />
                     </div>
@@ -154,6 +160,7 @@ function App() {
                             setLocale={setLocale}
                             setSelectedDatabase={setSelectedDatabase}
                             setSelectedDocument={handleSelectDocument}
+                            onFootnoteClick={handleFootnoteClick}
                             db_name={selectedDatabase}
                             db_collection_name={selectedDatabase}
                             messages={messages}

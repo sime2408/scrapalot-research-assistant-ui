@@ -7,7 +7,7 @@ import themes from '../../themes/CustomThemeProvider.module.css';
 import Footnote from "./Footnote";
 
 // MessagesList component
-function MessagesList({messages, setMessages, setSelectedDatabase, setSelectedDocument, darkMode}) {
+function MessagesList({messages, setMessages, setSelectedDatabase, setSelectedDocument, onFootnoteClick, darkMode}) {
 
     const userBgColor = darkMode ? 'rgb(65 73 77)' : 'rgba(79, 181, 185, 0.1)';
     const aiBgColor = darkMode ? 'rgb(92 102 108)' : '#f8f9fa';
@@ -87,8 +87,10 @@ function MessagesList({messages, setMessages, setSelectedDatabase, setSelectedDo
                                                 index={i + 1}
                                                 link={doc["link"]}
                                                 content={doc["content"]}
+                                                page={doc["page"] || 0}
                                                 setSelectedDatabase={setSelectedDatabase}
                                                 setSelectedDocument={setSelectedDocument}
+                                                onFootnoteClick={onFootnoteClick}
                                             />
                                         ))}
                                 </div>
@@ -149,7 +151,7 @@ function MessagesList({messages, setMessages, setSelectedDatabase, setSelectedDo
     );
 }
 
-function AIChatbot({locale, setLocale, setSelectedDatabase, setSelectedDocument, db_name, db_collection_name, messages, setMessages, darkMode}) {
+function AIChatbot({locale, setLocale, setSelectedDatabase, setSelectedDocument, onFootnoteClick, db_name, db_collection_name, messages, setMessages, darkMode}) {
 
     const [inputText, setInputText] = useState("");
     const [inputValid, setInputValid] = useState(true);
@@ -239,6 +241,7 @@ function AIChatbot({locale, setLocale, setSelectedDatabase, setSelectedDocument,
                 setMessages={setMessages}
                 setSelectedDatabase={setSelectedDatabase}
                 setSelectedDocument={setSelectedDocument}
+                onFootnoteClick={onFootnoteClick}
                 darkMode={darkMode}
             />
             <div className={styles.aiChatbotInputMessageContainer}>

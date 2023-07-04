@@ -32,11 +32,11 @@ function MainHeader({onSelectDatabase, selectedDatabase, databases, toggleTheme,
 
     const handleFileChange = (e) => {
         const files = Array.from(e.target.files);
-        const acceptedFiles = files.filter(file => ['application/pdf', 'application/epub+zip', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'].includes(file.type));
+        const acceptedFiles = files.filter(file => ['application/pdf'].includes(file.type));
         if (acceptedFiles.length > 0) {
             setFile(acceptedFiles[0]);
         } else {
-            alert('Please select only PDF, EPUB or DOCX files');
+            alert('Please select only PDF files');
         }
     };
 
@@ -132,8 +132,8 @@ function MainHeader({onSelectDatabase, selectedDatabase, databases, toggleTheme,
                     <Modal.Body>
                         <Form onSubmit={submitForm}>
                             <Form.Group controlId="formFile" className="mb-3">
-                                <Form.Label>Select a File (pdf, epub, docx)</Form.Label>
-                                <Form.Control type="file" accept=".pdf,.epub,.docx" onChange={handleFileChange}/>
+                                <Form.Label>Select a File (pdf)</Form.Label>
+                                <Form.Control type="file" accept=".pdf" onChange={handleFileChange}/>
                             </Form.Group>
                             <Row className={'mb-4'}>
                                 <Col>

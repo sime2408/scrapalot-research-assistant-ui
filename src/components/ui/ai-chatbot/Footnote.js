@@ -1,14 +1,22 @@
 import React, {useState} from 'react';
 import {Button, Modal} from 'react-bootstrap';
 
-const Footnote = ({index, link, content, setSelectedDatabase, setSelectedDocument}) => {
+const Footnote = ({index, link, content, page, setSelectedDatabase, setSelectedDocument, onFootnoteClick}) => {
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
     const handleShow = (databaseName, fileName) => {
         setSelectedDocument({name: fileName});
         setSelectedDatabase(databaseName)
+        handleClick(page); // Navigate to the page related to this footnote
         setShow(true);
+
+    };
+
+    const handleClick = (pageNumber) => {
+        // Other click handling code...
+        // Call the callback function with the desired page number
+        onFootnoteClick(pageNumber - 1); // subtract 1 because PDF.js uses zero-based index
     };
 
     // Extract the database and file name from the link

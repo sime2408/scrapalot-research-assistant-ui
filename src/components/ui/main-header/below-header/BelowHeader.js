@@ -57,7 +57,7 @@ function BelowHeader({setLocale, onSearch, handleClearMessages, darkMode}) {
 
     const renderSearchTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props}>
-            search files in the selected database
+            search documents from your database
         </Tooltip>
     );
 
@@ -79,7 +79,7 @@ function BelowHeader({setLocale, onSearch, handleClearMessages, darkMode}) {
                             trigger={["hover", "focus"]}
                         >
                             <FormControl
-                                placeholder="search files"
+                                placeholder="search documents"
                                 aria-label="Search"
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}

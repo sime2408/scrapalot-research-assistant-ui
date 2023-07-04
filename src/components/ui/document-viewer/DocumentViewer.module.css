@@ -17,21 +17,6 @@
 
 }
 
-.fileEpubViewer {
-}
-
-.fileHtmlViewer {
-  width: 80%;
-  margin: 10px auto;
-  background-color: white;
-  padding: 20px;
-  color: black;
-}
-
-.fileHtmlViewer img {
-  max-width: 100%;
-}
-
 .pageDivider {
   border-bottom: 1px solid #ccc; /* Adjust as needed */
 }
