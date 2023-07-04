@@ -1,4 +1,5 @@
 import React from 'react';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 function Footnote({index, link, content, page, setSelectedDatabase, setSelectedDocument, handleFootnoteClick, lastClickedIndex, setLastClickedIndex}) {
 
@@ -17,7 +18,16 @@ function Footnote({index, link, content, page, setSelectedDatabase, setSelectedD
     return (
         <div>
             <sup style={{cursor: 'pointer'}} className={'mt-1 me-1'} onClick={() => handleClick(databaseName, fileName, page, index)}>
-                <a href="#" style={index === lastClickedIndex ? {color: '#fdc446'} : {}} onClick={(e) => e.preventDefault()}>[{index}]</a>
+                <OverlayTrigger
+                    placement="top"
+                    overlay={
+                        <Tooltip id={`tooltip-${index}`}>
+                            {fileName}
+                        </Tooltip>
+                    }
+                >
+                    <a href="#" style={index === lastClickedIndex ? {color: '#fdc446'} : {}} onClick={(e) => e.preventDefault()}>[{index}]</a>
+                </OverlayTrigger>
             </sup>
         </div>
     );
