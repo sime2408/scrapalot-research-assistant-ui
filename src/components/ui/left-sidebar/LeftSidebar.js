@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {Accordion, Card, ListGroup} from "react-bootstrap";
 import styles from "./LeftSidebar.module.css";
-import CustomToggle from '../../utils/CustomToggle';
+import ScrapalotToggle from '../../utils/ScrapalotToggle';
 import themes from '../../themes/CustomThemeProvider.module.css';
 
 function LeftSidebar({setSelectedDocument, onSelectDatabase, selectedDatabase, searchTerm, databases, setSelectedDocumentInitialPage, darkMode}) {
@@ -96,23 +96,23 @@ function LeftSidebar({setSelectedDocument, onSelectDatabase, selectedDatabase, s
                     {databases.map((database, dbIndex) => (
                         <Card key={`database_${dbIndex}`} className={`${styles.leftSidebarDropdownCard} ${darkMode ? themes.darkThemeSecondary : ''}`}>
                             <Card.Header className={styles.leftSidebarDropdownCardHeader}>
-                                <CustomToggle eventKey={dbIndex.toString()} handleOnClick={() => fetchDatabaseDocuments(database.name)} setOpen={setOpenDatabase}>
+                                <ScrapalotToggle eventKey={dbIndex.toString()} handleOnClick={() => fetchDatabaseDocuments(database.name)} setOpen={setOpenDatabase}>
                                     {database.name}
-                                </CustomToggle>
+                                </ScrapalotToggle>
                             </Card.Header>
                             <Accordion.Collapse in={dbIndex.toString() === openDatabase} eventKey={dbIndex.toString()}>
                                 <Card.Body className={styles.leftSidebarCardBody}>
                                     {database.collections.map((collection, collectionIndex) => (
                                         <div key={`collection_${dbIndex}_${collectionIndex}`} className={styles.collectionItem}>
                                             {collection.name !== 'langchain' && collection.name !== database.name && (
-                                                <CustomToggle eventKey={`${dbIndex.toString()}_${collectionIndex.toString()}`}
-                                                              handleOnClick={() => fetchCollectionDocuments(database.name, collection.name)}
-                                                              setOpen={setOpenCollection}>
+                                                <ScrapalotToggle eventKey={`${dbIndex.toString()}_${collectionIndex.toString()}`}
+                                                                 handleOnClick={() => fetchCollectionDocuments(database.name, collection.name)}
+                                                                 setOpen={setOpenCollection}>
                                                     <div style={{padding: "8px 16px", borderTop: "1px #d2d2d2 solid", borderBottom: "1px #d2d2d2 solid"}}>
                                                         <i className={'bi bi-arrow-return-right'}/> {document.name}
                                                         {collection.name}
                                                     </div>
-                                                </CustomToggle>
+                                                </ScrapalotToggle>
 
                                             )}
                                             <Card className={`${styles.leftSidebarDocItems} ${darkMode ? themes.darkThemeSecondary : ''}`}>

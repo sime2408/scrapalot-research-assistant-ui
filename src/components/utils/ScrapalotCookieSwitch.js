@@ -4,7 +4,9 @@ import {useEffect, useState} from 'react';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
-function CustomCookieSwitch({toggleLabel, cookieKey}) {
+import styles from './ScrapalotCookieSwitch.module.css';
+
+function ScrapalotCookieSwitch({toggleLabel, cookieKey}) {
 
     const initialSwitchState = Cookies.get(cookieKey) === 'true';
     const [switchState, setSwitchState] = useState(initialSwitchState);
@@ -33,6 +35,7 @@ function CustomCookieSwitch({toggleLabel, cookieKey}) {
             >
                 <div>
                     <Form.Check
+                        className={styles.scrapalotCookieSwitch}
                         type="switch"
                         id="custom-switch"
                         checked={switchState} // use the switchState
@@ -44,4 +47,4 @@ function CustomCookieSwitch({toggleLabel, cookieKey}) {
     );
 }
 
-export default CustomCookieSwitch;
+export default ScrapalotCookieSwitch;

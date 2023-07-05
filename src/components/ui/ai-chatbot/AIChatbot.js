@@ -6,20 +6,20 @@ import styles from "./AIChatbot.module.css";
 import themes from '../../themes/CustomThemeProvider.module.css';
 import Footnote from "./Footnote";
 
-function MessagesList({messages, setMessages, setSelectedDatabase, setSelectedDocument, handleFootnoteClick, footnoteContent, darkMode}) {
+const MessagesList = (props) => {
 
-    const userBgColor = darkMode ? 'rgb(65 73 77)' : 'rgba(79, 181, 185, 0.1)';
-    const aiBgColor = darkMode ? 'rgb(92 102 108)' : '#f8f9fa';
-    const textColor = darkMode ? 'rgb(244 244 244)' : '#212529';
+    const userBgColor = props.darkMode ? 'rgb(65 73 77)' : 'rgba(79, 181, 185, 0.1)';
+    const aiBgColor = props.darkMode ? 'rgb(92 102 108)' : '#f8f9fa';
+    const textColor = props.darkMode ? 'rgb(244 244 244)' : '#212529';
 
     const [footnoteShowFullContent, setFootnoteShowFullContent] = useState(false);
-    const [footnoteLastClickedIndex, setFootnoteLastClickedIndex] = useState(null);
+    const [footnoteLastClickedIndex, setFootnoteLastClickedIndex] = useState({messageIndex: null, footnoteIndex: null});
 
     const handleDeleteMessage = (indexToDelete) => {
         // Filter out the message at the given index
-        const newMessages = messages.filter((message, index) => index !== indexToDelete);
+        const newMessages = props.messages.filter((message, index) => index !== indexToDelete);
         // Update state
-        setMessages(newMessages);
+        props.setMessages(newMessages);
         // Update localStorage
         localStorage.setItem("scrapalot-chat-messages", JSON.stringify(newMessages));
     };
@@ -64,7 +64,7 @@ function MessagesList({messages, setMessages, setSelectedDatabase, setSelectedDo
 
     return (
         <div className={styles.aiChatbotMessagesList}>
-            {messages.map((message, index) => (
+            {props.messages.map((message, index) => (
                 <div
                     key={index}
                     style={{
@@ -90,26 +90,27 @@ function MessagesList({messages, setMessages, setSelectedDatabase, setSelectedDo
                                                 link={doc["link"]}
                                                 content={doc["content"]}
                                                 page={doc["page"] || 0}
-                                                setSelectedDatabase={setSelectedDatabase}
-                                                setSelectedDocument={setSelectedDocument}
-                                                handleFootnoteClick={(content, page) => handleFootnoteClick(content, page, index)}
-                                                lastClickedIndex={footnoteLastClickedIndex}
-                                                setLastClickedIndex={setFootnoteLastClickedIndex}
+                                                setSelectedDatabase={props.setSelectedDatabase}
+                                                setSelectedDocument={props.setSelectedDocument}
+                                                handleFootnoteClick={(content, page) => props.handleFootnoteClick(content, page, index)}
+                                                footnoteLastClickedIndex={footnoteLastClickedIndex}
+                                                setFootnoteLastClickedIndex={setFootnoteLastClickedIndex}
+                                                messageIndex={index}
                                             />
                                         ))}
                                 </div>
                             </>
                         )}
                     </div>
-                    {message["source"] === "ai" && footnoteContent.messageIndex === index && (
+                    {message["source"] === "ai" && props.footnoteContent.messageIndex === index && (
                         <div style={{fontSize: '0.80rem', fontStyle: 'italic', color: 'rgb(157 157 157)', marginTop: '0.2rem'}}>
-                            {footnoteShowFullContent ? footnoteContent.content : footnoteContent.content.slice(0, 150)}
-                            {footnoteContent.content.length > 200 && (
+                            {footnoteShowFullContent ? `"${props.footnoteContent.content}"` : `"${props.footnoteContent.content.slice(0, 150)}"`}
+                            {props.footnoteContent.content.length > 200 && (
                                 <a href="#" onClick={(e) => {
                                     e.preventDefault();
                                     setFootnoteShowFullContent(!footnoteShowFullContent)
                                 }}>
-                                    {footnoteShowFullContent ? " Show less" : " Show more"}
+                                    {footnoteShowFullContent ? " less" : " more"}
                                 </a>
                             )}
                         </div>
@@ -168,7 +169,9 @@ function MessagesList({messages, setMessages, setSelectedDatabase, setSelectedDo
     );
 }
 
-function AIChatbot({locale, setLocale, setSelectedDatabase, setSelectedDocument, onFootnoteClick, db_name, db_collection_name, messages, setMessages, darkMode}) {
+
+const AIChatbot = (props) => {
+// function AIChatbot({locale, setLocale, setSelectedDatabase, setSelectedDocument, onFootnoteClick, db_name, db_collection_name, messages, setMessages, darkMode}) {
 
     const [inputText, setInputText] = useState("");
     const [inputValid, setInputValid] = useState(true);
@@ -182,23 +185,23 @@ function AIChatbot({locale, setLocale, setSelectedDatabase, setSelectedDocument,
     useEffect(() => {
         const handleStorageChange = () => {
             const savedLocale = Cookies.get("scrapalot-locale");
-            if (savedLocale && savedLocale !== locale) {
-                setLocale(savedLocale);
+            if (savedLocale && savedLocale !== props.locale) {
+                props.setLocale(savedLocale);
             }
         };
 
         window.addEventListener("storage", handleStorageChange);
         return () => window.removeEventListener("storage", handleStorageChange);
-    }, [locale]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [props.locale]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const sendMessage = async () => {
         // Declare and assign the value for savedLocale here
         const savedLocale = Cookies.get("scrapalot-locale") || "en";
 
         if (inputText.trim() !== "") {
-            const newMessage = {answer: inputText, source: "user", language: locale};
+            const newMessage = {answer: inputText, source: "user", language: props.locale};
 
-            setMessages((prevMessages) => {
+            props.setMessages((prevMessages) => {
                 const newMessages = [...prevMessages, newMessage];
                 localStorage.setItem("scrapalot-chat-messages", JSON.stringify(newMessages));
                 return newMessages;
@@ -207,9 +210,9 @@ function AIChatbot({locale, setLocale, setSelectedDatabase, setSelectedDocument,
             setIsLoading(true);
 
             const requestBody = {
-                database_name: db_name,
+                database_name: props.db_name,
                 question: inputText,
-                collection_name: db_collection_name || db_name,
+                collection_name: props.db_collection_name || props.db_name,
                 locale: savedLocale,
                 translate_chunks: Cookies.get("scrapalot-translate-chunks") === "true" || false,
             };
@@ -219,7 +222,7 @@ function AIChatbot({locale, setLocale, setSelectedDatabase, setSelectedDocument,
                 response.data["source"] = "ai"; // source property is now AI
                 response.data["language"] = savedLocale
 
-                setMessages((prevMessages) => {
+                props.setMessages((prevMessages) => {
                     const newMessages = [...prevMessages, response.data];
                     localStorage.setItem("scrapalot-chat-messages", JSON.stringify(newMessages));
                     return newMessages;
@@ -251,22 +254,22 @@ function AIChatbot({locale, setLocale, setSelectedDatabase, setSelectedDocument,
 
     const handleFootnoteClick = (content, pageNumber, messageIndex) => {
         setFootnoteContent({content, messageIndex});
-        onFootnoteClick(pageNumber - 1); // subtract 1 because PDF.js uses zero-based index
+        props.onFootnoteClick(pageNumber - 1); // subtract 1 because PDF.js uses zero-based index
     };
 
     // dark theme backgrounds
-    const spinnerVariant = darkMode ? 'light' : 'dark';
+    const spinnerVariant = props.darkMode ? 'light' : 'dark';
 
     return (
         <div className={styles.aiChatbot}>
             <MessagesList
-                messages={messages}
-                setMessages={setMessages}
-                setSelectedDatabase={setSelectedDatabase}
-                setSelectedDocument={setSelectedDocument}
+                messages={props.messages}
+                setMessages={props.setMessages}
+                setSelectedDatabase={props.setSelectedDatabase}
+                setSelectedDocument={props.setSelectedDocument}
                 handleFootnoteClick={handleFootnoteClick}
                 footnoteContent={footnoteContent}
-                darkMode={darkMode}
+                darkMode={props.darkMode}
             />
             <div className={styles.aiChatbotInputMessageContainer}>
                 <InputGroup className={styles.aiChatbotInputMessage}>
@@ -276,18 +279,18 @@ function AIChatbot({locale, setLocale, setSelectedDatabase, setSelectedDocument,
                                  onChange={(e) => setInputText(e.target.value)}
                                  onKeyDown={handleKeyDown} // Use onKeyDown event
                                  ref={inputRef}
-                                 style={darkMode ? {backgroundColor: 'rgb(92 102 108)', color: 'white', borderColor: '#212529'} : {backgroundColor: ''}}
+                                 style={props.darkMode ? {backgroundColor: 'rgb(92 102 108)', color: 'white', borderColor: '#212529'} : {backgroundColor: ''}}
                     />
 
                     <InputGroup.Text
-                        style={darkMode ? {backgroundColor: 'rgb(92 102 108)', color: 'white', borderColor: '#212529'} : {backgroundColor: ''}}
-                        className={`${styles.aiChatbotInputSendButton} ${darkMode ? `${themes.darkThemeInputGroup} ${themes.darkThemeButtons}` : ''}`} onClick={sendMessage}>
+                        style={props.darkMode ? {backgroundColor: 'rgb(92 102 108)', color: 'white', borderColor: '#212529'} : {backgroundColor: ''}}
+                        className={`${styles.aiChatbotInputSendButton} ${props.darkMode ? `${themes.darkThemeInputGroup} ${themes.darkThemeButtons}` : ''}`} onClick={sendMessage}>
 
                         <button ref={sendButtonRef} style={{border: "none", background: 'none'}}>
                             {isLoading ? (
                                 <Spinner animation="border" variant={spinnerVariant} size="sm"/>
                             ) : (
-                                <i style={darkMode ? {color: 'white', borderColor: '#212529'} : {color: 'black'}} className="bi bi-cursor-fill"></i>
+                                <i style={props.darkMode ? {color: 'white', borderColor: '#212529'} : {color: 'black'}} className="bi bi-cursor-fill"></i>
                             )}
                         </button>
                     </InputGroup.Text>

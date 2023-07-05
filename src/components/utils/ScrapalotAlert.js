@@ -1,7 +1,7 @@
 import React from 'react';
 import {Alert} from 'react-bootstrap';
 
-const CustomAlert = ({message, onClose}) => {
+const ScrapalotAlert = ({message, onClose}) => {
     const alertStyle = {
         position: "fixed",
         top: "165px",
@@ -18,4 +18,4 @@ const CustomAlert = ({message, onClose}) => {
     );
 };
 
-export default CustomAlert;
+export default ScrapalotAlert;

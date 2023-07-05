@@ -1,13 +1,13 @@
 import React from 'react';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 
-function Footnote({index, link, content, page, setSelectedDatabase, setSelectedDocument, handleFootnoteClick, lastClickedIndex, setLastClickedIndex}) {
+function Footnote({index, link, content, page, setSelectedDatabase, setSelectedDocument, handleFootnoteClick, footnoteLastClickedIndex, setFootnoteLastClickedIndex, messageIndex}) {
 
-    const handleClick = (databaseName, fileName, page, messageIndex) => {
+    const handleClick = (databaseName, fileName, page) => {
         setSelectedDatabase(databaseName);
         setSelectedDocument({name: fileName});
         handleFootnoteClick(content, page, messageIndex);
-        setLastClickedIndex(index);
+        setFootnoteLastClickedIndex({messageIndex: messageIndex, footnoteIndex: index});
     };
 
     // Extract the database and file name from the link
@@ -16,8 +16,8 @@ function Footnote({index, link, content, page, setSelectedDatabase, setSelectedD
     const databaseName = pathArray.pop();
 
     return (
-        <div>
-            <sup style={{cursor: 'pointer'}} className={'mt-1 me-1'} onClick={() => handleClick(databaseName, fileName, page, index)}>
+        <>
+            <sup style={{cursor: 'pointer'}} className={'mt-1 me-1'} onClick={() => handleClick(databaseName, fileName, page)}>
                 <OverlayTrigger
                     placement="top"
                     overlay={
@@ -26,10 +26,11 @@ function Footnote({index, link, content, page, setSelectedDatabase, setSelectedD
                         </Tooltip>
                     }
                 >
-                    <a href="#" style={index === lastClickedIndex ? {color: '#fdc446'} : {}} onClick={(e) => e.preventDefault()}>[{index}]</a>
+                    <a href="#" style={footnoteLastClickedIndex && index === footnoteLastClickedIndex.footnoteIndex && messageIndex === footnoteLastClickedIndex.messageIndex ? {color: '#fdc446'} : {}}
+                       onClick={(e) => e.preventDefault()}>[{index}]</a>
                 </OverlayTrigger>
             </sup>
-        </div>
+        </>
     );
 };
 

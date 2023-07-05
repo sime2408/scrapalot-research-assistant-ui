@@ -1,6 +1,6 @@
 import React from 'react';
 
-const CustomToggle = ({children, eventKey, handleOnClick, setOpen}) => {
+const ScrapalotToggle = ({children, eventKey, handleOnClick, setOpen}) => {
     return (
         <div onClick={(event) => {
             event.stopPropagation();
@@ -16,4 +16,4 @@ const CustomToggle = ({children, eventKey, handleOnClick, setOpen}) => {
     );
 };
 
-export default CustomToggle;
+export default ScrapalotToggle;

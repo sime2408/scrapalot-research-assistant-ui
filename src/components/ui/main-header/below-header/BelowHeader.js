@@ -6,7 +6,7 @@ import themes from "../../../themes/CustomThemeProvider.module.css"
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import Cookies from 'js-cookie';
-import CustomCookieSwitch from '../../../utils/CustomCookieSwitch';
+import ScrapalotCookieSwitch from '../../../utils/ScrapalotCookieSwitch';
 
 import englishFlag from '../../../../static/img/flags/en.svg';
 import germanFlag from '../../../../static/img/flags/de.svg';
@@ -26,7 +26,9 @@ function BelowHeader({setLocale, onSearch, handleClearMessages, darkMode}) {
         {id: 'hr', name: 'Croatian', flag: croatianFlag},
     ];
 
-    const [language, setLanguage] = useState(languages[0]);
+    const savedLocale = Cookies.get('scrapalot-locale') || 'en';
+    const initialLanguage = languages.find(lang => lang.id === savedLocale) || languages[0];
+    const [language, setLanguage] = useState(initialLanguage);
 
     const handleLocaleChange = (newLocale) => {
         setLanguage(newLocale);
@@ -120,7 +122,7 @@ function BelowHeader({setLocale, onSearch, handleClearMessages, darkMode}) {
                         </button>
                     </OverlayTrigger>
                     <span className={styles.belowHeaderAiChatbotTranslateChunks}>
-                        <CustomCookieSwitch toggleLabel={"translate footnotes"} cookieKey={"scrapalot-translate-chunks"}/>
+                        <ScrapalotCookieSwitch toggleLabel={"translate footnotes"} cookieKey={"scrapalot-translate-chunks"}/>
                     </span>
                     <div className={styles.belowHeaderLangContainer}>
                         <DropdownButton
