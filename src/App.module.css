@@ -4,7 +4,7 @@
 
 .containerFluid {
   height: calc(
-          100vh - 118px
+          100vh - 117px
   );
   padding: 0 !important;
   overflow: hidden;
