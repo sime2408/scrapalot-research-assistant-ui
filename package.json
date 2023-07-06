@@ -29,9 +29,11 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && npm run cleanup && npm run movebuild",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "cleanup": "rimraf ../scrapalot-research-assistant/scrapalot-research-assistant-ui",
+    "movebuild": "ncp build/ ../scrapalot-research-assistant/scrapalot-research-assistant-ui"
   },
   "eslintConfig": {
     "extends": [
@@ -52,6 +54,8 @@
     ]
   },
   "devDependencies": {
-    "copy-webpack-plugin": "^4.5.4"
+    "copy-webpack-plugin": "^4.5.4",
+    "ncp": "^2.0.0",
+    "rimraf": "^5.0.1"
   }
 }

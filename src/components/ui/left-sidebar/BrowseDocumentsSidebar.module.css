@@ -1,7 +1,25 @@
+/* BrowseDocumentsSidebar */
+
+.leftSidebarSearchBar {
+  display: flex;
+  align-items: center;
+}
+
+.leftSidebarSearchBarInput {
+  position: absolute;
+  right: 1px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: white;
+  border: none;
+  z-index: 5;
+  border-radius: 0 !important;
+}
+
 .leftSidebar {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 120px); /* assuming you want the sidebar to be full height */
+  height: calc(100vh - 140px); /* assuming you want the sidebar to be full height */
 }
 
 .leftSidebarDocItems {
@@ -32,6 +50,8 @@
 
 .leftSidebarDropdown, .leftSidebarDropdownCard {
   border-radius: 0 !important;
+  overflow-y: auto;
+  padding: 0 5px 0 0;
 }
 
 .leftSidebarCardBody {

@@ -1,6 +1,20 @@
-.mainHeaderThemeSwitcher {
+.mainHeaderToolbar {
   margin-left: auto;
   justify-content: flex-end;
+}
+
+.mainHeaderToolbarIconLight {
+  font-size: 24px;
+  color: #000; /* Customize the icon color */
+  cursor: pointer;
+  padding: 0 10px;
+}
+
+.mainHeaderToolbarIconDark {
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+  padding: 0 10px;
 }
 
 .mainHeaderDarkThemeSwitcher,
@@ -8,18 +22,4 @@
   border: none;
   background-color: transparent;
   padding: 0;
-}
-
-.mainHeaderThemeSwitcherIcon {
-  font-size: 20px;
-  color: #000; /* Customize the icon color */
-  cursor: pointer;
-  padding: 0 10px;
-}
-
-.mainHeaderThemeSwitcherIconDark {
-  font-size: 24px;
-  color: white;
-  cursor: pointer;
-  padding: 0 10px;
 }

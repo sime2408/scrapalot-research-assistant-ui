@@ -1,3 +1,32 @@
+/* AIChatbot toolbar */
+
+.aiChatbotToolbar {
+  display: flex;
+  align-items: center;
+}
+
+.aiChatbotTranslateChunks {
+  margin-left: auto;
+  justify-content: flex-end;
+}
+
+.aiChatbotLangContainer {
+  width: 40px;
+}
+
+.aiChatbotLangDropdown {
+  margin-right: 12px;
+}
+
+.aiChatbotLangDropdown button:focus,
+.aiChatbotLangDropdown button:active,
+.aiChatbotLangDropdown .dropdown-toggle:focus,
+.aiChatbotLangDropdown .dropdown-toggle:active {
+  box-shadow: none !important;
+  outline: 0 !important;
+  border: none !important;
+}
+
 /* QA rendered messages */
 
 .aiChatbot {
@@ -7,7 +36,8 @@
 }
 
 .aiChatbot a {
-  color: darkblue;
+  color: #44abb6;
+  font-weight: bold;
 }
 
 .aiChatbotMessagesList {
@@ -15,6 +45,7 @@
   overflow-y: auto;
   margin-top: 10px;
   max-height: calc(100% - 50px);
+  padding: 0 5px
 }
 
 .aiChatbotMessage {
@@ -56,7 +87,6 @@
 /* QA section for inputting the message for the AI */
 
 .aiChatbotInputMessageContainer {
-  padding-bottom: 8px;
 }
 
 .aiChatbotInputMessage {

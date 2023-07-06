@@ -1,26 +1,49 @@
-.mainContainer {
+.appMainContainer {
   overflow: hidden;
 }
 
-.containerFluid {
-  height: calc(
-          100vh - 117px
-  );
+.appContainerFluid {
+  height: calc(100vh - 57px);
   padding: 0 !important;
   overflow: hidden;
 }
 
-.leftSidebarColumn {
+/* tabs theme modes */
+
+.appDarkModeTab {
+  color: white !important;
+  background-color: transparent !important;
+}
+
+.appLightModeTab {
+  color: black !important;
+  background-color: transparent !important;
+}
+
+.appDarkModeTabActive {
+  color: #44abb6 !important;
+  background-color: rgb(92, 102, 108) !important;
+}
+
+.appLightModeTabActive {
+  color: #44abb6 !important;
+  background-color: #f5f5f5 !important;
+}
+
+/* left sidebar to search through documents */
+
+.appLeftSidebarColumn {
   overflow: auto;
   height: 100%; /* Full height of the parent (.containerFluid) */
   position: relative; /* This is added to create a new containing block for absolute positioning */
   padding-left: 20px;
 }
 
-.documentViewerColumn {
-  height: 100%; /* Full height of the parent (.containerFluid) */
-  background-color: #f5f5f5;
-  position: relative; /* This is added to create a new containing block for absolute positioning */
+/* document viewer */
+
+.appDocumentViewerColumn {
+  height: 100%;
+  position: relative;
   padding-left: 0;
 }
 

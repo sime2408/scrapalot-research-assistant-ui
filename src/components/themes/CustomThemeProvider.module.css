@@ -1,8 +1,4 @@
 /* dark theme */
-body {
-  background-color: #212529;
-}
-
 .darkThemeInputGroup {
   background-color: #212529 !important;
 }
@@ -14,7 +10,7 @@ body {
 .darkThemePrimary {
   background-color: #212529 !important;
   color: white !important;
-  /*border-bottom: 1px solid #1c2123 !important;*/
+  border-bottom: 1px solid rgb(65, 73, 77) !important;
   color-scheme: dark;
 }
 
@@ -34,6 +30,12 @@ body {
   background-color: #41494d !important;
   color: #d5d5d5 !important;
   color-scheme: dark;
+}
+
+.lightThemePrimary {
+  background-color: white;
+  color: black;
+  border-bottom: 1px solid rgb(229, 229, 229)
 }
 
 .lightThemeDefault {

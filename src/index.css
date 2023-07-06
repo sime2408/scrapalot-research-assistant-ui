@@ -20,8 +20,17 @@ body,
   background: #fdc446;
 }
 
+::-webkit-scrollbar {
+  width: 0.4em;
+  height: 0.4em;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #44abb6;
+}
+
 a {
-  color: darkblue;
+  color: #44abb6;
   text-decoration: none !important;
 }
 
@@ -52,6 +61,20 @@ a {
   --rpv-core__popover-body-background-color: #343a40;
 }
 
+.rpv-core__menu-item:hover {
+  background-color: #44abb6;
+  outline: 0;
+}
+
+.rpv-core__minimal-button--selected {
+  background-color: #44abb6;
+  color: black;
+}
+
+.rpv-core__minimal-button--selected:hover {
+  color: white;
+}
+
 /* bootstrap */
 
 .container-fluid {
@@ -62,24 +85,53 @@ a {
   height: 100%;
 }
 
-.col-md-3 {
-  height: 100%;
-  overflow-y: scroll;
-}
-
-.col-md-6 {
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.col-md-3:last-child {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
 .modal-content {
   border-radius: 0 !important;
+}
+
+.list-group-item:last-child {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.list-group-item:first-child {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.btn-outline-primary {
+  color: #fdc446;
+  border-color: transparent;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:not(:disabled):not(.disabled):active,
+.btn-outline-primary:not(:disabled):not(.disabled).active,
+.show > .btn-outline-primary.dropdown-toggle {
+  color: #fdc446;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+
+.btn-check:checked + .btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check) + .btn:active {
+  border-color: transparent !important;
+}
+
+.btn-check:checked + .btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check) + .btn:active {
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+
+.nav-tabs .nav-link.active {
+  border: 0 solid transparent;
+  border-radius: 0;
+  padding: 8px 16px;
+}
+
+.nav-tabs .nav-link {
+  border: 0 solid transparent;
+  border-radius: 0;
+  padding: 8px 16px;
 }

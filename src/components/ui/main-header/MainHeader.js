@@ -14,6 +14,7 @@ function MainHeader({onSelectDatabase, selectedDatabase, databases, toggleTheme,
     const [loading, setLoading] = useState(false);
     const [selectedCollection, setSelectedCollection] = useState(null);
     const [currentDatabaseCollections, setCurrentDatabaseCollections] = useState([]);
+    const [isDatabaseDropdownOpen, setIsDatabaseDropdownOpen] = useState(false);
 
     const handleClose = () => setShow(false);
     const handleShow = () => {
@@ -76,10 +77,20 @@ function MainHeader({onSelectDatabase, selectedDatabase, databases, toggleTheme,
         }
     }, [selectedDatabase, databases]);
 
+    const toggleDatabaseDropdown = () => {
+        setIsDatabaseDropdownOpen(!isDatabaseDropdownOpen);
+    }
+
+    useEffect(() => {
+        document.body.onclick = () => {
+            setIsDatabaseDropdownOpen(false);
+        }
+    }, []);
+
     return (
-        <Navbar expand="lg" className={`'px-2' ${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemeDefault}`}>
+        <Navbar expand="lg" className={`'px-2' ${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemePrimary}`}>
             <Navbar.Brand href="/">
-                <img style={{marginLeft: '8px'}}
+                <img style={{marginLeft: '14px'}}
                      alt="Scrapalot Logo"
                      src={logo}
                      width="30"
@@ -88,43 +99,48 @@ function MainHeader({onSelectDatabase, selectedDatabase, databases, toggleTheme,
                 />{" "}
                 <span className={`${darkMode ? themes.darkThemeDefault : ''}`}>Scrapalot</span>
             </Navbar.Brand>
-            <Dropdown className={'me-1'}>
-                <Dropdown.Toggle variant={darkMode ? "dark" : "light"} id="dropdown-basic" as="div">
-                    <Button variant={darkMode ? "dark" : "light"} style={{textAlign: 'right'}}>
-                        {selectedDatabase || 'Select Database'}
-                    </Button>
-                </Dropdown.Toggle>
-
-                <Dropdown.Menu style={{maxHeight: '500px', overflow: 'auto'}}>
-                    <Dropdown.Item as="div">
-                        <Form.Control
-                            type="text"
-                            placeholder="Search"
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            onClick={(e) => e.stopPropagation()}
-                        />
-                    </Dropdown.Item>
-
-                    {filteredDatabases.map((db, index) =>
-                        <Dropdown.Item key={index} onClick={() => onSelectDatabase(db.name)} href={`#/book-${index + 1}`}>{db.name}</Dropdown.Item>
-                    )}
-                </Dropdown.Menu>
-            </Dropdown>
             <Navbar.Toggle aria-controls="basic-navbar-nav"/>
             <Navbar.Collapse id="basic-navbar-nav">
+                <Nav className="justify-content-end">
+                    <Dropdown className={'me-1'}>
+                        <Dropdown.Toggle id="dropdown-basic" as="div">
+                            <Button variant="outline-primary" style={{textAlign: 'right'}}>
+                                <i className={`bi bi-database-down`}></i>
+                                &nbsp;&nbsp;
+                                {selectedDatabase || 'Select Database'}
+                            </Button>
+                        </Dropdown.Toggle>
 
-                <div className={`${styles.mainHeaderThemeSwitcher}`}>
+                        <Dropdown.Menu style={{maxHeight: '500px', overflow: 'auto'}}>
+                            <Dropdown.Item as="div">
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Search"
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    onClick={(e) => e.stopPropagation()}
+                                />
+                            </Dropdown.Item>
+
+                            {filteredDatabases.map((db, index) =>
+                                <Dropdown.Item key={index} onClick={() => onSelectDatabase(db.name)} href={`#/book-${index + 1}`}>{db.name}</Dropdown.Item>
+                            )}
+                        </Dropdown.Menu>
+                    </Dropdown>
+
+                </Nav>
+                <div className={`${styles.mainHeaderToolbar}`}>
                     {darkMode ? (
-                        <i className={`bi bi-brightness-high-fill ${styles.mainHeaderThemeSwitcherIconDark}`} onClick={toggleTheme}></i>
+                        <i className={`bi bi-brightness-high-fill ${styles.mainHeaderToolbarIconDark}`} onClick={toggleTheme}></i>
                     ) : (
-                        <i className={`bi bi-moon-fill ${styles.mainHeaderThemeSwitcherIcon}`} onClick={toggleTheme}></i>
+                        <i className={`bi bi-moon-fill ${styles.mainHeaderToolbarIconLight}`} onClick={toggleTheme}></i>
                     )}
                 </div>
+                <Button variant="outline-primary" className={'me-2'} onClick={handleShow}>
+                    upload
+                    &nbsp;&nbsp;<i className="bi bi-upload"></i>
+                </Button>
 
-                <Nav className="justify-content-end">
-                    <Button variant="outline-primary" className={'mx-3'} onClick={handleShow}>Upload</Button>
-                </Nav>
                 <Modal show={show} onHide={handleClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Upload files</Modal.Title>
