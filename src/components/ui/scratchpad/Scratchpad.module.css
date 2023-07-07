@@ -1,0 +1,6 @@
+/* Scratchpad toolbar */
+
+.scratchpadToolbar {
+  display: flex;
+  align-items: center;
+}

@@ -1,24 +1,19 @@
 import React, {useCallback, useEffect, useState} from "react";
-import MainHeader from "./components/ui/main-header/MainHeader";
-import BrowseDocumentsSidebar from "./components/ui/left-sidebar/BrowseDocumentsSidebar";
-import DocumentViewer from "./components/ui/document-viewer/DocumentViewer";
-import AIChatbot from "./components/ui/ai-chatbot/AIChatbot";
-
+import {Tab, Tabs} from 'react-bootstrap';
 import debounce from 'lodash.debounce';
 import Cookies from 'js-cookie';
 
+import MainHeader from "./components/ui/main-header/MainHeader";
+import BrowseDocumentsSidebar from "./components/ui/browse-document-sidebar/BrowseDocumentsSidebar";
+import WebDocumentSidebar from './components/ui/web-document-sidebar/WebDocumentSidebar';
+import DocumentViewer from "./components/ui/document-viewer/DocumentViewer";
+import AIChatbot from "./components/ui/ai-chatbot/AIChatbot";
+import Scratchpad from './components/ui/scratchpad/Scratchpad';
+
 import styles from "./App.module.css";
 import themes from './components/themes/CustomThemeProvider.module.css';
-import {Tab, Tabs} from 'react-bootstrap';
-
-const WebDocumentSidebar = () => <div style={{padding: '8px'}}>Web Document Sidebar</div>;
-const Scratchpad = () => <div style={{padding: '8px'}}>Scratchpad</div>;
 
 function App() {
-
-    // tabs
-    const [activeTabLeftKey, setActiveTabLeftKey] = useState('browse');
-    const [activeTabRightKey, setActiveTabRightKey] = useState('chatbot');
 
     // application theme
     const [darkMode, setDarkMode] = useState(() => {
@@ -35,6 +30,13 @@ function App() {
     useEffect(() => {
         Cookies.set('scrapalot-dark-mode', darkMode.toString()); // Convert to string before setting the cookie
     }, [darkMode]);
+
+    // application locale
+    const [locale, setLocale] = useState(() => Cookies.get("scrapalot-locale") || "en");
+
+    // application tabs
+    const [activeTabLeftKey, setActiveTabLeftKey] = useState('browse');
+    const [activeTabRightKey, setActiveTabRightKey] = useState('chatbot');
 
     const handleTabColors = useCallback((tab) => {
         if (darkMode) {
@@ -59,8 +61,6 @@ function App() {
             }
         }
     }, [darkMode]);
-
-    // application tabs
 
     useEffect(() => {
         const tabs = document.querySelectorAll('.nav-tabs .nav-link');
@@ -93,9 +93,6 @@ function App() {
             observers.forEach(observer => observer.disconnect());
         };
     }, [handleTabColors]);
-
-    // application locale
-    const [locale, setLocale] = useState(() => Cookies.get("scrapalot-locale") || "en");
 
     useEffect(() => {
         const handleStorageChange = () => {
@@ -179,6 +176,13 @@ function App() {
         handleSearch(search);
     }
 
+    // scratchpad
+
+    const [isDocumentBrowserVisible, setIsDocumentBrowserVisible] = useState(true);
+    const handleExpandScratchpad = () => {
+        setIsDocumentBrowserVisible(!isDocumentBrowserVisible);
+    }
+
     return (
         <div className={styles.appMainContainer}>
             <MainHeader
@@ -189,7 +193,7 @@ function App() {
                 darkMode={darkMode}/>
             <div className={`container-fluid ${styles.appContainerFluid}`}>
                 <div className="row">
-                    <div className={`col-md-2 ${styles.appLeftSidebarColumn} ${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemeDefault}`}
+                    <div className={`col-2 ${styles.appLeftSidebarColumn} ${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemeDefault}`}
                          style={darkMode ?
                              {
                                  borderRight: "1px solid #41494d",
@@ -203,7 +207,9 @@ function App() {
                                  paddingLeft: '14px',
                                  paddingRight: '0',
                              }}>
-                        <Tabs
+
+                        {isDocumentBrowserVisible &&
+                            <Tabs
                             justify
                             activeKey={activeTabLeftKey}
                             onSelect={(k) => setActiveTabLeftKey(k)}
@@ -228,9 +234,9 @@ function App() {
                             <Tab eventKey="search" title="search web">
                                 Tab content for Search
                             </Tab>
-                        </Tabs>
+                        </Tabs>}
                     </div>
-                    <div className={`col-md-7 ${styles.appDocumentViewerColumn} ${darkMode ? themes.darkThemePrimary : themes.lightThemeDefault}`}>
+                    <div className={`col-7 ${styles.appDocumentViewerColumn} ${darkMode ? themes.darkThemePrimary : themes.lightThemeDefault}`}>
                         <DocumentViewer
                             selectedDatabase={selectedDatabase}
                             selectedDocument={selectedDocument}
@@ -239,7 +245,7 @@ function App() {
                             darkMode={darkMode}
                         />
                     </div>
-                    <div className={`col-md-3 ${darkMode ? themes.darkThemeSecondary : themes.lightThemePrimary}`}
+                    <div className={`col-3 ${darkMode ? themes.darkThemeSecondary : themes.lightThemePrimary}`}
                          style={darkMode ?
                              {
                                  borderLeft: "1px solid #41494d",
@@ -284,7 +290,9 @@ function App() {
                                 />
                             </Tab>
                             <Tab eventKey="scratchpad" title="scratchpad">
-                                <Scratchpad/>
+                                <Scratchpad
+                                    handleExpandScratchpad={handleExpandScratchpad}
+                                />
                             </Tab>
                         </Tabs>
                     </div>
