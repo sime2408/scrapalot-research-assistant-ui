@@ -93,11 +93,38 @@ function MainHeader({handleExpandSidebar: handleExpandSidebar, isDocumentBrowser
                      height="30"
                      className={'d-inline-block align-top'}
                 />{" "}
-                <span className={`${darkMode ? themes.darkThemeDefault : ''}`}>Scrapalot</span>
+                <span className={`${darkMode ? themes.darkThemeDefault : ''}`} style={{fontVariantCaps: 'all-small-caps'}}>Scrapalot</span>
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav"/>
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="justify-content-end">
+                    <Dropdown className={'me-1'}>
+                        <Dropdown.Toggle id="dropdown-settings" as="div">
+                            <Button variant="outline-primary" style={{textAlign: 'right'}}>
+                                <i className="bi bi-gear"></i>
+                                &nbsp;&nbsp;
+                                Settings
+                            </Button>
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu style={{maxHeight: '500px', overflow: 'auto'}}>
+                            <Dropdown.Item key="0" onClick={() => handleExpandSidebar()}>
+
+                                {isDocumentBrowserVisible && (
+                                    <>
+                                        <i className="bi bi-box-arrow-left"></i>
+                                        &nbsp;&nbsp;hide sidebar
+                                    </>
+                                )}
+
+                                {!isDocumentBrowserVisible && (
+                                    <>
+                                        <i className="bi bi-box-arrow-right"></i>
+                                        &nbsp;&nbsp;show sidebar
+                                    </>
+                                )}
+                            </Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
                     <Dropdown className={'me-1'}>
                         <Dropdown.Toggle id="dropdown-basic" as="div">
                             <Button variant="outline-primary" style={{textAlign: 'right'}}>
@@ -121,31 +148,6 @@ function MainHeader({handleExpandSidebar: handleExpandSidebar, isDocumentBrowser
                             {filteredDatabases.map((db, index) =>
                                 <Dropdown.Item key={index} onClick={() => onSelectDatabase(db.name)} href={`#/book-${index + 1}`}>{db.name}</Dropdown.Item>
                             )}
-                        </Dropdown.Menu>
-                    </Dropdown>
-                    <Dropdown className={'me-1'}>
-                        <Dropdown.Toggle id="dropdown-settings" as="div">
-                            <Button variant="outline-primary" style={{textAlign: 'right'}}>
-                                <i className="bi bi-gear"></i>
-                            </Button>
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu style={{maxHeight: '500px', overflow: 'auto'}}>
-                            <Dropdown.Item key="0" onClick={() => handleExpandSidebar()}>
-
-                                {isDocumentBrowserVisible && (
-                                    <>
-                                        <i className="bi bi-box-arrow-left"></i>
-                                        &nbsp;&nbsp;hide sidebar
-                                    </>
-                                )}
-
-                                {!isDocumentBrowserVisible && (
-                                    <>
-                                        <i className="bi bi-box-arrow-right"></i>
-                                        &nbsp;&nbsp;show sidebar
-                                    </>
-                                )}
-                            </Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
                 </Nav>
