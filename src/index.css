@@ -94,6 +94,10 @@ span.rpv-core__text-layer-text::selection {
   height: 100%;
 }
 
+.form-control {
+  border-radius: 0 !important;
+}
+
 .modal-content {
   border-radius: 0 !important;
 }
@@ -106,6 +110,17 @@ span.rpv-core__text-layer-text::selection {
 .list-group-item:first-child {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+}
+
+
+.btn {
+  border-radius: 0 !important;
+}
+
+.btn-primary {
+  background-color: #44abb6 !important;
+  color: #000000 !important;
+  border: 0 !important;
 }
 
 .btn-outline-primary {
@@ -124,7 +139,6 @@ span.rpv-core__text-layer-text::selection {
   background-color: transparent;
   border-color: transparent;
 }
-
 
 .btn-check:checked + .btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check) + .btn:active {
   border-color: transparent !important;
@@ -149,6 +163,14 @@ span.rpv-core__text-layer-text::selection {
   font-variant-caps: all-small-caps;
 }
 
+.nav-link {
+  color: #44abb6
+}
+
 .dropdown-toggle::after {
   vertical-align: middle;
+}
+
+.dropdown-menu {
+  border-radius: 0 !important;
 }

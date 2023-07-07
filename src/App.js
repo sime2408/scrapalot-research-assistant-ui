@@ -318,7 +318,7 @@ function App() {
                                 />
                             </Tab>
                             <Tab eventKey="scratchpad" title="scratchpad">
-                                <Scratchpad/>
+                                <Scratchpad darkMode={darkMode}/>
                             </Tab>
                         </Tabs>
                     </div>

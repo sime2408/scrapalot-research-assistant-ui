@@ -69,7 +69,16 @@ const Scratchpad = (props) => {
         <div style={{padding: '8px 8px 8px 0', height: 'calc(100vh - 134px)'}}>
             <MenuBar editor={editor}/>
             <div className={styles.scratchpad}>
-                <div className={styles.scratchpadTextEditor}>
+                <div className={styles.scratchpadTextEditor}
+                    style={
+                        props.darkMode ? {
+                                backgroundColor: '#5c676c',
+                                padding: '8px'
+                            } : {
+                                backgroundColor: 'whitesmoke',
+                                padding: '8px'
+                            }
+                    }>
                     <EditorContent editor={editor} />
                 </div>
             </div>
