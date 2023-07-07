@@ -110,6 +110,7 @@ span.rpv-core__text-layer-text::selection {
 .btn-outline-primary {
   color: #fdc446;
   border-color: transparent;
+  padding-right: 4px;
 }
 
 .btn-outline-primary:hover,
@@ -142,4 +143,8 @@ span.rpv-core__text-layer-text::selection {
   border: 0 solid transparent;
   border-radius: 0;
   padding: 8px 16px;
+}
+
+.dropdown-toggle::after {
+  vertical-align: middle;
 }

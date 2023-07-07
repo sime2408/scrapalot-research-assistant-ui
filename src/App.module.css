@@ -8,6 +8,11 @@
   overflow: hidden;
 }
 
+.appColNoPadding {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 /* tabs theme modes */
 
 .appDarkModeTab {
@@ -36,7 +41,6 @@
   overflow: auto;
   height: 100%; /* Full height of the parent (.containerFluid) */
   position: relative; /* This is added to create a new containing block for absolute positioning */
-  padding-left: 20px;
 }
 
 /* document viewer */

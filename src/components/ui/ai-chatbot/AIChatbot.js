@@ -296,7 +296,7 @@ const AIChatbot = (props) => {
     };
 
     return (
-        <div style={{padding: '8px 6px', height: 'calc(100vh - 134px)'}}>
+        <div style={{padding: '8px 8px 8px 0', height: 'calc(100vh - 134px)'}}>
             <div className={styles.aiChatbotToolbar}>
                 <OverlayTrigger
                     style={{cursor: 'pointer'}}

@@ -46,7 +46,7 @@
   overflow-y: auto;
   margin-top: 10px;
   max-height: calc(100% - 50px);
-  padding: 0 5px
+  padding: 0 5px 0 0;
 }
 
 .aiChatbotMessage {

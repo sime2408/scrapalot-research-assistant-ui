@@ -224,14 +224,10 @@ function App() {
                                  {
                                      borderRight: "1px solid #41494d",
                                      overflowY: 'hidden',
-                                     paddingLeft: '14px',
-                                     paddingRight: '0',
                                  } :
                                  {
                                      borderRight: "1px solid rgb(229 229 229)",
                                      overflowY: 'hidden',
-                                     paddingLeft: '14px',
-                                     paddingRight: '0',
                                  }}>
                             <Tabs
                                 justify
@@ -242,7 +238,8 @@ function App() {
                                 className={`${styles.appDocumentViewerColumn} ${darkMode ? themes.darkThemePrimary : themes.lightThemePrimary}`}
                                 style={{
                                     height: '42px',
-                                    padding: '0'
+                                    padding: '0',
+                                    marginRight: '-12px'
                                 }}
                             >
                                 <Tab eventKey="browse" title="my documents">
@@ -264,14 +261,17 @@ function App() {
                             </Tabs>
                         </div>
                     )}
-                    <div className={`${columnClasses.middle} ${styles.appDocumentViewerColumn} ${darkMode ? themes.darkThemePrimary : themes.lightThemeDefault}`}
-                        style={ isDocumentBrowserVisible ?
-                            {
-                                paddingLeft: '0'
+                    <div className={`d-flex justify-content-center align-items-center ${columnClasses.middle} ${styles.appDocumentViewerColumn} ${darkMode ? themes.darkThemePrimary : themes.lightThemeDefault}`}
+                        style={
+                            isDocumentBrowserVisible ? {
+                                paddingLeft: '0',
+                                paddingRight: '0'
                             } : {
-                                paddingLeft: '12px'
+                                paddingLeft: '12px',
+                                paddingRight: '0'
                             }
-                        }>
+                        }
+                        >
                         <DocumentViewer
                             selectedDatabase={selectedDatabase}
                             selectedDocument={selectedDocument}
@@ -281,20 +281,14 @@ function App() {
                         />
                     </div>
                     <div className={`${columnClasses.right} ${darkMode ? themes.darkThemeSecondary : themes.lightThemePrimary}`}
-                         style={{
-                             ...{
+                         style={
+                             {
                                  borderLeft: darkMode ? "1px solid #41494d" : "1px solid rgb(229 229 229)",
                                  overflowY: 'hidden',
-                                 paddingRight: '12px',
                                  display: 'flex',
                                  flexDirection: 'column',
-                             },
-                             ...isDocumentBrowserVisible ? {
-                                 paddingLeft: '0'
-                             } : {
-                                 paddingLeft: '12px'
                              }
-                         }}>
+                         }>
                         <Tabs
                             justify
                             activeKey={activeTabRightKey}
@@ -302,7 +296,11 @@ function App() {
                             transition={false}
                             id="controlled-tab-example"
                             className={`${styles.appDocumentViewerColumn} ${darkMode ? themes.darkThemePrimary : themes.lightThemePrimary}`}
-                            style={{height: '42px', padding: '0'}}
+                            style={{
+                                height: '42px',
+                                padding: '0',
+                                marginLeft: '-12px'
+                            }}
                         >
                             <Tab eventKey="chatbot" title="chat">
                                 <AIChatbot

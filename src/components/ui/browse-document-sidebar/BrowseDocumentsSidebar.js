@@ -113,7 +113,7 @@ function BrowseDocumentsSidebar({onSearch, setSelectedDocument, onSelectDatabase
     );
 
     return (
-        <div style={{padding: '8px'}}>
+        <div style={{padding: '12px 0px 8px 12px'}}>
             <div style={{width: "100%"}}>
                 <InputGroup className={styles.inputGroup}>
                     <OverlayTrigger
