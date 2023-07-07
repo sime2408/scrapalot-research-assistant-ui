@@ -177,15 +177,40 @@ function App() {
     }
 
     // scratchpad
-
     const [isDocumentBrowserVisible, setIsDocumentBrowserVisible] = useState(true);
-    const handleExpandScratchpad = () => {
-        setIsDocumentBrowserVisible(!isDocumentBrowserVisible);
-    }
+
+    const [columnClasses, setColumnClasses] = useState({
+        left: 'col-2',
+        middle: 'col-7',
+        right: 'col-3'
+    });
+
+    const handleExpandSidebar = () => {
+        setIsDocumentBrowserVisible(prevIsDocumentBrowserVisible => {
+            if (prevIsDocumentBrowserVisible) {
+                setColumnClasses({
+                    left: 'col-0',
+                    middle: 'col-6',
+                    right: 'col-6'
+                });
+            } else {
+                setColumnClasses({
+                    left: 'col-2',
+                    middle: 'col-7',
+                    right: 'col-3'
+                });
+            }
+
+            return !prevIsDocumentBrowserVisible;
+        });
+    };
+
 
     return (
         <div className={styles.appMainContainer}>
             <MainHeader
+                handleExpandSidebar={handleExpandSidebar}
+                isDocumentBrowserVisible={isDocumentBrowserVisible}
                 onSelectDatabase={handleSelectDatabase}
                 selectedDatabase={selectedDatabase}
                 databases={databases}
@@ -193,50 +218,60 @@ function App() {
                 darkMode={darkMode}/>
             <div className={`container-fluid ${styles.appContainerFluid}`}>
                 <div className="row">
-                    <div className={`col-2 ${styles.appLeftSidebarColumn} ${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemeDefault}`}
-                         style={darkMode ?
-                             {
-                                 borderRight: "1px solid #41494d",
-                                 overflowY: 'hidden',
-                                 paddingLeft: '14px',
-                                 paddingRight: '0',
-                             } :
-                             {
-                                 borderRight: "1px solid rgb(229 229 229)",
-                                 overflowY: 'hidden',
-                                 paddingLeft: '14px',
-                                 paddingRight: '0',
-                             }}>
-
-                        {isDocumentBrowserVisible &&
+                    {isDocumentBrowserVisible && (
+                        <div className={`${columnClasses.left} ${styles.appLeftSidebarColumn} ${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemeDefault}`}
+                             style={darkMode ?
+                                 {
+                                     borderRight: "1px solid #41494d",
+                                     overflowY: 'hidden',
+                                     paddingLeft: '14px',
+                                     paddingRight: '0',
+                                 } :
+                                 {
+                                     borderRight: "1px solid rgb(229 229 229)",
+                                     overflowY: 'hidden',
+                                     paddingLeft: '14px',
+                                     paddingRight: '0',
+                                 }}>
                             <Tabs
-                            justify
-                            activeKey={activeTabLeftKey}
-                            onSelect={(k) => setActiveTabLeftKey(k)}
-                            transition={false}
-                            id="controlled-tab-example"
-                            className={`${styles.appDocumentViewerColumn} ${darkMode ? themes.darkThemePrimary : themes.lightThemePrimary}`}
-                            style={{height: '42px', padding: '0'}}
-                        >
-                            <Tab eventKey="browse" title="my documents">
-                                <BrowseDocumentsSidebar
-                                    onSearch={onSearch}
-                                    setSelectedDocument={setSelectedDocument}
-                                    onSelectDatabase={handleSelectDatabase}
-                                    selectedDatabase={selectedDatabase}
-                                    searchTerm={searchTerm}
-                                    databases={databases}
-                                    setSelectedDocumentInitialPage={setSelectedDocumentInitialPage}
-                                    darkMode={darkMode}
-                                />
-                                <WebDocumentSidebar/>
-                            </Tab>
-                            <Tab eventKey="search" title="search web">
-                                Tab content for Search
-                            </Tab>
-                        </Tabs>}
-                    </div>
-                    <div className={`col-7 ${styles.appDocumentViewerColumn} ${darkMode ? themes.darkThemePrimary : themes.lightThemeDefault}`}>
+                                justify
+                                activeKey={activeTabLeftKey}
+                                onSelect={(k) => setActiveTabLeftKey(k)}
+                                transition={false}
+                                id="controlled-tab-example"
+                                className={`${styles.appDocumentViewerColumn} ${darkMode ? themes.darkThemePrimary : themes.lightThemePrimary}`}
+                                style={{
+                                    height: '42px',
+                                    padding: '0'
+                                }}
+                            >
+                                <Tab eventKey="browse" title="my documents">
+                                    <BrowseDocumentsSidebar
+                                        onSearch={onSearch}
+                                        setSelectedDocument={setSelectedDocument}
+                                        onSelectDatabase={handleSelectDatabase}
+                                        selectedDatabase={selectedDatabase}
+                                        searchTerm={searchTerm}
+                                        databases={databases}
+                                        setSelectedDocumentInitialPage={setSelectedDocumentInitialPage}
+                                        darkMode={darkMode}
+                                    />
+                                    <WebDocumentSidebar/>
+                                </Tab>
+                                <Tab eventKey="search" title="search web">
+                                    Tab content for Search
+                                </Tab>
+                            </Tabs>
+                        </div>
+                    )}
+                    <div className={`${columnClasses.middle} ${styles.appDocumentViewerColumn} ${darkMode ? themes.darkThemePrimary : themes.lightThemeDefault}`}
+                        style={ isDocumentBrowserVisible ?
+                            {
+                                paddingLeft: '0'
+                            } : {
+                                paddingLeft: '12px'
+                            }
+                        }>
                         <DocumentViewer
                             selectedDatabase={selectedDatabase}
                             selectedDocument={selectedDocument}
@@ -245,26 +280,21 @@ function App() {
                             darkMode={darkMode}
                         />
                     </div>
-                    <div className={`col-3 ${darkMode ? themes.darkThemeSecondary : themes.lightThemePrimary}`}
-                         style={darkMode ?
-                             {
-                                 borderLeft: "1px solid #41494d",
+                    <div className={`${columnClasses.right} ${darkMode ? themes.darkThemeSecondary : themes.lightThemePrimary}`}
+                         style={{
+                             ...{
+                                 borderLeft: darkMode ? "1px solid #41494d" : "1px solid rgb(229 229 229)",
                                  overflowY: 'hidden',
-                                 paddingLeft: '0',
                                  paddingRight: '12px',
                                  display: 'flex',
                                  flexDirection: 'column',
-                                 // justifyContent: 'space-between',
-                             } :
-                             {
-                                 borderLeft: "1px solid rgb(229 229 229)",
-                                 overflowY: 'hidden',
-                                 paddingLeft: '0',
-                                 paddingRight: '12px',
-                                 display: 'flex',
-                                 flexDirection: 'column',
-                                 // justifyContent: 'space-between',
-                             }}>
+                             },
+                             ...isDocumentBrowserVisible ? {
+                                 paddingLeft: '0'
+                             } : {
+                                 paddingLeft: '12px'
+                             }
+                         }}>
                         <Tabs
                             justify
                             activeKey={activeTabRightKey}
@@ -290,9 +320,7 @@ function App() {
                                 />
                             </Tab>
                             <Tab eventKey="scratchpad" title="scratchpad">
-                                <Scratchpad
-                                    handleExpandScratchpad={handleExpandScratchpad}
-                                />
+                                <Scratchpad/>
                             </Tab>
                         </Tabs>
                     </div>

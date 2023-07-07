@@ -44,7 +44,6 @@
 .appDocumentViewerColumn {
   height: 100%;
   position: relative;
-  padding-left: 0;
 }
 
 :global(.btn) {

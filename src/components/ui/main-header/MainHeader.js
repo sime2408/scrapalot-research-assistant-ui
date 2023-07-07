@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Col, Dropdown, Form, Modal, Nav, Navbar, Row, Spinner} from "react-bootstrap";
+import {Button, Col, Dropdown, Form, Modal, Nav, Navbar, OverlayTrigger, Row, Spinner, Tooltip} from "react-bootstrap";
 import axios from 'axios';
 
 import styles from "./MainHeader.module.css"
@@ -7,7 +7,7 @@ import themes from "../../themes/CustomThemeProvider.module.css"
 
 import logo from '../../../static/img/logo-icon.png';
 
-function MainHeader({onSelectDatabase, selectedDatabase, databases, toggleTheme, darkMode}) {
+function MainHeader({handleExpandSidebar: handleExpandSidebar, isDocumentBrowserVisible, onSelectDatabase, selectedDatabase, databases, toggleTheme, darkMode}) {
     const [search, setSearch] = useState('');
     const [show, setShow] = useState(false);
     const [file, setFile] = useState(null);
@@ -77,10 +77,6 @@ function MainHeader({onSelectDatabase, selectedDatabase, databases, toggleTheme,
         }
     }, [selectedDatabase, databases]);
 
-    const toggleDatabaseDropdown = () => {
-        setIsDatabaseDropdownOpen(!isDatabaseDropdownOpen);
-    }
-
     useEffect(() => {
         document.body.onclick = () => {
             setIsDatabaseDropdownOpen(false);
@@ -127,7 +123,31 @@ function MainHeader({onSelectDatabase, selectedDatabase, databases, toggleTheme,
                             )}
                         </Dropdown.Menu>
                     </Dropdown>
+                    <Dropdown className={'me-1'}>
+                        <Dropdown.Toggle id="dropdown-settings" as="div">
+                            <Button variant="outline-primary" style={{textAlign: 'right'}}>
+                                <i className="bi bi-gear"></i>
+                            </Button>
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu style={{maxHeight: '500px', overflow: 'auto'}}>
+                            <Dropdown.Item key="0" onClick={() => handleExpandSidebar()}>
 
+                                {isDocumentBrowserVisible && (
+                                    <>
+                                        <i className="bi bi-box-arrow-left"></i>
+                                        &nbsp;&nbsp;hide sidebar
+                                    </>
+                                )}
+
+                                {!isDocumentBrowserVisible && (
+                                    <>
+                                        <i className="bi bi-box-arrow-right"></i>
+                                        &nbsp;&nbsp;show sidebar
+                                    </>
+                                )}
+                            </Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
                 </Nav>
                 <div className={`${styles.mainHeaderToolbar}`}>
                     {darkMode ? (
