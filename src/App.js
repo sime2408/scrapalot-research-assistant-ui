@@ -242,7 +242,7 @@ function App() {
                                     marginRight: '-12px'
                                 }}
                             >
-                                <Tab eventKey="browse" title="my documents">
+                                <Tab eventKey="browse" title="documents">
                                     <BrowseDocumentsSidebar
                                         onSearch={onSearch}
                                         setSelectedDocument={setSelectedDocument}
