@@ -36,6 +36,14 @@ a {
 
 /* react-pdf-viewer */
 
+span.rpv-core__text-layer-text::selection {
+  background: #fdc446;
+}
+
+.rpv-core__text-layer {
+  top: 10px;
+}
+
 .rpv-core__inner-page {
   background-color: transparent !important;
 }
