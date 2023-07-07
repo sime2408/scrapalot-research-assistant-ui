@@ -4,3 +4,25 @@
   display: flex;
   align-items: center;
 }
+
+/* Scratchpad editor */
+
+.scratchpad {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 12px 0 8px 0;
+}
+
+.scratchpad a {
+  color: #44abb6;
+  font-weight: bold;
+}
+
+.scratchpadTextEditor {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-top: 10px;
+  max-height: calc(100% - 50px);
+  padding: 0 5px 0 0;
+}
