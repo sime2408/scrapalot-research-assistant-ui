@@ -13,12 +13,12 @@ body,
 
 ::-moz-selection { /* Code for Firefox */
   color: black;
-  background: #fdc446;
+  background: rgba(253, 196, 70, 0.5);
 }
 
 ::selection {
   color: black;
-  background: #fdc446;
+  background: rgba(253, 196, 70, 0.5);
 }
 
 ::-webkit-scrollbar {
@@ -120,6 +120,10 @@ span.rpv-core__text-layer-text::selection {
 .btn-primary {
   background-color: #44abb6 !important;
   color: #000000 !important;
+  border: 0 !important;
+}
+
+.btn-secondary {
   border: 0 !important;
 }
 

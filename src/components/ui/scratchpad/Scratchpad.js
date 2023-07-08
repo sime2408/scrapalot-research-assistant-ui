@@ -66,7 +66,7 @@ const Scratchpad = (props) => {
     };
 
     return (
-        <div style={{padding: '8px 8px 8px 0', height: 'calc(100vh - 134px)'}}>
+        <div style={{padding: '8px 8px 8px 0', height: 'calc(100vh - 114px)'}}>
             <MenuBar editor={editor}/>
             <div className={styles.scratchpad}>
                 <div className={styles.scratchpadTextEditor}
@@ -84,9 +84,13 @@ const Scratchpad = (props) => {
                     <EditorContent editor={editor} />
                 </div>
                 <div className={styles.scratchpadButtonsContainer}>
-                    <InputGroup className={styles.scratchpadButtons}>
-                        <Button variant="primary" className="me-2">cite</Button>
-                        <Button variant="secondary">summarize</Button>
+                    <InputGroup className={`d-flex justify-content-between ${styles.scratchpadButtons}`}>
+                        <div className="flex-grow-1 me-2">
+                            <Button variant="primary" className="me-2" style={{width: '100%'}}>save</Button>
+                        </div>
+                        <div className="flex-grow-1">
+                            <Button variant="secondary" style={{width: '100%'}}>summarize</Button>
+                        </div>
                     </InputGroup>
                 </div>
             </div>
