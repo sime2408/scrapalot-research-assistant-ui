@@ -14,7 +14,7 @@ function BrowseDocumentsSidebar({onSearch, setSelectedDocument, onSelectDatabase
     // Fetch abort controller
     const abortController = new AbortController();
 
-
+    // this one refreshes the database if it's selected from other components
     useEffect(() => {
         if (selectedDatabase) {
             fetchDatabaseDocuments(selectedDatabase);

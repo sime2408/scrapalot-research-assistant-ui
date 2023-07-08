@@ -43,7 +43,8 @@ function DocumentViewer({ selectedDatabase, selectedDocument, setSelectedDocumen
                     {fileType === "pdf" && (
                         <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
                             <ViewerWrapper
-                                key={`${selectedDocument.name}-${selectedDocumentInitialPage}`} // make sure that react re-render each Footnote click
+                                // make sure that react re-render each Footnote click
+                                key={`${selectedDocument.name}-${selectedDocumentInitialPage}`}
                                 className={styles.filePdfViewer}
                                 fileUrl={`${process.env.REACT_APP_API_BASE_URL}/database/${selectedDatabase}/file/${selectedDocument.name}`}
                                 initialPage={selectedDocumentInitialPage}
