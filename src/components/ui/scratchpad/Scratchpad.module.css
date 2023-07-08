@@ -3,6 +3,7 @@
 .scratchpadToolbar {
   display: flow-root;
   align-items: center;
+  text-align: center;
 }
 
 /* Scratchpad editor */
@@ -37,11 +38,10 @@ blockquote p {
   font-weight: bold;
 }
 
-
 .scratchpadTextEditor {
   flex-grow: 1;
   overflow-y: auto;
-  max-height: calc(100% - 40px);
+  max-height: calc(100% - 50px);
   padding: 0 5px 0 0;
 }
 
@@ -62,7 +62,7 @@ blockquote p {
 .scratchpadButtons {
   position: relative;
   width: 100%;
-  margin-top: 5px;
+  margin-top: 10px;
   justify-content: center;
 }
 

@@ -66,7 +66,7 @@ const Scratchpad = (props) => {
     };
 
     return (
-        <div style={{padding: '8px 8px 8px 0', height: 'calc(100vh - 114px)'}}>
+        <div style={{padding: '8px 12px 8px 0', height: 'calc(100vh - 114px)'}}>
             <MenuBar editor={editor}/>
             <div className={styles.scratchpad}>
                 <div className={styles.scratchpadTextEditor}
