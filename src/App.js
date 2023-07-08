@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useContext, useEffect, useState} from "react";
 import {Tab, Tabs} from 'react-bootstrap';
 import debounce from 'lodash.debounce';
 import Cookies from 'js-cookie';
@@ -12,8 +12,13 @@ import Scratchpad from './components/ui/scratchpad/Scratchpad';
 
 import styles from "./App.module.css";
 import themes from './components/themes/CustomThemeProvider.module.css';
+import {ScrapalotLoadingContext} from './components/utils/ScrapalotLoadingContext';
+import ScrapalotSpinner from './components/utils/ScrapalotSpinner';
 
 function App() {
+
+    // loading
+    const { setLoading } = useContext(ScrapalotLoadingContext);
 
     // application theme
     const [darkMode, setDarkMode] = useState(() => {
@@ -115,6 +120,7 @@ function App() {
 
     const fetchDatabasesAndCollections = useCallback(async (url, retryCount = 5, interval = 2000) => {
         for (let i = 0; i < retryCount; i++) {
+            setLoading(true);
             try {
                 const response = await fetch(url);
                 const data = await response.json();
@@ -123,9 +129,11 @@ function App() {
                     collections: database.collections
                 }));
                 setDatabases(transformedData);
+                setLoading(false);
                 break; // Exit the loop if the fetch request was successful
             } catch (error) {
                 if (i === retryCount - 1) {
+                    setLoading(false);
                     console.error('Failed to fetch databases:', error);
                 } else {
                     console.log(`Retrying in ${interval}ms... (${retryCount - i - 1} tries left)`);
@@ -332,8 +340,7 @@ function App() {
                     </div>
                 </div>
             </div>
-
-
+            <ScrapalotSpinner/>
         </div>
     );
 }

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {SpecialZoomLevel, Viewer, Worker} from "@react-pdf-viewer/core";
 
 import {defaultLayoutPlugin} from '@react-pdf-viewer/default-layout';
@@ -22,6 +22,7 @@ const ViewerWrapper = ({ fileUrl, initialPage, theme }) => {
 };
 
 function DocumentViewer({ selectedDatabase, selectedDocument, setSelectedDocument, selectedDocumentInitialPage, darkMode }) {
+
     // file type state
     const [fileType, setFileType] = useState(null);
 
