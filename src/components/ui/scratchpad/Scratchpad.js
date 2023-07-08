@@ -1,5 +1,5 @@
 import React from "react";
-import {OverlayTrigger, Tooltip} from 'react-bootstrap';
+import {Button, InputGroup, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import styles from './Scratchpad.module.css';
 import {StarterKit} from '@tiptap/starter-kit';
 import {EditorContent, useEditor} from '@tiptap/react';
@@ -73,13 +73,21 @@ const Scratchpad = (props) => {
                     style={
                         props.darkMode ? {
                                 backgroundColor: '#5c676c',
-                                padding: '8px'
+                                padding: '8px',
+                                borderRadius: '4px'
                             } : {
                                 backgroundColor: 'whitesmoke',
-                                padding: '8px'
+                                padding: '8px',
+                                borderRadius: '4px'
                             }
                     }>
                     <EditorContent editor={editor} />
+                </div>
+                <div className={styles.scratchpadButtonsContainer}>
+                    <InputGroup className={styles.scratchpadButtons}>
+                        <Button variant="primary" className="me-2">cite</Button>
+                        <Button variant="secondary">summarize</Button>
+                    </InputGroup>
                 </div>
             </div>
         </div>

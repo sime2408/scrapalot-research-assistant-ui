@@ -1,7 +1,7 @@
 /* Scratchpad toolbar */
 
 .scratchpadToolbar {
-  display: flex;
+  display: flow-root;
   align-items: center;
 }
 
@@ -22,7 +22,21 @@
 .scratchpadTextEditor {
   flex-grow: 1;
   overflow-y: auto;
-  margin-top: 10px;
   max-height: calc(100% - 50px);
   padding: 0 5px 0 0;
+}
+
+.scratchpadButtonsContainer {
+
+}
+
+.scratchpadButtons {
+  position: relative;
+  width: 100%;
+  margin-top: 5px;
+  justify-content: center;
+}
+
+.scratchpadButtons button {
+  font-variant-caps: all-small-caps;
 }
