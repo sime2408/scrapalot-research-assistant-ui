@@ -1,12 +1,11 @@
 import React from 'react';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 
-function Footnote({index, link, content, page, setSelectedDatabase, setSelectedDocument, handleFootnoteClick, footnoteLastClickedIndex, setFootnoteLastClickedIndex, messageIndex}) {
+function Footnote({index, link, content, page, handleFootnoteClick, footnoteLastClickedIndex, setFootnoteLastClickedIndex, messageIndex}) {
 
     const handleClick = (databaseName, fileName, page) => {
-        setSelectedDatabase(databaseName);
-        setSelectedDocument({name: fileName});
-        handleFootnoteClick(content, page, messageIndex);
+        const selectedDocument = {name: fileName};
+        handleFootnoteClick(content, page, messageIndex, databaseName, selectedDocument);
         setFootnoteLastClickedIndex({messageIndex: messageIndex, footnoteIndex: index});
     };
 

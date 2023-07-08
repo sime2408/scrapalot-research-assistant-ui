@@ -14,7 +14,6 @@ import ScrapalotCookieSwitch from '../../utils/ScrapalotCookieSwitch';
 import MessagesList from './MessagesList';
 
 const AIChatbot = (props) => {
-// function AIChatbot({locale, setLocale, setSelectedDatabase, setSelectedDocument, onFootnoteClick, db_name, db_collection_name, messages, setMessages, darkMode}) {
 
     const [inputText, setInputText] = useState("");
     const [inputValid, setInputValid] = useState(true);
@@ -95,9 +94,9 @@ const AIChatbot = (props) => {
         }
     };
 
-    const handleFootnoteClick = (content, pageNumber, messageIndex) => {
+    const handleFootnoteClick = (content, pageNumber, messageIndex, selectedDatabase, selectedDocument) => {
         setFootnoteContent({content, messageIndex});
-        props.onFootnoteClick(pageNumber - 1); // subtract 1 because PDF.js uses zero-based index
+        props.handleFootnoteClick(content, pageNumber - 1, messageIndex, selectedDatabase, selectedDocument); // subtract 1 because PDF.js uses zero-based index
     };
 
     // dark theme backgrounds
@@ -168,8 +167,6 @@ const AIChatbot = (props) => {
                 <MessagesList
                     messages={props.messages}
                     setMessages={props.setMessages}
-                    setSelectedDatabase={props.setSelectedDatabase}
-                    setSelectedDocument={props.setSelectedDocument}
                     handleFootnoteClick={handleFootnoteClick}
                     footnoteContent={footnoteContent}
                     darkMode={props.darkMode}

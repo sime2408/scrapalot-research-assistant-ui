@@ -87,9 +87,7 @@ const MessagesList = (props) => {
                                                 link={doc["link"]}
                                                 content={doc["content"]}
                                                 page={doc["page"] || 0}
-                                                setSelectedDatabase={props.setSelectedDatabase}
-                                                setSelectedDocument={props.setSelectedDocument}
-                                                handleFootnoteClick={(content, page) => props.handleFootnoteClick(content, page, index)}
+                                                handleFootnoteClick={props.handleFootnoteClick}
                                                 footnoteLastClickedIndex={footnoteLastClickedIndex}
                                                 setFootnoteLastClickedIndex={setFootnoteLastClickedIndex}
                                                 messageIndex={index}

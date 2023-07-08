@@ -142,11 +142,10 @@ function App() {
     const handleSelectDatabase = (dbName) => {
         setSelectedDatabase(dbName);
         Cookies.set('scrapalot-selected-db', dbName, {expires: 7});
+        if (!footnoteClicked) {
+            setSelectedDocument(null);
+        }
     };
-
-    useEffect(() => {
-        setSelectedDocument(null);
-    }, [selectedDatabase]);
 
     const handleSelectDocument = (document) => {
         setSelectedDocument(document);
@@ -162,9 +161,20 @@ function App() {
         setMessages([]);
         localStorage.removeItem('scrapalot-chat-messages');
     };
-    const handleFootnoteClick = (pageNumber) => {
+
+    // Add a new state variable to track if a footnote has been clicked
+    const [footnoteClicked, setFootnoteClicked] = useState(false);
+
+    const handleFootnoteClick = (content, pageNumber, index, selectedDatabase, selectedDocument) => {
+        setFootnoteClicked(true);
+        handleSelectDatabase(selectedDatabase) // pass the triggeredBy parameter
+        handleSelectDocument(selectedDocument)
         setSelectedDocumentInitialPage(pageNumber + 1); // Assuming pageNumber is zero-based
     };
+
+    useEffect(() => {
+        setFootnoteClicked(false);
+    }, [selectedDatabase]);
 
     // search through documents
 
@@ -307,9 +317,7 @@ function App() {
                                     handleClearMessages={handleClearMessages}
                                     locale={locale}
                                     setLocale={setLocale}
-                                    setSelectedDatabase={setSelectedDatabase}
-                                    setSelectedDocument={handleSelectDocument}
-                                    onFootnoteClick={handleFootnoteClick}
+                                    handleFootnoteClick={handleFootnoteClick}
                                     db_name={selectedDatabase}
                                     db_collection_name={selectedDatabase}
                                     messages={messages}
