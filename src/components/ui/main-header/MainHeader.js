@@ -7,7 +7,7 @@ import themes from "../../themes/CustomThemeProvider.module.css"
 
 import logo from '../../../static/img/logo-icon.png';
 
-function MainHeader({handleExpandSidebar: handleExpandSidebar, isDocumentBrowserVisible, onSelectDatabase, selectedDatabase, databases, toggleTheme, darkMode}) {
+function MainHeader({onSelectDatabase, selectedDatabase, databases, toggleTheme, darkMode}) {
     const [search, setSearch] = useState('');
     const [show, setShow] = useState(false);
     const [file, setFile] = useState(null);
@@ -107,21 +107,11 @@ function MainHeader({handleExpandSidebar: handleExpandSidebar, isDocumentBrowser
                             </Button>
                         </Dropdown.Toggle>
                         <Dropdown.Menu style={{maxHeight: '500px', overflow: 'auto'}}>
-                            <Dropdown.Item key="0" onClick={() => handleExpandSidebar()}>
-
-                                {isDocumentBrowserVisible && (
-                                    <>
-                                        <i className="bi bi-box-arrow-left"></i>
-                                        &nbsp;&nbsp;hide sidebar
-                                    </>
-                                )}
-
-                                {!isDocumentBrowserVisible && (
-                                    <>
-                                        <i className="bi bi-box-arrow-right"></i>
-                                        &nbsp;&nbsp;show sidebar
-                                    </>
-                                )}
+                            <Dropdown.Item key="0">
+                                <>
+                                    <i className="bi bi-robot"></i>
+                                    &nbsp;&nbsp;Configure LLM
+                                </>
                             </Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>

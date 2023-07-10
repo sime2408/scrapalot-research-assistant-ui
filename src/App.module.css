@@ -8,6 +8,11 @@
   overflow: hidden;
 }
 
+.appColumnDefaults {
+  height: 100%;
+  position: relative;
+}
+
 .appColNoPadding {
   padding-left: 0;
   padding-right: 0;
@@ -43,9 +48,9 @@
   position: relative; /* This is added to create a new containing block for absolute positioning */
 }
 
-/* document viewer */
-
-.appDocumentViewerColumn {
-  height: 100%;
-  position: relative;
+.appLeftSidebarToggleButton {
+  padding: 0 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px !important;
 }

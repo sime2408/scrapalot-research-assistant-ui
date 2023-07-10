@@ -1,5 +1,5 @@
 import React, {useCallback, useContext, useEffect, useState} from "react";
-import {Tab, Tabs} from 'react-bootstrap';
+import {Button, Tab, Tabs} from 'react-bootstrap';
 import debounce from 'lodash.debounce';
 import Cookies from 'js-cookie';
 
@@ -227,8 +227,6 @@ function App() {
     return (
         <div className={styles.appMainContainer}>
             <MainHeader
-                handleExpandSidebar={handleExpandSidebar}
-                isDocumentBrowserVisible={isDocumentBrowserVisible}
                 onSelectDatabase={handleSelectDatabase}
                 selectedDatabase={selectedDatabase}
                 databases={databases}
@@ -253,7 +251,7 @@ function App() {
                                 onSelect={(k) => setActiveTabLeftKey(k)}
                                 transition={false}
                                 id="controlled-tab-example"
-                                className={`${styles.appDocumentViewerColumn} ${darkMode ? themes.darkThemePrimary : themes.lightThemePrimary}`}
+                                className={`${styles.appColumnDefaults} ${darkMode ? themes.darkThemePrimary : themes.lightThemePrimary}`}
                                 style={{
                                     height: '42px',
                                     padding: '0',
@@ -269,6 +267,8 @@ function App() {
                                         searchTerm={searchTerm}
                                         databases={databases}
                                         setSelectedDocumentInitialPage={setSelectedDocumentInitialPage}
+                                        handleExpandSidebar={handleExpandSidebar}
+                                        isDocumentBrowserVisible={isDocumentBrowserVisible}
                                         darkMode={darkMode}
                                     />
                                     <WebDocumentSidebar/>
@@ -279,17 +279,16 @@ function App() {
                             </Tabs>
                         </div>
                     )}
-                    <div className={`d-flex justify-content-center align-items-center ${columnClasses.middle} ${styles.appDocumentViewerColumn} ${darkMode ? themes.darkThemePrimary : themes.lightThemeDefault}`}
-                        style={
-                            isDocumentBrowserVisible ? {
-                                paddingLeft: '0',
-                                paddingRight: '0'
-                            } : {
-                                paddingLeft: '12px',
-                                paddingRight: '0'
-                            }
-                        }
-                        >
+                    <div className={`d-flex justify-content-center align-items-center ${columnClasses.middle} ${styles.appColumnDefaults} ${darkMode ? themes.darkThemePrimary : themes.lightThemeDefault}`}
+                         style={
+                             isDocumentBrowserVisible ? {
+                                 paddingLeft: '0',
+                                 paddingRight: '0'
+                             } : {
+                                 paddingLeft: '12px',
+                                 paddingRight: '0'
+                             }
+                         }>
                         <DocumentViewer
                             selectedDatabase={selectedDatabase}
                             selectedDocument={selectedDocument}
@@ -313,7 +312,7 @@ function App() {
                             onSelect={(k) => setActiveTabRightKey(k)}
                             transition={false}
                             id="controlled-tab-example"
-                            className={`${styles.appDocumentViewerColumn} ${darkMode ? themes.darkThemePrimary : themes.lightThemePrimary}`}
+                            className={`${styles.appColumnDefaults} ${darkMode ? themes.darkThemePrimary : themes.lightThemePrimary}`}
                             style={{
                                 height: '42px',
                                 padding: '0',
@@ -339,6 +338,18 @@ function App() {
                         </Tabs>
                     </div>
                 </div>
+            </div>
+            <div style={{position: 'fixed', bottom: '10px', left: isDocumentBrowserVisible ? '320px' : '10px', zIndex: 9999}}>
+                {isDocumentBrowserVisible && (
+                    <Button onClick={handleExpandSidebar} className={styles.appLeftSidebarToggleButton}>
+                        <i className="bi bi-box-arrow-left"></i>
+                    </Button>
+                )}
+                {!isDocumentBrowserVisible && (
+                    <Button onClick={handleExpandSidebar} className={styles.appLeftSidebarToggleButton}>
+                        <i className="bi bi-box-arrow-right"></i>
+                    </Button>
+                )}
             </div>
             <ScrapalotSpinner/>
         </div>

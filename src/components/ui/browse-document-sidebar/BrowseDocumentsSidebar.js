@@ -4,7 +4,7 @@ import styles from "./BrowseDocumentsSidebar.module.css";
 import ScrapalotToggle from '../../utils/ScrapalotToggle';
 import themes from '../../themes/CustomThemeProvider.module.css';
 
-function BrowseDocumentsSidebar({onSearch, setSelectedDocument, onSelectDatabase, selectedDatabase, searchTerm, databases, setSelectedDocumentInitialPage, darkMode}) {
+function BrowseDocumentsSidebar({onSearch, setSelectedDocument, onSelectDatabase, selectedDatabase, searchTerm, databases, setSelectedDocumentInitialPage, darkMode, handleExpandSidebar, isDocumentBrowserVisible}) {
 
     // what happens when you click on the sidebar database/collection name
     const [openDatabase, setOpenDatabase] = useState('0');

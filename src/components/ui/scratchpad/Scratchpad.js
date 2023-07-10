@@ -10,7 +10,7 @@ const Scratchpad = (props) => {
         extensions: [
             StarterKit,
         ],
-        content: '<p>Hello World!</p>',
+        content: '<p></p>',
     });
 
     const MenuBar = ({ editor }) => {
