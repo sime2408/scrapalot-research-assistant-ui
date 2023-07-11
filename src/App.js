@@ -351,7 +351,7 @@ function App() {
                     </Button>
                 )}
             </div>
-            <ScrapalotSpinner/>
+            <ScrapalotSpinner darkMode={darkMode}/>
         </div>
     );
 }
