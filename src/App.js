@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useEffect, useState} from "react";
+import React, {useCallback, useContext, useEffect, useState, useReducer} from "react";
 import {Button, Tab, Tabs} from 'react-bootstrap';
 import debounce from 'lodash.debounce';
 import Cookies from 'js-cookie';
@@ -15,21 +15,32 @@ import themes from './components/themes/CustomThemeProvider.module.css';
 import {ScrapalotLoadingContext} from './components/utils/ScrapalotLoadingContext';
 import ScrapalotSpinner from './components/utils/ScrapalotSpinner';
 
+const initialThemeState = {
+    darkMode: Cookies.get('scrapalot-dark-mode') === 'true', // Convert the cookie value to a boolean
+};
+
+function themeReducer(state, action) {
+    switch (action.type) {
+        case 'TOGGLE_THEME':
+            const updatedDarkMode = !state.darkMode;
+            Cookies.set('scrapalot-dark-mode', updatedDarkMode.toString()); // Convert to string before setting the cookie
+            return { ...state, darkMode: updatedDarkMode };
+        default:
+            throw new Error(`Unsupported action type: ${action.type}`);
+    }
+}
+
 function App() {
 
     // loading
-    const { setLoading } = useContext(ScrapalotLoadingContext);
+    const {setLoading} = useContext(ScrapalotLoadingContext);
 
     // application theme
-    const [darkMode, setDarkMode] = useState(() => {
-        const storedDarkMode = Cookies.get('scrapalot-dark-mode');
-        return storedDarkMode === 'true'; // Convert the cookie value to a boolean
-    });
+    const [state, dispatch] = useReducer(themeReducer, initialThemeState);
+    const { darkMode } = state;
 
     const toggleTheme = () => {
-        const updatedDarkMode = !darkMode;
-        setDarkMode(updatedDarkMode);
-        Cookies.set('scrapalot-dark-mode', updatedDarkMode.toString()); // Convert to string before setting the cookie
+        dispatch({ type: 'TOGGLE_THEME' });
     };
 
     useEffect(() => {
@@ -271,24 +282,24 @@ function App() {
                                         isDocumentBrowserVisible={isDocumentBrowserVisible}
                                         darkMode={darkMode}
                                     />
-                                    <WebDocumentSidebar/>
                                 </Tab>
                                 <Tab eventKey="search" title="search web">
-                                    Tab content for Search
+                                    <WebDocumentSidebar/>
                                 </Tab>
                             </Tabs>
                         </div>
                     )}
-                    <div className={`d-flex justify-content-center align-items-center ${columnClasses.middle} ${styles.appColumnDefaults} ${darkMode ? themes.darkThemePrimary : themes.lightThemeDefault}`}
-                         style={
-                             isDocumentBrowserVisible ? {
-                                 paddingLeft: '0',
-                                 paddingRight: '0'
-                             } : {
-                                 paddingLeft: '12px',
-                                 paddingRight: '0'
-                             }
-                         }>
+                    <div
+                        className={`d-flex justify-content-center align-items-center ${columnClasses.middle} ${styles.appColumnDefaults} ${darkMode ? themes.darkThemePrimary : themes.lightThemeDefault}`}
+                        style={
+                            isDocumentBrowserVisible ? {
+                                paddingLeft: '0',
+                                paddingRight: '0'
+                            } : {
+                                paddingLeft: '12px',
+                                paddingRight: '0'
+                            }
+                        }>
                         <DocumentViewer
                             selectedDatabase={selectedDatabase}
                             selectedDocument={selectedDocument}

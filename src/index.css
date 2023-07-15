@@ -41,10 +41,6 @@ span.rpv-core__text-layer-text::selection {
   background: #fdc446;
 }
 
-.rpv-core__text-layer {
-  top: 10px;
-}
-
 .rpv-core__inner-page {
   background-color: transparent !important;
 }
@@ -82,6 +78,14 @@ span.rpv-core__text-layer-text::selection {
 
 .rpv-core__minimal-button--selected:hover {
   color: white;
+}
+
+.rpv-core__text-layer {
+  top: 10px;
+}
+
+.rpv-highlight__selected-text {
+  background: rgba(253, 196, 70, 0.5);
 }
 
 /* bootstrap */

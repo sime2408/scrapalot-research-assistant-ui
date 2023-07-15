@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from "react";
-import {Icon, SpecialZoomLevel, Viewer, Worker} from "@react-pdf-viewer/core";
+import React, {ReactElement, useEffect, useState} from "react";
+import {Button, Icon, Position, SpecialZoomLevel, Tooltip, Viewer, Worker} from "@react-pdf-viewer/core";
 
 import {defaultLayoutPlugin} from '@react-pdf-viewer/default-layout';
 
 import styles from "./DocumentViewer.module.css";
-import {ReactElement} from 'react';
+import {highlightPlugin, MessageIcon, RenderHighlightTargetProps} from '@react-pdf-viewer/highlight';
 
 const renderToolbar = (Toolbar: (props) => ReactElement) => (
     <Toolbar>
@@ -30,35 +30,35 @@ const renderToolbar = (Toolbar: (props) => ReactElement) => (
                         width: '100%',
                     }}
                 >
-                    <div style={{ padding: '0px 2px' }}>
-                        <ShowSearchPopover />
+                    <div style={{padding: '0px 2px'}}>
+                        <ShowSearchPopover/>
                     </div>
-                    <div style={{ padding: '0px 2px' }}>
-                        <ZoomOut />
+                    <div style={{padding: '0px 2px'}}>
+                        <ZoomOut/>
                     </div>
-                    <div style={{ padding: '0px 2px' }}>
-                        <Zoom />
+                    <div style={{padding: '0px 2px'}}>
+                        <Zoom/>
                     </div>
-                    <div style={{ padding: '0px 2px' }}>
-                        <ZoomIn />
+                    <div style={{padding: '0px 2px'}}>
+                        <ZoomIn/>
                     </div>
-                    <div style={{ padding: '0px 2px', marginLeft: 'auto' }}>
-                        <GoToPreviousPage />
+                    <div style={{padding: '0px 2px', marginLeft: 'auto'}}>
+                        <GoToPreviousPage/>
                     </div>
-                    <div style={{ padding: '0px 2px', display: 'contents' }}>
-                        <CurrentPageInput /> / <NumberOfPages />
+                    <div style={{padding: '0px 2px', display: 'contents'}}>
+                        <CurrentPageInput/> / <NumberOfPages/>
                     </div>
-                    <div style={{ padding: '0px 2px' }}>
-                        <GoToNextPage />
+                    <div style={{padding: '0px 2px'}}>
+                        <GoToNextPage/>
                     </div>
-                    <div style={{ padding: '0px 2px', marginLeft: 'auto' }}>
-                        <EnterFullScreen />
+                    <div style={{padding: '0px 2px', marginLeft: 'auto'}}>
+                        <EnterFullScreen/>
                     </div>
-                    <div style={{ padding: '0px 2px' }}>
-                        <Download />
+                    <div style={{padding: '0px 2px'}}>
+                        <Download/>
                     </div>
-                    <div style={{ padding: '0px 2px' }}>
-                        <Print />
+                    <div style={{padding: '0px 2px'}}>
+                        <Print/>
                     </div>
                 </div>
             );
@@ -66,7 +66,32 @@ const renderToolbar = (Toolbar: (props) => ReactElement) => (
     </Toolbar>
 );
 
-const ViewerWrapper = ({ fileUrl, initialPage, theme }) => {
+const renderHighlightTarget = (props: RenderHighlightTargetProps) => (
+    <div
+        style={{
+            background: '#eee',
+            display: 'flex',
+            position: 'absolute',
+            left: `${props.selectionRegion.left}%`,
+            top: `${props.selectionRegion.top + props.selectionRegion.height}%`,
+            transform: 'translate(0, 8px)',
+            zIndex: 1,
+        }}
+    >
+        <Tooltip
+            position={Position.TopCenter}
+            target={
+                <Button onClick={props.toggle}>
+                    <MessageIcon/>
+                </Button>
+            }
+            content={() => <div style={{width: '100px'}}>Add a note</div>}
+            offset={{left: 0, top: -8}}
+        />
+    </div>
+);
+
+const ViewerWrapper = ({fileUrl, initialPage, theme}) => {
     const defaultLayoutPluginInstance = defaultLayoutPlugin({
         renderToolbar,
         thumbnailPlugin: {
@@ -74,28 +99,32 @@ const ViewerWrapper = ({ fileUrl, initialPage, theme }) => {
         },
         sidebarTabs: (defaultTabs) =>
             defaultTabs.concat({
-                content: <div style={{ textAlign: 'center', width: '100%' }}>Notes are listed here</div>,
+                content: <div style={{textAlign: 'center', width: '100%'}}>Notes are listed here</div>,
                 icon: (
                     <Icon size={16}>
-                        <path d="M23.5,17a1,1,0,0,1-1,1h-11l-4,4V18h-6a1,1,0,0,1-1-1V3a1,1,0,0,1,1-1h21a1,1,0,0,1,1,1Z" />
-                        <path d="M5.5 12L18.5 12" />
-                        <path d="M5.5 7L18.5 7" />
+                        <path d="M23.5,17a1,1,0,0,1-1,1h-11l-4,4V18h-6a1,1,0,0,1-1-1V3a1,1,0,0,1,1-1h21a1,1,0,0,1,1,1Z"/>
+                        <path d="M5.5 12L18.5 12"/>
+                        <path d="M5.5 7L18.5 7"/>
                     </Icon>
                 ),
                 title: 'Notes',
             }),
     });
 
+    const highlightPluginInstance = highlightPlugin({
+        renderHighlightTarget,
+    });
+
     return (
         <Viewer fileUrl={fileUrl}
                 defaultScale={SpecialZoomLevel.PageWidth}
-                plugins={[defaultLayoutPluginInstance]}
+                plugins={[defaultLayoutPluginInstance, highlightPluginInstance]}
                 initialPage={initialPage}
-                theme={theme} />
+                theme={theme}/>
     );
 };
 
-function DocumentViewer({ selectedDatabase, selectedDocument, setSelectedDocument, selectedDocumentInitialPage, darkMode }) {
+function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument, selectedDocumentInitialPage, darkMode}) {
 
     // file type state
     const [fileType, setFileType] = useState(null);
