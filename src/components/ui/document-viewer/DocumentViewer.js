@@ -156,7 +156,9 @@ function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument
             }}
         >
             <OverlayTrigger
+                style={{cursor: 'pointer'}}
                 placement="top"
+                trigger={["hover", "focus"]}
                 delay={{show: 250, hide: 400}}
                 overlay={renderTooltip('Cite')}
             >
@@ -164,7 +166,9 @@ function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument
                     <i className="bi bi-bookmark"></i></BootstrapButtonWithRef>
             </OverlayTrigger>
             <OverlayTrigger
+                style={{cursor: 'pointer'}}
                 placement="top"
+                trigger={["hover", "focus"]}
                 delay={{show: 250, hide: 400}}
                 overlay={renderTooltip('Copy')}
             >
@@ -172,7 +176,9 @@ function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument
                     <i className={"bi bi-clipboard"}></i></BootstrapButtonWithRef>
             </OverlayTrigger>
             <OverlayTrigger
+                style={{cursor: 'pointer'}}
                 placement="top"
+                trigger={["hover", "focus"]}
                 delay={{show: 250, hide: 400}}
                 overlay={renderTooltip('Translate')}
             >
@@ -180,7 +186,9 @@ function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument
                     <i className={"bi bi-translate"}></i></BootstrapButtonWithRef>
             </OverlayTrigger>
             <OverlayTrigger
+                style={{cursor: 'pointer'}}
                 placement="top"
+                trigger={["hover", "focus"]}
                 delay={{show: 250, hide: 400}}
                 overlay={renderTooltip('Speak')}
             >

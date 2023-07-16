@@ -4,7 +4,7 @@ const WebDocumentSidebar = (props) => {
 
     return (
         <div style={{padding: '8px'}}>
-            Scratchpad
+            Search articles
         </div>
     );
 
