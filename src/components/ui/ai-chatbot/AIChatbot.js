@@ -12,6 +12,7 @@ import italianFlag from '../../../static/img/flags/it.svg';
 import croatianFlag from '../../../static/img/flags/hr.svg';
 import ScrapalotCookieSwitch from '../../utils/ScrapalotCookieSwitch';
 import MessagesList from './MessagesList';
+import ScrapalotSpeechSynthesis from '../../utils/ScrapalotSpeechSynthesis';
 
 const AIChatbot = (props) => {
 
@@ -164,13 +165,16 @@ const AIChatbot = (props) => {
                 </div>
             </div>
             <div className={styles.aiChatbot}>
-                <MessagesList
-                    messages={props.messages}
-                    setMessages={props.setMessages}
-                    handleFootnoteClick={handleFootnoteClick}
-                    footnoteContent={footnoteContent}
-                    darkMode={props.darkMode}
-                />
+
+                <ScrapalotSpeechSynthesis>
+                    <MessagesList
+                        messages={props.messages}
+                        setMessages={props.setMessages}
+                        handleFootnoteClick={handleFootnoteClick}
+                        footnoteContent={footnoteContent}
+                        darkMode={props.darkMode}
+                    />
+                </ScrapalotSpeechSynthesis>
                 <div className={styles.aiChatbotInputMessageContainer}>
                     <InputGroup className={styles.aiChatbotInputMessage}>
                         <FormControl placeholder="Ask a question"

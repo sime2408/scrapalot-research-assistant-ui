@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import styles from './AIChatbot.module.css';
 import Footnote from './Footnote';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap';
+import {SpeakContext} from '../../utils/ScrapalotSpeechSynthesis';
 
 const MessagesList = (props) => {
 
@@ -29,34 +30,10 @@ const MessagesList = (props) => {
         });
     };
 
-    const [speaking, setSpeaking] = useState(false);
+    const {speak} = useContext(SpeakContext);
 
     const handleSpeak = (text, lang) => {
-        if (!speaking) {
-            if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = lang;
-
-                if (window.speechSynthesis.getVoices().length === 0) {
-                    window.speechSynthesis.onvoiceschanged = function () {
-                        window.speechSynthesis.speak(utterance);
-                    };
-                } else {
-                    window.speechSynthesis.speak(utterance);
-                }
-
-                setSpeaking(true);
-
-                utterance.onend = () => {
-                    setSpeaking(false);
-                }
-            } else {
-                console.error("Your browser does not support text to speech.");
-            }
-        } else {
-            window.speechSynthesis.cancel();
-            setSpeaking(false);
-        }
+        speak(text, lang)
     };
 
     return (

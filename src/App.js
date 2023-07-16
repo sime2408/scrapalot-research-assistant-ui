@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useEffect, useState, useReducer} from "react";
+import React, {useCallback, useContext, useEffect, useReducer, useState} from "react";
 import {Button, Tab, Tabs} from 'react-bootstrap';
 import debounce from 'lodash.debounce';
 import Cookies from 'js-cookie';
@@ -14,6 +14,7 @@ import styles from "./App.module.css";
 import themes from './components/themes/CustomThemeProvider.module.css';
 import {ScrapalotLoadingContext} from './components/utils/ScrapalotLoadingContext';
 import ScrapalotSpinner from './components/utils/ScrapalotSpinner';
+import ScrapalotSpeechSynthesis from './components/utils/ScrapalotSpeechSynthesis';
 
 const initialThemeState = {
     darkMode: Cookies.get('scrapalot-dark-mode') === 'true', // Convert the cookie value to a boolean
@@ -24,7 +25,7 @@ function themeReducer(state, action) {
         case 'TOGGLE_THEME':
             const updatedDarkMode = !state.darkMode;
             Cookies.set('scrapalot-dark-mode', updatedDarkMode.toString()); // Convert to string before setting the cookie
-            return { ...state, darkMode: updatedDarkMode };
+            return {...state, darkMode: updatedDarkMode};
         default:
             throw new Error(`Unsupported action type: ${action.type}`);
     }
@@ -37,10 +38,10 @@ function App() {
 
     // application theme
     const [state, dispatch] = useReducer(themeReducer, initialThemeState);
-    const { darkMode } = state;
+    const {darkMode} = state;
 
     const toggleTheme = () => {
-        dispatch({ type: 'TOGGLE_THEME' });
+        dispatch({type: 'TOGGLE_THEME'});
     };
 
     useEffect(() => {
@@ -300,13 +301,15 @@ function App() {
                                 paddingRight: '0'
                             }
                         }>
-                        <DocumentViewer
-                            selectedDatabase={selectedDatabase}
-                            selectedDocument={selectedDocument}
-                            setSelectedDocument={handleSelectDocument}
-                            selectedDocumentInitialPage={selectedDocumentInitialPage}
-                            darkMode={darkMode}
-                        />
+                        <ScrapalotSpeechSynthesis>
+                            <DocumentViewer
+                                selectedDatabase={selectedDatabase}
+                                selectedDocument={selectedDocument}
+                                setSelectedDocument={handleSelectDocument}
+                                selectedDocumentInitialPage={selectedDocumentInitialPage}
+                                darkMode={darkMode}
+                            />
+                        </ScrapalotSpeechSynthesis>
                     </div>
                     <div className={`${columnClasses.right} ${darkMode ? themes.darkThemeSecondary : themes.lightThemePrimary}`}
                          style={
