@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from "react";
+import React, {useEffect} from "react";
 import {Button, InputGroup, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import styles from './Scratchpad.module.css';
 import {StarterKit} from '@tiptap/starter-kit';
@@ -8,25 +8,17 @@ const Scratchpad = (props) => {
 
     const {selectedText} = props;
 
-    const editorRef = useRef(null);
-
     const editor = useEditor({
         extensions: [
             StarterKit,
         ],
-        content: '<em></em>',
-        onMount: editor => {
-            editorRef.current = editor;
-        },
-        onDestroy: () => {
-            editorRef.current = null;
-        },
+        content: '<p></p>',
     });
 
     useEffect(() => {
-        if (editorRef.current && selectedText !== '') {
-            const newText = `<em>${selectedText}</em>`;  // Wrap the selected text in cite tags
-            editorRef.current.commands.setContent(newText);
+        if (editor && selectedText !== '') {
+            const newText = `<blockquote>${selectedText}</blockquote>`;  // Wrap the selected text in cite tags
+            editor.commands.insertContent(newText);
         }
     }, [selectedText]);
 

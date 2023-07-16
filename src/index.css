@@ -182,3 +182,9 @@ span.rpv-core__text-layer-text::selection {
 .dropdown-menu {
   border-radius: 0 !important;
 }
+
+@media (min-width: 576px) {
+  .modal-dialog {
+    max-width: 680px;
+  }
+}
