@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useRef} from "react";
 import {Button, InputGroup, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import styles from './Scratchpad.module.css';
 import {StarterKit} from '@tiptap/starter-kit';
@@ -6,14 +6,31 @@ import {EditorContent, useEditor} from '@tiptap/react';
 
 const Scratchpad = (props) => {
 
+    const {selectedText} = props;
+
+    const editorRef = useRef(null);
+
     const editor = useEditor({
         extensions: [
             StarterKit,
         ],
-        content: '<p></p>',
+        content: '<em></em>',
+        onMount: editor => {
+            editorRef.current = editor;
+        },
+        onDestroy: () => {
+            editorRef.current = null;
+        },
     });
 
-    const MenuBar = ({ editor }) => {
+    useEffect(() => {
+        if (editorRef.current && selectedText !== '') {
+            const newText = `<em>${selectedText}</em>`;  // Wrap the selected text in cite tags
+            editorRef.current.commands.setContent(newText);
+        }
+    }, [selectedText]);
+
+    const MenuBar = ({editor}) => {
         if (!editor) {
             return null;
         }
@@ -25,9 +42,9 @@ const Scratchpad = (props) => {
             {icon: 'type-italic', operation: () => () => editor.chain().focus().toggleItalic().run(), label: 'Italic'},
             {icon: 'type-strikethrough', operation: () => () => editor.chain().focus().toggleStrike().run(), label: 'Strikethrough'},
             {icon: 'paragraph', operation: () => () => editor.chain().focus().setParagraph().run(), label: 'Paragraph'},
-            {icon: 'type-h1', operation: () => () => editor.chain().focus().toggleHeading({ level: 1 }).run(), label: 'Heading 1'},
-            {icon: 'type-h2', operation: () => () => editor.chain().focus().toggleHeading({ level: 2 }).run(), label: 'Heading 2'},
-            {icon: 'type-h3', operation: () => () => editor.chain().focus().toggleHeading({ level: 3 }).run(), label: 'Heading 3'},
+            {icon: 'type-h1', operation: () => () => editor.chain().focus().toggleHeading({level: 1}).run(), label: 'Heading 1'},
+            {icon: 'type-h2', operation: () => () => editor.chain().focus().toggleHeading({level: 2}).run(), label: 'Heading 2'},
+            {icon: 'type-h3', operation: () => () => editor.chain().focus().toggleHeading({level: 3}).run(), label: 'Heading 3'},
             {icon: 'list-ul', operation: () => () => editor.chain().focus().toggleBulletList().run(), label: 'Bullet List'},
             {icon: 'list-ol', operation: () => () => editor.chain().focus().toggleOrderedList().run(), label: 'Ordered List'},
             {icon: 'code', operation: () => () => editor.chain().focus().toggleCode().run(), label: 'Code'},
@@ -70,18 +87,18 @@ const Scratchpad = (props) => {
             <MenuBar editor={editor}/>
             <div className={styles.scratchpad}>
                 <div className={styles.scratchpadTextEditor}
-                    style={
-                        props.darkMode ? {
-                                backgroundColor: '#5c676c',
-                                padding: '8px',
-                                borderRadius: '4px'
-                            } : {
-                                backgroundColor: 'whitesmoke',
-                                padding: '8px',
-                                borderRadius: '4px'
-                            }
-                    }>
-                    <EditorContent editor={editor} />
+                     style={
+                         props.darkMode ? {
+                             backgroundColor: '#5c676c',
+                             padding: '8px',
+                             borderRadius: '4px'
+                         } : {
+                             backgroundColor: 'whitesmoke',
+                             padding: '8px',
+                             borderRadius: '4px'
+                         }
+                     }>
+                    <EditorContent editor={editor}/>
                 </div>
                 <div className={styles.scratchpadButtonsContainer}>
                     <InputGroup className={`d-flex justify-content-between ${styles.scratchpadButtons}`}>

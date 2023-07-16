@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
-import {Icon, SpecialZoomLevel, Tooltip, Viewer, Worker} from "@react-pdf-viewer/core";
+import {SpecialZoomLevel, Tooltip, Viewer, Worker} from "@react-pdf-viewer/core";
 import {Button as BootstrapButton, Modal, OverlayTrigger} from 'react-bootstrap';
 import {defaultLayoutPlugin} from '@react-pdf-viewer/default-layout';
 
@@ -10,12 +10,21 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 // Handlers for the button actions
-const handleCite = () => {
-    console.log("Cite button was clicked.");
-};
-
-const handleCopy = () => {
-    console.log("Copy button was clicked.");
+const handleCopyToClipboard = () => {
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        if (range.startContainer && range.endContainer) {
+            const text = selection.toString();
+            if (text !== '') {
+                navigator.clipboard.writeText(text).then(() => {
+                    console.log('Text copied to clipboard');
+                }).catch(err => {
+                    console.error('Could not copy text to clipboard: ', err);
+                });
+            }
+        }
+    }
 };
 
 // Function to render the tooltip
@@ -30,55 +39,8 @@ const BootstrapButtonWithRef = React.forwardRef((props, ref) => (
     <BootstrapButton ref={ref} {...props}>{props.children}</BootstrapButton>
 ));
 
-// Function to render the highlight target
-const renderHighlightTarget = (props: RenderHighlightTargetProps, handleTranslate, handleSpeak) => (
-    <div
-        style={{
-            background: '#eee',
-            display: 'flex',
-            position: 'absolute',
-            left: `${props.selectionRegion.left}%`,
-            top: `${props.selectionRegion.top + props.selectionRegion.height}%`,
-            transform: 'translate(0, 8px)',
-            zIndex: 1,
-        }}
-    >
-        <OverlayTrigger
-            placement="top"
-            delay={{show: 250, hide: 400}}
-            overlay={renderTooltip('Cite')}
-        >
-            <BootstrapButtonWithRef onClick={handleCite} className={'me-1'}>
-                <i className="bi bi-bookmark"></i></BootstrapButtonWithRef>
-        </OverlayTrigger>
-        <OverlayTrigger
-            placement="top"
-            delay={{show: 250, hide: 400}}
-            overlay={renderTooltip('Copy')}
-        >
-            <BootstrapButtonWithRef onClick={handleCopy} className={'me-1'}>
-                <i className={"bi bi-clipboard"}></i></BootstrapButtonWithRef>
-        </OverlayTrigger>
-        <OverlayTrigger
-            placement="top"
-            delay={{show: 250, hide: 400}}
-            overlay={renderTooltip('Translate')}
-        >
-            <BootstrapButtonWithRef onClick={handleTranslate} className={'me-1'}>
-                <i className={"bi bi-translate"}></i></BootstrapButtonWithRef>
-        </OverlayTrigger>
-        <OverlayTrigger
-            placement="top"
-            delay={{show: 250, hide: 400}}
-            overlay={renderTooltip('Speak')}
-        >
-            <BootstrapButtonWithRef onClick={handleSpeak}>
-                <i className="bi bi-megaphone"></i></BootstrapButtonWithRef>
-        </OverlayTrigger>
-    </div>
-);
 
-const ViewerWrapper = ({fileUrl, initialPage, theme, handleTranslate, handleSpeak}) => {
+const ViewerWrapper = ({fileUrl, initialPage, theme, renderHighlightTarget}) => {
 
     const renderToolbar = (Toolbar) => (
         <Toolbar>
@@ -144,23 +106,11 @@ const ViewerWrapper = ({fileUrl, initialPage, theme, handleTranslate, handleSpea
         renderToolbar,
         thumbnailPlugin: {
             thumbnailWidth: 150,
-        },
-        sidebarTabs: (defaultTabs) =>
-            defaultTabs.concat({
-                content: <div style={{textAlign: 'center', width: '100%'}}>Notes are listed here</div>,
-                icon: (
-                    <Icon size={16}>
-                        <path d="M23.5,17a1,1,0,0,1-1,1h-11l-4,4V18h-6a1,1,0,0,1-1-1V3a1,1,0,0,1,1-1h21a1,1,0,0,1,1,1Z"/>
-                        <path d="M5.5 12L18.5 12"/>
-                        <path d="M5.5 7L18.5 7"/>
-                    </Icon>
-                ),
-                title: 'Notes',
-            }),
+        }
     });
 
     const highlightPluginInstance = highlightPlugin({
-        renderHighlightTarget: (props) => renderHighlightTarget(props, handleTranslate, handleSpeak),
+        renderHighlightTarget,
     });
 
     return (
@@ -172,7 +122,7 @@ const ViewerWrapper = ({fileUrl, initialPage, theme, handleTranslate, handleSpea
     );
 };
 
-function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument, selectedDocumentInitialPage, darkMode}) {
+function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument, selectedDocumentInitialPage, setSelectedText, darkMode}) {
 
     // file type state
     const [fileType, setFileType] = useState(null);
@@ -191,18 +141,88 @@ function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument
         return selectedDocument && selectedDocument.name.split(".").pop();
     }
 
+    // Function to render the highlight target
+    const renderHighlightTarget = (props: RenderHighlightTargetProps, handleTranslate, handleSpeak) => (
+        <div
+            style={{
+                marginTop: '6px',
+                background: '#eee',
+                display: 'flex',
+                position: 'absolute',
+                left: `${props.selectionRegion.left}%`,
+                top: `${props.selectionRegion.top + props.selectionRegion.height}%`,
+                transform: 'translate(0, 8px)',
+                zIndex: 1,
+            }}
+        >
+            <OverlayTrigger
+                placement="top"
+                delay={{show: 250, hide: 400}}
+                overlay={renderTooltip('Cite')}
+            >
+                <BootstrapButtonWithRef onClick={handleCite} className={'me-1'}>
+                    <i className="bi bi-bookmark"></i></BootstrapButtonWithRef>
+            </OverlayTrigger>
+            <OverlayTrigger
+                placement="top"
+                delay={{show: 250, hide: 400}}
+                overlay={renderTooltip('Copy')}
+            >
+                <BootstrapButtonWithRef onClick={handleCopyToClipboard} className={'me-1'}>
+                    <i className={"bi bi-clipboard"}></i></BootstrapButtonWithRef>
+            </OverlayTrigger>
+            <OverlayTrigger
+                placement="top"
+                delay={{show: 250, hide: 400}}
+                overlay={renderTooltip('Translate')}
+            >
+                <BootstrapButtonWithRef onClick={handleTranslate} className={'me-1'}>
+                    <i className={"bi bi-translate"}></i></BootstrapButtonWithRef>
+            </OverlayTrigger>
+            <OverlayTrigger
+                placement="top"
+                delay={{show: 250, hide: 400}}
+                overlay={renderTooltip('Speak')}
+            >
+                <BootstrapButtonWithRef onClick={handleSpeak}>
+                    <i className="bi bi-megaphone"></i></BootstrapButtonWithRef>
+            </OverlayTrigger>
+        </div>
+    );
+
+    const handleCite = () => {
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+            const range = selection.getRangeAt(0);
+            if (range.startContainer && range.endContainer) {
+                const text = selection.toString();
+                if (text !== '') {
+                    setSelectedText(text);  // Set the selected text
+                }
+            }
+        }
+    };
+
     const handleTranslate = async () => {
-        const text = window.getSelection().toString();
-        try {
-            const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/translate`, {
-                src_lang: "en",
-                dst_lang: Cookies.get("scrapalot-locale") || "en",
-                text: text
-            });
-            setTranslatedText(response.data.translated_text);
-            setShowTranslation(true);
-        } catch (error) {
-            console.error("Error translating text:", error);
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+            const range = selection.getRangeAt(0);
+            if (range.startContainer && range.endContainer) {
+                const text = selection.toString();
+                if (text !== '') {
+                    try {
+                        const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/translate`, {
+                            src_lang: "en",
+                            dst_lang: Cookies.get("scrapalot-locale") || "en",
+                            text: text
+                        });
+                        setTranslatedText(response.data["translated_text"]);
+                        setShowTranslation(true);
+                    } catch (error) {
+                        console.error("Error translating text:", error);
+                    }
+                }
+            }
         }
     };
 
@@ -211,8 +231,14 @@ function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument
     };
 
     const handleSpeak = () => {
-        const text = window.getSelection().toString();
-        speak(text);
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+            const range = selection.getRangeAt(0);
+            if (range.startContainer && range.endContainer) {
+                const text = selection.toString();
+                speak(text);
+            }
+        }
     };
 
     return (
@@ -228,8 +254,7 @@ function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument
                                 fileUrl={`${process.env.REACT_APP_API_BASE_URL}/database/${selectedDatabase}/file/${selectedDocument.name}`}
                                 initialPage={selectedDocumentInitialPage}
                                 theme={darkMode ? "dark" : "light"}
-                                handleTranslate={handleTranslate}
-                                handleSpeak={handleSpeak}
+                                renderHighlightTarget={(props) => renderHighlightTarget(props, handleTranslate, handleSpeak, handleCite)}
                             />
                         </Worker>
                     )}
@@ -251,15 +276,15 @@ function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument
 
             <Modal show={showTranslation} onHide={() => setShowTranslation(false)}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Translated Text</Modal.Title>
+                    <Modal.Title><i className="bi bi-translate"></i> translated text</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>{translatedText}</Modal.Body>
                 <Modal.Footer>
                     <BootstrapButton variant="secondary" onClick={handleSpeakTranslation}>
-                        Speak
+                        <i className="bi bi-megaphone"></i> speak
                     </BootstrapButton>
                     <BootstrapButton variant="primary" onClick={() => setShowTranslation(false)}>
-                        Close
+                        <i className="bi bi-x-circle"></i> close
                     </BootstrapButton>
                 </Modal.Footer>
             </Modal>

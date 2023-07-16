@@ -235,6 +235,7 @@ function App() {
         });
     };
 
+    const [selectedText, setSelectedText] = useState('');
 
     return (
         <div className={styles.appMainContainer}>
@@ -307,6 +308,7 @@ function App() {
                                 selectedDocument={selectedDocument}
                                 setSelectedDocument={handleSelectDocument}
                                 selectedDocumentInitialPage={selectedDocumentInitialPage}
+                                setSelectedText={setSelectedText}
                                 darkMode={darkMode}
                             />
                         </ScrapalotSpeechSynthesis>
@@ -347,7 +349,7 @@ function App() {
                                 />
                             </Tab>
                             <Tab eventKey="scratchpad" title="scratchpad">
-                                <Scratchpad darkMode={darkMode}/>
+                                <Scratchpad selectedText={selectedText} darkMode={darkMode}/>
                             </Tab>
                         </Tabs>
                     </div>
