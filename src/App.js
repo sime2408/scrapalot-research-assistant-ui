@@ -349,13 +349,13 @@ function App() {
                                 />
                             </Tab>
                             <Tab eventKey="scratchpad" title="scratchpad">
-                                <Scratchpad selectedText={selectedText} darkMode={darkMode}/>
+                                <Scratchpad selectedText={selectedText} selectedDocument={selectedDocument} darkMode={darkMode}/>
                             </Tab>
                         </Tabs>
                     </div>
                 </div>
             </div>
-            <div style={{position: 'fixed', bottom: '10px', left: isDocumentBrowserVisible ? '320px' : '10px', zIndex: 9999}}>
+            <div style={{position: 'fixed', bottom: '10px', left: isDocumentBrowserVisible ? '319px' : '10px', zIndex: 9999}}>
                 {isDocumentBrowserVisible && (
                     <Button onClick={handleExpandSidebar} className={styles.appLeftSidebarToggleButton}>
                         <i className="bi bi-box-arrow-left"></i>

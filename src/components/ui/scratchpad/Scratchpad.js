@@ -1,26 +1,35 @@
-import React, {useEffect} from "react";
-import {Button, InputGroup, OverlayTrigger, Tooltip} from 'react-bootstrap';
-import styles from './Scratchpad.module.css';
+import React, {useEffect, useState} from "react";
+import {Button, Col, Form, InputGroup, Modal, OverlayTrigger, Row, Tooltip} from 'react-bootstrap';
 import {StarterKit} from '@tiptap/starter-kit';
 import {EditorContent, useEditor} from '@tiptap/react';
+import TurndownService from 'turndown';
+
+import styles from './Scratchpad.module.css';
 
 const Scratchpad = (props) => {
+    const {selectedText, selectedDocument} = props;
 
-    const {selectedText} = props;
+    const [modalShow, setModalShow] = useState(false);
+    const [exportFormat, setExportFormat] = useState('markdown');
+    const [disableButtonsIfNoContent, setDisableButtonsIfNoContent] = useState(true);
 
     const editor = useEditor({
         extensions: [
             StarterKit,
         ],
         content: '<p></p>',
+        onUpdate: () => {
+            const content = editor.getHTML();
+            setDisableButtonsIfNoContent(content === '<p></p>' || content === '');
+        }
     });
 
     useEffect(() => {
         if (editor && selectedText !== '') {
-            const newText = `<blockquote>${selectedText}</blockquote>`;  // Wrap the selected text in cite tags
+            const newText = `<blockquote>${selectedText}</blockquote><br/>`;
             editor.commands.insertContent(newText);
         }
-    }, [selectedText]);
+    }, [selectedText, editor]);
 
     const MenuBar = ({editor}) => {
         if (!editor) {
@@ -74,6 +83,65 @@ const Scratchpad = (props) => {
         );
     };
 
+    const handleExport = () => {
+        let content = editor.getHTML();
+        let filename = `${selectedDocument.name.toLowerCase().split(' ').join('_')}`;
+
+        if (exportFormat === 'markdown') {
+            content = convertHtmlToMarkdown(content);
+            filename = `${filename}.md`;
+        } else if (exportFormat === 'bbcode') {
+            content = convertHtmlToBBCode(content);
+            filename = `${filename}.txt`;
+        }
+
+        saveAs(filename, content);
+
+        setModalShow(false);
+    };
+
+    const convertHtmlToMarkdown = (html) => {
+        const turnDownService = new TurndownService();
+        return turnDownService.turndown(html);
+    }
+
+    const convertHtmlToBBCode = (html) => {
+        let bbcode = html;
+
+        // Replace start and end tags for some common elements
+        const replacements = {
+            '<b>': '[b]', '</b>': '[/b]',
+            '<i>': '[i]', '</i>': '[/i]',
+            '<u>': '[u]', '</u>': '[/u]',
+            '<s>': '[s]', '</s>': '[/s]',
+            '<br/>': '', '<br>': '',
+            '<p>': '', '</p>': '',
+            '<blockquote>': '[quote]', '</blockquote>': '[/quote]',
+        };
+
+        for (let [key, value] of Object.entries(replacements)) {
+            bbcode = bbcode.split(key).join(value);
+        }
+
+        // Convert links
+        bbcode = bbcode.replace(/<a href="(.*?)">(.*?)<\/a>/g, '[url=$1]$2[/url]');
+
+        // Convert images
+        bbcode = bbcode.replace(/<img src="(.*?)" alt="(.*?)" \/>/g, '[img]$1[/img]');
+
+        return bbcode;
+    }
+
+    const saveAs = (filename, content) => {
+        const element = document.createElement("a");
+        const file = new Blob([content], {type: 'text/plain'});
+        element.href = URL.createObjectURL(file);
+        element.download = filename;
+        document.body.appendChild(element); // Required for this to work in FireFox
+        element.click();
+    };
+
+
     return (
         <div style={{padding: '8px 12px 8px 0', height: 'calc(100vh - 114px)'}}>
             <MenuBar editor={editor}/>
@@ -95,13 +163,81 @@ const Scratchpad = (props) => {
                 <div className={styles.scratchpadButtonsContainer}>
                     <InputGroup className={`d-flex justify-content-between ${styles.scratchpadButtons}`}>
                         <div className="flex-grow-1 me-2">
-                            <Button variant="primary" className="me-2" style={{width: '100%'}}>export</Button>
+                            <Button
+                                variant="primary"
+                                className="me-2"
+                                style={{width: '100%'}}
+                                disabled={disableButtonsIfNoContent}
+                                onClick={() => setModalShow(true)}
+                            >
+                                <i className="bi bi-download"></i>
+                                &nbsp;&nbsp;export
+                            </Button>
                         </div>
                         <div className="flex-grow-1">
-                            <Button variant="secondary" style={{width: '100%'}}>summarize</Button>
+                            <Button
+                                variant="secondary"
+                                style={{width: '100%'}}
+                                disabled={disableButtonsIfNoContent}>
+                                <i className="bi bi-text-paragraph"></i>
+                                &nbsp;&nbsp;summarize
+                            </Button>
                         </div>
                     </InputGroup>
                 </div>
+            </div>
+            <div>
+                <Modal show={modalShow} onHide={() => setModalShow(false)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Export to file</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form.Group as={Row}>
+                            <Col sm={10}>
+                                <div style={{display: "flex", justifyContent: "space-between"}}>
+                                    <Form.Check
+                                        inline
+                                        type="radio"
+                                        label={
+                                            <span>
+                                <i className="bi bi-markdown" style={{marginRight: "10px"}}></i>
+                                Markdown
+                            </span>
+                                        }
+                                        name="exportFormat"
+                                        id="markdown"
+                                        value="markdown"
+                                        checked={exportFormat === 'markdown'}
+                                        onChange={e => setExportFormat(e.target.value)}
+                                    />
+                                    <Form.Check
+                                        inline
+                                        type="radio"
+                                        label={
+                                            <span>
+                                <i className="bi bi-file-earmark-code" style={{marginRight: "10px"}}></i>
+                                BBCode
+                            </span>
+                                        }
+                                        name="exportFormat"
+                                        id="bbcode"
+                                        value="bbcode"
+                                        checked={exportFormat === 'bbcode'}
+                                        onChange={e => setExportFormat(e.target.value)}
+                                    />
+                                </div>
+                            </Col>
+                        </Form.Group>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => setModalShow(false)}>
+                            <i className="bi bi-x-circle"></i> close
+                        </Button>
+                        <Button variant="primary" onClick={handleExport}>
+                            <i className="bi bi-download"></i> save
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
             </div>
         </div>
     );
