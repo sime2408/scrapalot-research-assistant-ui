@@ -163,7 +163,7 @@ function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument
                 overlay={renderTooltip('Cite')}
             >
                 <BootstrapButtonWithRef onClick={handleCite} className={'me-1'}>
-                    <i className="bi bi-bookmark"></i></BootstrapButtonWithRef>
+                    <i className="bi bi-blockquote-left"></i></BootstrapButtonWithRef>
             </OverlayTrigger>
             <OverlayTrigger
                 style={{cursor: 'pointer'}}
@@ -203,8 +203,10 @@ function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument
         if (selection.rangeCount > 0) {
             const range = selection.getRangeAt(0);
             if (range.startContainer && range.endContainer) {
-                const text = selection.toString();
+                let text = selection.toString();
                 if (text !== '') {
+                    text = text.replace(/\n/g, ' ');  // Replace newline characters with spaces
+                    text = text.replace(/-\s/g, ''); // Replace hyphen followed by space with nothing (joining the word parts)
                     setSelectedText(text);  // Set the selected text
                 }
             }

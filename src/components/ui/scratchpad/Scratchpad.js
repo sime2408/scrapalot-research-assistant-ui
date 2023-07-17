@@ -95,7 +95,7 @@ const Scratchpad = (props) => {
                 <div className={styles.scratchpadButtonsContainer}>
                     <InputGroup className={`d-flex justify-content-between ${styles.scratchpadButtons}`}>
                         <div className="flex-grow-1 me-2">
-                            <Button variant="primary" className="me-2" style={{width: '100%'}}>save</Button>
+                            <Button variant="primary" className="me-2" style={{width: '100%'}}>export</Button>
                         </div>
                         <div className="flex-grow-1">
                             <Button variant="secondary" style={{width: '100%'}}>summarize</Button>
