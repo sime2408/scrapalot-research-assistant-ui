@@ -53,7 +53,6 @@ function App() {
 
     // application tabs
     const [activeTabLeftKey, setActiveTabLeftKey] = useState('browse');
-    const [activeTabRightKey, setActiveTabRightKey] = useState('chatbot');
 
     const handleTabColors = useCallback((tab) => {
         if (darkMode) {
