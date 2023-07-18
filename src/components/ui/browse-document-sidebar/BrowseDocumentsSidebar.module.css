@@ -19,7 +19,7 @@
 .leftSidebar {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 140px); /* assuming you want the sidebar to be full height */
+  height: calc(100vh - 122px);
 }
 
 .leftSidebarDocItems {

@@ -26,7 +26,7 @@ const Scratchpad = (props) => {
 
     useEffect(() => {
         if (editor && selectedText !== '') {
-            const newText = `<blockquote>${selectedText}</blockquote><br/>`;
+            const newText = `<blockquote>${selectedText}</blockquote><strong style="text-align: right !important;"><em>${selectedDocument.name}</em></strong><br/>`;
             editor.commands.insertContent(newText);
         }
     }, [selectedText, editor]);
@@ -141,9 +141,24 @@ const Scratchpad = (props) => {
         element.click();
     };
 
+    // add a new state variable for the text editor height
+    const [textEditorHeight, setTextEditorHeight] = useState("calc(50vh - 164px)");
+
+    useEffect(() => {
+        // remove the '%' from the end of documentViewerHeight and convert to a number
+        let documentViewerHeightValue = Number(props.documentViewerHeight.slice(0, -1));
+
+        // calculate the equivalent vh value (subtract from 100 to reverse the direction)
+        let documentViewerHeightInVh = 100 - documentViewerHeightValue;
+
+        // calculate the new height of the text editor
+        let newHeight = `calc(${documentViewerHeightInVh}vh - 164px)`;
+
+        setTextEditorHeight(newHeight);
+    }, [props.documentViewerHeight]);
 
     return (
-        <div style={{padding: '8px 12px 8px 0', height: 'calc(100vh - 114px)'}}>
+        <div style={{padding: '8px 12px 8px 12px', borderTop: props.darkMode ? '1px black solid' : '1px #c4c4c4 solid'}}>
             <MenuBar editor={editor}/>
             <div className={styles.scratchpad}>
                 <div className={styles.scratchpadTextEditor}
@@ -151,11 +166,13 @@ const Scratchpad = (props) => {
                          props.darkMode ? {
                              backgroundColor: '#5c676c',
                              padding: '8px',
-                             borderRadius: '4px'
+                             borderRadius: '4px',
+                             height: textEditorHeight
                          } : {
-                             backgroundColor: 'whitesmoke',
+                             backgroundColor: 'white',
                              padding: '8px',
-                             borderRadius: '4px'
+                             borderRadius: '4px',
+                             height: textEditorHeight
                          }
                      }>
                     <EditorContent editor={editor}/>

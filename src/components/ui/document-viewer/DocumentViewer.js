@@ -115,7 +115,7 @@ const ViewerWrapper = ({fileUrl, initialPage, theme, renderHighlightTarget}) => 
 
     return (
         <Viewer fileUrl={fileUrl}
-                defaultScale={SpecialZoomLevel.PageWidth}
+                defaultScale={SpecialZoomLevel.ActualSize}
                 plugins={[defaultLayoutPluginInstance, highlightPluginInstance]}
                 initialPage={initialPage}
                 theme={theme}/>

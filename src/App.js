@@ -207,6 +207,7 @@ function App() {
     }
 
     // scratchpad
+    const [isScratchpadVisible, setIsScratchpadVisible] = useState(false);
     const [isDocumentBrowserVisible, setIsDocumentBrowserVisible] = useState(true);
 
     const [columnClasses, setColumnClasses] = useState({
@@ -220,8 +221,8 @@ function App() {
             if (prevIsDocumentBrowserVisible) {
                 setColumnClasses({
                     left: 'col-0',
-                    middle: 'col-6',
-                    right: 'col-6'
+                    middle: 'col-8',
+                    right: 'col-4'
                 });
             } else {
                 setColumnClasses({
@@ -235,7 +236,31 @@ function App() {
         });
     };
 
+    const handleExpandScratchpad = () => {
+        setIsScratchpadVisible(!isScratchpadVisible)
+    }
+
     const [selectedText, setSelectedText] = useState('');
+
+    // state for managing DocumentViewer and Scratchpad heights.
+    const [isResizing, setIsResizing] = useState(false);
+    const [documentViewerHeight, setDocumentViewerHeight] = useState("50%");
+
+    const handleMouseDown = e => {
+        setIsResizing(true);
+    };
+
+    const handleMouseUp = e => {
+        setIsResizing(false);
+    };
+
+    const handleMouseMove = e => {
+        if (!isResizing) return;
+        let newHeight = (e.clientY / window.innerHeight) * 100;
+        if (newHeight < 20) newHeight = 20;
+        if (newHeight > 80) newHeight = 80;
+        setDocumentViewerHeight(`${newHeight}%`);
+    };
 
     return (
         <div className={styles.appMainContainer}>
@@ -245,7 +270,9 @@ function App() {
                 databases={databases}
                 toggleTheme={toggleTheme}
                 darkMode={darkMode}/>
-            <div className={`container-fluid ${styles.appContainerFluid}`}>
+            <div className={`container-fluid ${styles.appContainerFluid}`}
+                 onMouseMove={handleMouseMove}
+                 onMouseUp={handleMouseUp}>
                 <div className="row">
                     {isDocumentBrowserVisible && (
                         <div className={`${columnClasses.left} ${styles.appLeftSidebarColumn} ${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemeDefault}`}
@@ -303,14 +330,37 @@ function App() {
                             }
                         }>
                         <ScrapalotSpeechSynthesis>
-                            <DocumentViewer
-                                selectedDatabase={selectedDatabase}
-                                selectedDocument={selectedDocument}
-                                setSelectedDocument={handleSelectDocument}
-                                selectedDocumentInitialPage={selectedDocumentInitialPage}
-                                setSelectedText={setSelectedText}
-                                darkMode={darkMode}
-                            />
+                            <div className={styles.appDocViewerContainer}>
+                                <div style={{height: isScratchpadVisible ? `${documentViewerHeight}` : '100%'}}>
+                                    <DocumentViewer
+                                        selectedDatabase={selectedDatabase}
+                                        selectedDocument={selectedDocument}
+                                        setSelectedDocument={handleSelectDocument}
+                                        selectedDocumentInitialPage={selectedDocumentInitialPage}
+                                        setSelectedText={setSelectedText}
+                                        darkMode={darkMode}
+                                    />
+                                </div>
+                                <div
+                                    style={{
+                                        borderTop: darkMode ? "1px solid #41494d" : "1px solid rgb(229 229 229)",
+                                        height: "6px",
+                                        cursor: "row-resize",
+                                        userSelect: "none"
+                                    }}
+                                    onMouseDown={handleMouseDown}
+                                ></div>
+                                {isScratchpadVisible && (
+                                    <div
+                                        style={{flexGrow: 1}}>
+                                        <Scratchpad
+                                            documentViewerHeight={documentViewerHeight}
+                                            selectedText={selectedText}
+                                            selectedDocument={selectedDocument}
+                                            darkMode={darkMode}/>
+                                    </div>
+                                )}
+                            </div>
                         </ScrapalotSpeechSynthesis>
                     </div>
                     <div className={`${columnClasses.right} ${darkMode ? themes.darkThemeSecondary : themes.lightThemePrimary}`}
@@ -322,50 +372,23 @@ function App() {
                                  flexDirection: 'column',
                              }
                          }>
-                        <Tabs
-                            justify
-                            activeKey={activeTabRightKey}
-                            onSelect={(k) => setActiveTabRightKey(k)}
-                            transition={false}
-                            id="controlled-tab-example"
-                            className={`${styles.appColumnDefaults} ${darkMode ? themes.darkThemePrimary : themes.lightThemePrimary}`}
-                            style={{
-                                height: '42px',
-                                padding: '0',
-                                marginLeft: '-12px'
-                            }}
-                        >
-                            <Tab eventKey="chatbot" title="chat">
-                                <AIChatbot
-                                    handleClearMessages={handleClearMessages}
-                                    locale={locale}
-                                    setLocale={setLocale}
-                                    handleFootnoteClick={handleFootnoteClick}
-                                    db_name={selectedDatabase}
-                                    db_collection_name={selectedDatabase}
-                                    messages={messages}
-                                    setMessages={setMessages}
-                                    darkMode={darkMode}
-                                />
-                            </Tab>
-                            <Tab eventKey="scratchpad" title="scratchpad">
-                                <Scratchpad selectedText={selectedText} selectedDocument={selectedDocument} darkMode={darkMode}/>
-                            </Tab>
-                        </Tabs>
+                        <AIChatbot
+                            handleClearMessages={handleClearMessages}
+                            locale={locale}
+                            setLocale={setLocale}
+                            handleFootnoteClick={handleFootnoteClick}
+                            db_name={selectedDatabase}
+                            db_collection_name={selectedDatabase}
+                            messages={messages}
+                            setMessages={setMessages}
+                            isDocumentBrowserVisible={isDocumentBrowserVisible}
+                            handleExpandSidebar={handleExpandSidebar}
+                            isScratchpadVisible={isScratchpadVisible}
+                            handleExpandScratchpad={handleExpandScratchpad}
+                            darkMode={darkMode}
+                        />
                     </div>
                 </div>
-            </div>
-            <div style={{position: 'fixed', bottom: '10px', left: isDocumentBrowserVisible ? '319px' : '10px', zIndex: 9999}}>
-                {isDocumentBrowserVisible && (
-                    <Button onClick={handleExpandSidebar} className={styles.appLeftSidebarToggleButton}>
-                        <i className="bi bi-box-arrow-left"></i>
-                    </Button>
-                )}
-                {!isDocumentBrowserVisible && (
-                    <Button onClick={handleExpandSidebar} className={styles.appLeftSidebarToggleButton}>
-                        <i className="bi bi-box-arrow-right"></i>
-                    </Button>
-                )}
             </div>
             <ScrapalotSpinner darkMode={darkMode}/>
         </div>

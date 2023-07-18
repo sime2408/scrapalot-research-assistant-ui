@@ -112,6 +112,18 @@ const AIChatbot = (props) => {
         </Tooltip>
     );
 
+    const renderSidebar = (props) => (
+        <Tooltip id="button-tooltip" {...props}>
+            sidebar
+        </Tooltip>
+    );
+
+    const renderScratchpad = (props) => (
+        <Tooltip id="button-tooltip" {...props}>
+            scratchpad
+        </Tooltip>
+    );
+
     const languages = [
         {id: 'en', name: 'English', flag: englishFlag},
         {id: 'de', name: 'German', flag: germanFlag},
@@ -132,8 +144,44 @@ const AIChatbot = (props) => {
     };
 
     return (
-        <div style={{padding: '8px 8px 8px 0', height: 'calc(100vh - 134px)'}}>
+        <div style={{padding: '8px 8px 8px 0', height: 'calc(100vh - 96px)'}}>
             <div className={styles.aiChatbotToolbar}>
+                <OverlayTrigger
+                    style={{cursor: 'pointer'}}
+                    placement="bottom"
+                    overlay={renderSidebar}
+                >
+                    <div>
+                        {props.isDocumentBrowserVisible && (
+                            <button onClick={props.handleExpandSidebar} style={{border: 'none', background: 'none'}}>
+                                <i className="bi bi-box-arrow-left"></i>
+                            </button>
+                        )}
+                        {!props.isDocumentBrowserVisible && (
+                            <button onClick={props.handleExpandSidebar} style={{border: 'none', background: 'none'}}>
+                                <i className="bi bi-box-arrow-right"></i>
+                            </button>
+                        )}
+                    </div>
+                </OverlayTrigger>
+                <OverlayTrigger
+                    style={{cursor: 'pointer'}}
+                    placement="bottom"
+                    overlay={renderScratchpad}
+                >
+                    <div>
+                        {props.isScratchpadVisible && (
+                            <button onClick={props.handleExpandScratchpad} style={{border: 'none', background: 'none'}}>
+                                <i className="bi bi-pencil-fill"></i>
+                            </button>
+                        )}
+                        {!props.isScratchpadVisible && (
+                            <button onClick={props.handleExpandScratchpad} style={{border: 'none', background: 'none'}}>
+                                <i className="bi bi-pencil"></i>
+                            </button>
+                        )}
+                    </div>
+                </OverlayTrigger>
                 <OverlayTrigger
                     style={{cursor: 'pointer'}}
                     placement="bottom"
@@ -143,9 +191,10 @@ const AIChatbot = (props) => {
                         <i className="bi bi-trash"></i>
                     </button>
                 </OverlayTrigger>
+
                 <span className={styles.aiChatbotTranslateChunks}>
-                        <ScrapalotCookieSwitch toggleLabel={"translate footnotes"} cookieKey={"scrapalot-translate-chunks"}/>
-                    </span>
+                    <ScrapalotCookieSwitch toggleLabel={"translate footnotes"} cookieKey={"scrapalot-translate-chunks"}/>
+                </span>
                 <div className={styles.aiChatbotLangContainer}>
                     <DropdownButton
                         align="end"

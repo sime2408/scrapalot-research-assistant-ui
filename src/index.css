@@ -46,7 +46,7 @@ span.rpv-core__text-layer-text::selection {
 }
 
 .rpv-core__viewer--light {
-  --rpv-default-layout__body-background-color: #f5f5f5;
+  --rpv-default-layout__body-background-color: #dadada;
   --rpv-default-layout__container-border-color: 1px solid rgb(229, 229, 229);
   --rpv-default-layout__toolbar-background-color: #f8f8f8;
   --rpv-default-layout__sidebar-headers-background-color: #f8f8f8;
