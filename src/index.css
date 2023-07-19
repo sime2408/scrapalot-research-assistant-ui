@@ -37,6 +37,21 @@ a {
 
 /* react-pdf-viewer */
 
+.rpv-default-layout__toolbar {
+  height: 2.6rem;
+}
+
+.rpv-default-layout__sidebar, .rpv-default-layout__body {
+  padding-top: 2.6rem;
+}
+
+.rpv-core__page-layer::after {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0.6rem;
+}
+
 span.rpv-core__text-layer-text::selection {
   background: #fdc446;
 }
@@ -64,6 +79,10 @@ span.rpv-core__text-layer-text::selection {
   --rpv-default-layout__sidebar-content--opened-border-color: #292929;
   --rpv-default-layout__sidebar-content--opened-color: #fff;
   --rpv-core__popover-body-background-color: #343a40;
+}
+
+.rpv-bookmark__item:hover {
+  background-color: #44abb6;
 }
 
 .rpv-core__menu-item:hover {
