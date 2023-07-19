@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Col, Dropdown, Form, Modal, Nav, Navbar, OverlayTrigger, Row, Spinner, Tooltip} from "react-bootstrap";
+import {Button, Col, Dropdown, Form, Modal, Nav, Navbar, Row, Spinner} from "react-bootstrap";
 import axios from 'axios';
 
 import styles from "./MainHeader.module.css"
@@ -110,7 +110,13 @@ function MainHeader({onSelectDatabase, selectedDatabase, databases, toggleTheme,
                             <Dropdown.Item key="0">
                                 <>
                                     <i className="bi bi-robot"></i>
-                                    &nbsp;&nbsp;Configure LLM
+                                    &nbsp;&nbsp;Configure AI
+                                </>
+                            </Dropdown.Item>
+                            <Dropdown.Item key="1">
+                                <>
+                                    <i className="bi bi-database-add"></i>
+                                    &nbsp;&nbsp;New Database
                                 </>
                             </Dropdown.Item>
                         </Dropdown.Menu>
@@ -154,10 +160,10 @@ function MainHeader({onSelectDatabase, selectedDatabase, databases, toggleTheme,
                 </Button>
 
                 <Modal show={show} onHide={handleClose}>
-                    <Modal.Header closeButton>
+                    <Modal.Header style={{borderRadius: '0'}} closeButton className={`${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemeDefault}`}>
                         <Modal.Title>Upload files</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>
+                    <Modal.Body className={`${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemePrimary}`}>
                         <Form onSubmit={submitForm}>
                             <Form.Group controlId="formFile" className="mb-3">
                                 <Form.Label>Select a File (pdf)</Form.Label>

@@ -4,7 +4,7 @@ import styles from "./BrowseDocumentsSidebar.module.css";
 import ScrapalotToggle from '../../utils/ScrapalotToggle';
 import themes from '../../themes/CustomThemeProvider.module.css';
 
-function BrowseDocumentsSidebar({onSearch, setSelectedDocument, onSelectDatabase, selectedDatabase, searchTerm, databases, setSelectedDocumentInitialPage, darkMode, handleExpandSidebar, isDocumentBrowserVisible}) {
+function BrowseDocumentsSidebar({onSearch, setSelectedDocument, onSelectDatabase, selectedDatabase, searchTerm, databases, setSelectedDocumentInitialPage, darkMode}) {
 
     // what happens when you click on the sidebar database/collection name
     const [openDatabase, setOpenDatabase] = useState('0');
@@ -30,7 +30,7 @@ function BrowseDocumentsSidebar({onSearch, setSelectedDocument, onSelectDatabase
         fetch(url, {signal: abortController.signal})  // Added signal option to listen to abort events
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error(`Network response was not ok. Status: ${response.status}, StatusText: ${response.statusText}`);
                 }
                 return response.json();
             })
@@ -50,8 +50,7 @@ function BrowseDocumentsSidebar({onSearch, setSelectedDocument, onSelectDatabase
                     if (error.name === 'AbortError') {
                         console.log('Fetch cancelled');
                     } else {
-                        console.error('Error:', error);
-                        // Display error message to user...
+                        console.error('Error after all retries: ', error);
                     }
                 }
             });

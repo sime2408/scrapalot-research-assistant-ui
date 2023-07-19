@@ -8,6 +8,7 @@ import {highlightPlugin, RenderHighlightTargetProps} from '@react-pdf-viewer/hig
 import {SpeakContext} from '../../utils/ScrapalotSpeechSynthesis';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import themes from '../../themes/CustomThemeProvider.module.css';
 
 // Handlers for the button actions
 const handleCopyToClipboard = () => {
@@ -278,18 +279,29 @@ function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument
                 </>
             ) : (
                 <div className={styles.fileViewerNoFile}>
-                    <h1 style={darkMode ? {textShadow: '0px 0px 3px rgba(66, 73, 77, 0.8)'} : {textShadow: '0 2px 3px rgba(255, 255, 255, 0.8)'}}>
-                        please select a document
-                    </h1>
+                    <div style={{display: 'flex', justifyContent: 'center', gap: '100px'}}>
+                        <div style={{textAlign: 'center'}}>
+                            <i className="bi bi-upload" style={darkMode ? {color: '#5c676c'} : {color: '#82c5cc'}}></i>
+                            <div>
+                                <button style={darkMode ? {backgroundColor: 'transparent'} : {backgroundColor: 'transparent'}}>Upload</button>
+                            </div>
+                        </div>
+                        <div style={{textAlign: 'center'}}>
+                            <i className="bi bi-database-add" style={darkMode ? {color: '#5c676c'} : {color: '#82c5cc'}}></i>
+                            <div>
+                                <button style={darkMode ? {backgroundColor: 'transparent'} : {backgroundColor: 'transparent'}}>New Database</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             )}
 
             <Modal show={showTranslation} onHide={() => setShowTranslation(false)}>
-                <Modal.Header closeButton>
+                <Modal.Header style={{borderRadius: '0'}} closeButton className={`${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemeDefault}`}>
                     <Modal.Title><i className="bi bi-translate"></i> translated text</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>{translatedText}</Modal.Body>
-                <Modal.Footer>
+                <Modal.Body className={`${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemePrimary}`}>{translatedText}</Modal.Body>
+                <Modal.Footer style={{borderRadius: '0'}} className={`${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemeDefault}`}>
                     <BootstrapButton variant="secondary" onClick={handleSpeakTranslation}>
                         <i className="bi bi-megaphone"></i> speak
                     </BootstrapButton>

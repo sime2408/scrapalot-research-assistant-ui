@@ -16,13 +16,12 @@
 }
 
 .pageDivider {
-  border-bottom: 1px solid #ccc; /* Adjust as needed */
+  border-bottom: 1px solid #ccc;
 }
 
 .fileViewerNoFile {
-  margin-top: 50px;
+  margin-top: 80px;
   text-align: center;
-  text-shadow: 1px 1px transparent, -1px -1px black;
 }
 
 .fileViewerNoFile h1 {
@@ -33,4 +32,24 @@
   -webkit-background-clip: text;
   -moz-background-clip: text;
   background-clip: text;
+}
+
+.fileViewerNoFile i {
+  vertical-align: middle;
+  font-size: 45px;
+}
+
+.fileViewerNoFile button {
+  color: #ffffff;
+  font-variant: all-small-caps;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0.4;
+}
+
+.fileViewerNoFile button:hover {
+  opacity: 1.0;
 }

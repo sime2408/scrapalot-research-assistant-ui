@@ -206,7 +206,7 @@ function App() {
     }
 
     // scratchpad
-    const [isScratchpadVisible, setIsScratchpadVisible] = useState(false);
+    const [isScratchpadVisible, setIsScratchpadVisible] = useState(true);
     const [isDocumentBrowserVisible, setIsDocumentBrowserVisible] = useState(true);
 
     const [columnClasses, setColumnClasses] = useState({
@@ -274,7 +274,7 @@ function App() {
                  onMouseUp={handleMouseUp}>
                 <div className="row">
                     {isDocumentBrowserVisible && (
-                        <div className={`${columnClasses.left} ${styles.appLeftSidebarColumn} ${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemeDefault}`}
+                        <div className={`${columnClasses.left} ${styles.appLeftSidebarColumn} ${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemePrimary}`}
                              style={darkMode ?
                                  {
                                      borderRight: "1px solid #41494d",
