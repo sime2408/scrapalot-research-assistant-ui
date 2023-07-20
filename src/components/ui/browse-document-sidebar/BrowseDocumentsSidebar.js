@@ -11,6 +11,9 @@ function BrowseDocumentsSidebar({onSearch, setSelectedDocument, onSelectDatabase
     const [openCollection, setOpenCollection] = useState(null);
     // loaded documents on database/collection click
     const [documents, setDocuments] = useState([]);
+    const [page, setPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [totalDocuments, setTotalDocuments] = useState(0);
     // Fetch abort controller
     const abortController = new AbortController();
 
@@ -25,8 +28,14 @@ function BrowseDocumentsSidebar({onSearch, setSelectedDocument, onSelectDatabase
         };
     }, [selectedDatabase, databases]);
 
-    const fetchDatabaseDocuments = useCallback((databaseName, retryCount = 5, interval = 2000) => {
-        const url = `${process.env.REACT_APP_API_BASE_URL}/database/${databaseName}`;
+    const fetchDatabaseDocuments = useCallback((databaseName, clearExisting = true, retryCount = 5, interval = 2000) => {
+        let currentPage = page;
+        let currentDocuments = documents;
+        if (clearExisting) {
+            currentDocuments = [];
+            currentPage = 1;
+        }
+        const url = `${process.env.REACT_APP_API_BASE_URL}/database/${databaseName}?page=${currentPage}&items_per_page=${itemsPerPage}`;
         fetch(url, {signal: abortController.signal})  // Added signal option to listen to abort events
             .then(response => {
                 if (!response.ok) {
@@ -35,7 +44,11 @@ function BrowseDocumentsSidebar({onSearch, setSelectedDocument, onSelectDatabase
                 return response.json();
             })
             .then(data => {
-                setDocuments(data);
+                if (data && data.items) {
+                    setDocuments([...currentDocuments, ...data.items]);
+                    setTotalDocuments(data["total_count"]);
+                    setPage(currentPage + 1);
+                }
                 const index = databases.findIndex(db => db.name === databaseName);
                 if (index !== -1) {
                     setOpenDatabase(index.toString());
@@ -56,13 +69,19 @@ function BrowseDocumentsSidebar({onSearch, setSelectedDocument, onSelectDatabase
             });
     }, [databases, onSelectDatabase, abortController.signal]);
 
-    useEffect(() => {
-        if (documents.length > 0) {
-            //setIsLoading(false);
+    // Load more documents
+    const loadMoreDocuments = () => {
+        if (selectedDatabase) {
+            // Do not clear existing documents
+            fetchDatabaseDocuments(selectedDatabase, false);
         }
-    }, [documents /*,setIsLoading*/]);
+    };
 
-    const fetchCollectionDocuments = (databaseName, collectionName) => {
+    const fetchCollectionDocuments = (databaseName, clearExisting = true, collectionName) => {
+        if (clearExisting) {
+            setDocuments([]); // Clear the documents before fetching new ones
+            setPage(1); // Reset the page number
+        }
         const url = `${process.env.REACT_APP_API_BASE_URL}/database/${databaseName}/collection/${collectionName}`;
         fetch(url)
             .then(response => response.json())
@@ -187,7 +206,16 @@ function BrowseDocumentsSidebar({onSearch, setSelectedDocument, onSelectDatabase
                                                                 >
                                                                     <i className={determineFileTypeIcon(document.name)}/> {document.name}
                                                                 </ListGroup.Item>
-                                                            ))}
+                                                            ))
+                                                        }
+                                                        {documents.length < totalDocuments && (
+                                                            <ListGroup.Item
+                                                                className={`${styles.leftSidebarDocItems} ${darkMode ? themes.darkThemeWithBottomBorderDefault : ''}`}
+                                                                onClick={loadMoreDocuments}
+                                                            >
+                                                                Load More
+                                                            </ListGroup.Item>
+                                                        )}
                                                     </ListGroup>
                                                 </Card>
                                             </div>
