@@ -41,7 +41,8 @@
 }
 
 .leftSidebarDropdown {
-  margin-top: 10px
+  margin-top: 10px;
+  margin-bottom: 30px;
 }
 
 .leftSidebarDropdownCard {

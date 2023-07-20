@@ -206,7 +206,7 @@ function App() {
     }
 
     // scratchpad
-    const [isScratchpadVisible, setIsScratchpadVisible] = useState(true);
+    const [isScratchpadVisible, setIsScratchpadVisible] = useState(false);
     const [isDocumentBrowserVisible, setIsDocumentBrowserVisible] = useState(true);
 
     const [columnClasses, setColumnClasses] = useState({
