@@ -135,6 +135,11 @@ span.rpv-core__text-layer-text::selection {
   border-top-right-radius: 0;
 }
 
+.form-check-input:checked {
+  background-color: #efbb46;
+  border-color: #fdad4b;
+  outline: none;
+}
 
 .btn {
   border-radius: 0 !important;

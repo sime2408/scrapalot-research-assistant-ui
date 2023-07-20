@@ -53,9 +53,9 @@ const AIChatbot = (props) => {
             setIsLoading(true);
 
             const requestBody = {
-                database_name: props.db_name,
+                database_name: props.selectedDatabase,
                 question: inputText,
-                collection_name: props.db_collection_name || props.db_name,
+                collection_name: props.selectedDatabaseColl || props.selectedDatabase,
                 locale: savedLocale,
                 translate_chunks: Cookies.get("scrapalot-translate-chunks") === "true" || false,
             };
@@ -106,12 +106,6 @@ const AIChatbot = (props) => {
 
     // toolbar
 
-    const renderClearTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props}>
-            clear the chat messages
-        </Tooltip>
-    );
-
     const renderSidebar = (props) => (
         <Tooltip id="button-tooltip" {...props}>
             sidebar
@@ -121,6 +115,19 @@ const AIChatbot = (props) => {
     const renderScratchpad = (props) => (
         <Tooltip id="button-tooltip" {...props}>
             scratchpad
+        </Tooltip>
+    );
+
+    const renderClearTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props}>
+            clear the chat messages
+        </Tooltip>
+    );
+
+
+    const renderAskThisDocument = (props) => (
+        <Tooltip id="button-tooltip" {...props}>
+            ask this document
         </Tooltip>
     );
 
@@ -142,6 +149,12 @@ const AIChatbot = (props) => {
         props.setLocale(newLocale.id);
         Cookies.set('scrapalot-locale', newLocale.id, {expires: 30});
     };
+
+    const [askThisDocument, setAskThisDocument] = useState(false);
+    const handleAskThisDocument = () => {
+        // Toggle the state of askThisDocument
+        setAskThisDocument(prevState => !prevState);
+    }
 
     return (
         <div style={{padding: '8px 8px 8px 0', height: 'calc(100vh - 96px)'}}>
@@ -167,30 +180,42 @@ const AIChatbot = (props) => {
                 <OverlayTrigger
                     style={{cursor: 'pointer'}}
                     placement="bottom"
-                    overlay={renderScratchpad}
-                >
-                    <div>
-                        {props.isScratchpadVisible && (
-                            <button onClick={props.handleExpandScratchpad} style={{border: 'none', background: 'none'}}>
-                                <i className="bi bi-pencil-fill"></i>
-                            </button>
-                        )}
-                        {!props.isScratchpadVisible && (
-                            <button onClick={props.handleExpandScratchpad} style={{border: 'none', background: 'none'}}>
-                                <i className="bi bi-pencil"></i>
-                            </button>
-                        )}
-                    </div>
-                </OverlayTrigger>
-                <OverlayTrigger
-                    style={{cursor: 'pointer'}}
-                    placement="bottom"
                     overlay={renderClearTooltip}
                 >
                     <button onClick={props.handleClearMessages} style={{border: 'none', background: 'none'}}>
                         <i className="bi bi-trash"></i>
                     </button>
                 </OverlayTrigger>
+                <OverlayTrigger
+                    style={{cursor: 'pointer'}}
+                    placement="bottom"
+                    overlay={renderScratchpad}
+                >
+                    <div>
+                        <button onClick={props.handleExpandScratchpad} style={{border: 'none', background: 'none'}}>
+                            {
+                                props.isScratchpadVisible
+                                    ? <i className="bi bi-pencil-fill" style={{color: '#44abb6'}}></i>
+                                    : <i className="bi bi-pencil"></i>
+                            }
+                        </button>
+                    </div>
+                </OverlayTrigger>
+                {props.selectedDocument && (
+                    <OverlayTrigger
+                        style={{cursor: 'pointer'}}
+                        placement="bottom"
+                        overlay={renderAskThisDocument}
+                    >
+                        <button onClick={handleAskThisDocument} style={{border: 'none', background: 'none'}}>
+                            {
+                                askThisDocument
+                                    ? <i className="bi bi-file-check-fill" style={{color: '#44abb6'}}></i>
+                                    : <i className="bi bi-file-check"></i>
+                            }
+                        </button>
+                    </OverlayTrigger>
+                )}
 
                 <span className={styles.aiChatbotTranslateChunks}>
                     <ScrapalotCookieSwitch toggleLabel={"translate footnotes"} cookieKey={"scrapalot-translate-chunks"}/>

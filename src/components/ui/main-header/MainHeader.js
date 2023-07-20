@@ -7,7 +7,7 @@ import themes from "../../themes/CustomThemeProvider.module.css"
 
 import logo from '../../../static/img/logo-icon.png';
 
-function MainHeader({onSelectDatabase, selectedDatabase, databases, toggleTheme, darkMode}) {
+function MainHeader({onSelectDatabase, selectedDatabase, selectedDocument, databases, toggleTheme, darkMode}) {
     const [search, setSearch] = useState('');
     const [show, setShow] = useState(false);
     const [file, setFile] = useState(null);
@@ -83,8 +83,23 @@ function MainHeader({onSelectDatabase, selectedDatabase, databases, toggleTheme,
         }
     }, []);
 
+    // selected document name
+
+    const documentName = selectedDocument ? selectedDocument.name : '';
+    const truncatedDocumentName = documentName.length > 80
+        ? `${documentName.substring(0, 80)}...`
+        : documentName;
+
+    const style = {
+        fontSize: '0.8em',
+        fontVariant: 'petite-caps',
+        color: darkMode ? 'white' : 'black',
+        textAlign: 'left',
+        width: '100%'
+    };
+
     return (
-        <Navbar expand="lg" className={`'px-2' ${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemePrimary}`}>
+        <Navbar expand="lg" style={{maxHeight: '57px'}} className={`'px-2' ${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemePrimary}`}>
             <Navbar.Brand href="/">
                 <img style={{marginLeft: '14px'}}
                      alt="Scrapalot Logo"
@@ -147,6 +162,13 @@ function MainHeader({onSelectDatabase, selectedDatabase, databases, toggleTheme,
                         </Dropdown.Menu>
                     </Dropdown>
                 </Nav>
+                {truncatedDocumentName && (
+                    <div style={style}>
+                        <i className="bi bi-arrow-right-short"></i>
+                        &nbsp;&nbsp;
+                        {truncatedDocumentName}
+                    </div>
+                )}
                 <div className={`${styles.mainHeaderToolbar}`}>
                     {darkMode ? (
                         <i className={`bi bi-brightness-high-fill ${styles.mainHeaderToolbarIconDark}`} onClick={toggleTheme}></i>

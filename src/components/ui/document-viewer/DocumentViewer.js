@@ -283,13 +283,13 @@ function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument
                         <div style={{textAlign: 'center'}}>
                             <i className="bi bi-upload" style={darkMode ? {color: '#5c676c'} : {color: '#82c5cc'}}></i>
                             <div>
-                                <button style={darkMode ? {backgroundColor: 'transparent'} : {backgroundColor: 'transparent'}}>Upload</button>
+                                <button style={darkMode ? {backgroundColor: 'transparent'} : {backgroundColor: 'transparent', color: '#9ca2a7'}}>Upload</button>
                             </div>
                         </div>
                         <div style={{textAlign: 'center'}}>
                             <i className="bi bi-database-add" style={darkMode ? {color: '#5c676c'} : {color: '#82c5cc'}}></i>
                             <div>
-                                <button style={darkMode ? {backgroundColor: 'transparent'} : {backgroundColor: 'transparent'}}>New Database</button>
+                                <button style={darkMode ? {backgroundColor: 'transparent'} : {backgroundColor: 'transparent', color: '#9ca2a7'}}>New Database</button>
                             </div>
                         </div>
                     </div>

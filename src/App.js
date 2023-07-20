@@ -266,6 +266,7 @@ function App() {
             <MainHeader
                 onSelectDatabase={handleSelectDatabase}
                 selectedDatabase={selectedDatabase}
+                selectedDocument={selectedDocument}
                 databases={databases}
                 toggleTheme={toggleTheme}
                 darkMode={darkMode}/>
@@ -376,8 +377,9 @@ function App() {
                             locale={locale}
                             setLocale={setLocale}
                             handleFootnoteClick={handleFootnoteClick}
-                            db_name={selectedDatabase}
-                            db_collection_name={selectedDatabase}
+                            selectedDatabase={selectedDatabase}
+                            selectedDatabaseColl={selectedDatabase}
+                            selectedDocument={selectedDocument}
                             messages={messages}
                             setMessages={setMessages}
                             isDocumentBrowserVisible={isDocumentBrowserVisible}
