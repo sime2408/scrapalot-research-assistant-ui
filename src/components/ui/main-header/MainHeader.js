@@ -1,6 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Button, Col, Dropdown, Form, Modal, Nav, Navbar, Row, Spinner} from "react-bootstrap";
 import axios from 'axios';
+import {ScrapalotLoadingContext} from '../../utils/ScrapalotLoadingContext';
 
 import styles from "./MainHeader.module.css"
 import themes from "../../themes/CustomThemeProvider.module.css"
@@ -8,23 +9,29 @@ import themes from "../../themes/CustomThemeProvider.module.css"
 import logo from '../../../static/img/logo-icon.png';
 
 function MainHeader({onSelectDatabase, selectedDatabase, selectedDocument, databases, toggleTheme, darkMode}) {
+
+    // loading
+    const {loading, setLoading} = useContext(ScrapalotLoadingContext);
+
     const [search, setSearch] = useState('');
-    const [show, setShow] = useState(false);
+    const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
     const [file, setFile] = useState(null);
-    const [loading, setLoading] = useState(false);
     const [selectedCollection, setSelectedCollection] = useState(null);
     const [currentDatabaseCollections, setCurrentDatabaseCollections] = useState([]);
     const [isDatabaseDropdownOpen, setIsDatabaseDropdownOpen] = useState(false);
+    const [isNewDatabaseModalOpen, setIsNewDatabaseModalOpen] = useState(false);
+    const [newDatabaseName, setNewDatabaseName] = useState("");
+    const [step, setStep] = useState(0);
 
-    const handleClose = () => setShow(false);
-    const handleShow = () => {
+    const handleUploadClose = () => setIsUploadModalOpen(false);
+    const handleUploadModal = () => {
         const databaseToSelect = databases.find(db => db.name === selectedDatabase) || databases[0];
         if (databaseToSelect) {
             onSelectDatabase(databaseToSelect.name);
             setCurrentDatabaseCollections(databaseToSelect.collections);
             setSelectedCollection(databaseToSelect.collections[0]?.name || null);
         }
-        setShow(true);
+        setIsUploadModalOpen(true);
     };
 
     const filteredDatabases = databases.filter(database =>
@@ -41,7 +48,35 @@ function MainHeader({onSelectDatabase, selectedDatabase, selectedDocument, datab
         }
     };
 
-    const submitForm = (e) => {
+    const handleNewDatabaseModalOpen = () => {
+        setIsNewDatabaseModalOpen(true);
+    };
+
+    const handleNewDatabaseModalClose = () => {
+        setIsNewDatabaseModalOpen(false);
+    };
+
+    const handleNewDatabaseNameChange = (e) => {
+        setNewDatabaseName(e.target.value);
+    };
+
+    const createNewDatabase = (e) => {
+        e.preventDefault();
+        setLoading(true);
+        const url = `${process.env.REACT_APP_API_BASE_URL}/database/${newDatabaseName}/new`;
+        axios.post(url)
+            .then(_ => {
+                setLoading(false);
+                alert('Database created!');
+                setStep(1);
+            })
+            .catch(err => {
+                setLoading(false);
+                console.log(err);
+            });
+    };
+
+    const submitUploadForm = (e) => {
         e.preventDefault();
         setLoading(true);
         const url = `${process.env.REACT_APP_API_BASE_URL}/upload`;
@@ -55,7 +90,7 @@ function MainHeader({onSelectDatabase, selectedDatabase, selectedDocument, datab
         axios.post(url, formData)
             .then(_ => {
                 setLoading(false);
-                handleClose();
+                handleUploadClose();
                 alert('Ingestion complete!');
                 e.target.reset();
             })
@@ -64,6 +99,27 @@ function MainHeader({onSelectDatabase, selectedDatabase, selectedDocument, datab
                 console.log(err);
             })
     };
+
+    const submitNewDatabaseUpload = (e) => {
+        e.preventDefault();
+        setLoading(true);
+        const url = `${process.env.REACT_APP_API_BASE_URL}/upload`;
+        const formData = new FormData();
+        formData.append('files', file);
+        formData.append('database_name', newDatabaseName);
+
+        axios.post(url, formData)
+            .then(_ => {
+                setLoading(false);
+                handleNewDatabaseModalClose();
+                alert('Ingestion complete!');
+                e.target.reset();
+            })
+            .catch(err => {
+                setLoading(false);
+                console.log(err);
+            });
+    }
 
     useEffect(() => {
         if (selectedDatabase) {
@@ -128,7 +184,7 @@ function MainHeader({onSelectDatabase, selectedDatabase, selectedDocument, datab
                                     &nbsp;&nbsp;Configure AI
                                 </>
                             </Dropdown.Item>
-                            <Dropdown.Item key="1">
+                            <Dropdown.Item key="1" onClick={handleNewDatabaseModalOpen}>
                                 <>
                                     <i className="bi bi-database-add"></i>
                                     &nbsp;&nbsp;New Database
@@ -176,17 +232,17 @@ function MainHeader({onSelectDatabase, selectedDatabase, selectedDocument, datab
                         <i className={`bi bi-moon-fill ${styles.mainHeaderToolbarIconLight}`} onClick={toggleTheme}></i>
                     )}
                 </div>
-                <Button variant="outline-primary" className={'me-2'} onClick={handleShow}>
+                <Button variant="outline-primary" className={'me-2'} onClick={handleUploadModal}>
                     upload
                     &nbsp;&nbsp;<i className="bi bi-upload"></i>
                 </Button>
 
-                <Modal show={show} onHide={handleClose}>
+                <Modal show={isUploadModalOpen} onHide={handleUploadClose}>
                     <Modal.Header style={{borderRadius: '0'}} closeButton className={`${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemeDefault}`}>
                         <Modal.Title>Upload files</Modal.Title>
                     </Modal.Header>
                     <Modal.Body className={`${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemePrimary}`}>
-                        <Form onSubmit={submitForm}>
+                        <Form onSubmit={submitUploadForm}>
                             <Form.Group controlId="formFile" className="mb-3">
                                 <Form.Label>Select a File (pdf)</Form.Label>
                                 <Form.Control type="file" accept=".pdf" onChange={handleFileChange}/>
@@ -219,6 +275,36 @@ function MainHeader({onSelectDatabase, selectedDatabase, selectedDocument, datab
                                 {loading ? <Spinner animation="border" size="sm"/> : 'Submit'}
                             </Button>
                         </Form>
+                    </Modal.Body>
+                </Modal>
+
+                <Modal show={isNewDatabaseModalOpen} onHide={handleNewDatabaseModalClose}>
+                    <Modal.Header style={{borderRadius: '0'}} closeButton className={`${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemeDefault}`}>
+                        <Modal.Title>Create New Database</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body className={`${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemePrimary}`}>
+                        {step === 0 && (
+                            <Form onSubmit={createNewDatabase}>
+                                <Form.Group controlId="newDatabaseName">
+                                    <Form.Label>New Database Name</Form.Label>
+                                    <Form.Control type="text" value={newDatabaseName} onChange={handleNewDatabaseNameChange}/>
+                                </Form.Group>
+                                <Button variant="primary" className={`mt-3`} type="submit">
+                                    {loading ? <Spinner animation="border" size="sm"/> : 'Create'}
+                                </Button>
+                            </Form>
+                        )}
+                        {step === 1 && (
+                            <Form onSubmit={submitNewDatabaseUpload}>
+                                <Form.Group controlId="formFile" className="mb-3">
+                                    <Form.Label>Select a File (pdf)</Form.Label>
+                                    <Form.Control type="file" accept=".pdf" onChange={handleFileChange}/>
+                                </Form.Group>
+                                <Button variant="primary" className={`mt-3`} type="submit">
+                                    {loading ? <Spinner animation="border" size="sm"/> : 'Submit'}
+                                </Button>
+                            </Form>
+                        )}
                     </Modal.Body>
                 </Modal>
             </Navbar.Collapse>
