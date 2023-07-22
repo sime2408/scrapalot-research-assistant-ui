@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import {SpecialZoomLevel, Tooltip, Viewer, Worker} from "@react-pdf-viewer/core";
 import {Button as BootstrapButton, Modal, OverlayTrigger} from 'react-bootstrap';
 import {defaultLayoutPlugin} from '@react-pdf-viewer/default-layout';
@@ -139,10 +139,12 @@ function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument
     }, [selectedDatabase, selectedDocument, setSelectedDocument]);
 
     // when you select the text, prevent selection leaking into other components
+    const documentViewerRef = useRef(null);
+
     useEffect(() => {
         function handleMouseUp(event) {
-            // Check if the mouseup event happens outside the PDF viewer
-            if (!event.target.closest('.fileViewer')) {
+            // If the mouse up event happens outside the DocumentViewer component
+            if (documentViewerRef.current && !documentViewerRef.current.contains(event.target)) {
                 // Clear any selection
                 if (window.getSelection) {
                     if (window.getSelection().empty) {  // Chrome
@@ -156,10 +158,13 @@ function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument
             }
         }
 
-        document.addEventListener('mouseup', handleMouseUp);
+        const node = documentViewerRef.current;
+        if (node) {
+            node.addEventListener('mouseup', handleMouseUp);
 
-        return () => {
-            document.removeEventListener('mouseup', handleMouseUp);
+            return () => {
+                node.removeEventListener('mouseup', handleMouseUp);
+            }
         }
     }, []);
 

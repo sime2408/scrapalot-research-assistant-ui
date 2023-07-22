@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
-import {Button, Col, Dropdown, Form, Modal, Nav, Navbar, Row, Spinner} from "react-bootstrap";
+import {Button, Col, Dropdown, Form, Nav, Navbar, Row} from "react-bootstrap";
 import axios from 'axios';
 import {ScrapalotLoadingContext} from '../../utils/ScrapalotLoadingContext';
 
@@ -7,6 +7,7 @@ import styles from "./MainHeader.module.css"
 import themes from "../../themes/CustomThemeProvider.module.css"
 
 import logo from '../../../static/img/logo-icon.png';
+import ScrapalotReusableModal from '../../utils/ScrapalotReusableModal';
 
 function MainHeader({onSelectDatabase, selectedDatabase, selectedDocument, databases, toggleTheme, darkMode}) {
 
@@ -237,12 +238,13 @@ function MainHeader({onSelectDatabase, selectedDatabase, selectedDocument, datab
                     &nbsp;&nbsp;<i className="bi bi-upload"></i>
                 </Button>
 
-                <Modal show={isUploadModalOpen} onHide={handleUploadClose}>
-                    <Modal.Header style={{borderRadius: '0'}} closeButton className={`${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemeDefault}`}>
-                        <Modal.Title>Upload files</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body className={`${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemePrimary}`}>
-                        <Form onSubmit={submitUploadForm}>
+                <ScrapalotReusableModal
+                    show={isUploadModalOpen}
+                    handleClose={handleUploadClose}
+                    darkMode={darkMode}
+                    title="Upload files"
+                    body={
+                        <>
                             <Form.Group controlId="formFile" className="mb-3">
                                 <Form.Label>Select a File (pdf)</Form.Label>
                                 <Form.Control type="file" accept=".pdf" onChange={handleFileChange}/>
@@ -271,42 +273,42 @@ function MainHeader({onSelectDatabase, selectedDatabase, selectedDocument, datab
                                     </Col>
                                 )}
                             </Row>
-                            <Button variant="primary" type="submit">
-                                {loading ? <Spinner animation="border" size="sm"/> : 'Submit'}
-                            </Button>
-                        </Form>
-                    </Modal.Body>
-                </Modal>
+                        </>
+                    } // Pass the form fields here
+                    onSubmit={submitUploadForm}
+                    loading={loading}
+                />
 
-                <Modal show={isNewDatabaseModalOpen} onHide={handleNewDatabaseModalClose}>
-                    <Modal.Header style={{borderRadius: '0'}} closeButton className={`${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemeDefault}`}>
-                        <Modal.Title>Create New Database</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body className={`${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemePrimary}`}>
-                        {step === 0 && (
-                            <Form onSubmit={createNewDatabase}>
-                                <Form.Group controlId="newDatabaseName">
-                                    <Form.Label>New Database Name</Form.Label>
-                                    <Form.Control type="text" value={newDatabaseName} onChange={handleNewDatabaseNameChange}/>
-                                </Form.Group>
-                                <Button variant="primary" className={`mt-3`} type="submit">
-                                    {loading ? <Spinner animation="border" size="sm"/> : 'Create'}
-                                </Button>
-                            </Form>
-                        )}
-                        {step === 1 && (
-                            <Form onSubmit={submitNewDatabaseUpload}>
-                                <Form.Group controlId="formFile" className="mb-3">
-                                    <Form.Label>Select a File (pdf)</Form.Label>
-                                    <Form.Control type="file" accept=".pdf" onChange={handleFileChange}/>
-                                </Form.Group>
-                                <Button variant="primary" className={`mt-3`} type="submit">
-                                    {loading ? <Spinner animation="border" size="sm"/> : 'Submit'}
-                                </Button>
-                            </Form>
-                        )}
-                    </Modal.Body>
-                </Modal>
+                <ScrapalotReusableModal
+                    show={isNewDatabaseModalOpen}
+                    handleClose={handleNewDatabaseModalClose}
+                    darkMode={darkMode}
+                    themes={themes}
+                    title="Create New Database"
+                    body={
+                        <>
+                            {step === 0 && (
+                                <>
+                                    <Form.Group controlId="newDatabaseName">
+                                        <Form.Label>New Database Name</Form.Label>
+                                        <Form.Control type="text" value={newDatabaseName} onChange={handleNewDatabaseNameChange}/>
+                                    </Form.Group>
+                                </>
+                            )}
+                            {step === 1 && (
+                                <>
+                                    <Form.Group controlId="formFile" className="mb-3">
+                                        <Form.Label>Select a File (pdf)</Form.Label>
+                                        <Form.Control type="file" accept=".pdf" onChange={handleFileChange}/>
+                                    </Form.Group>
+                                </>
+                            )}
+                        </>
+                    }
+                    onSubmit={step === 0 ? createNewDatabase : submitNewDatabaseUpload}
+                    loading={loading}
+                />
+
             </Navbar.Collapse>
         </Navbar>
     );
