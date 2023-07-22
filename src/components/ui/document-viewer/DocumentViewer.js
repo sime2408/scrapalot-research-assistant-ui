@@ -138,6 +138,31 @@ function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument
         }
     }, [selectedDatabase, selectedDocument, setSelectedDocument]);
 
+    // when you select the text, prevent selection leaking into other components
+    useEffect(() => {
+        function handleMouseUp(event) {
+            // Check if the mouseup event happens outside the PDF viewer
+            if (!event.target.closest('.fileViewer')) {
+                // Clear any selection
+                if (window.getSelection) {
+                    if (window.getSelection().empty) {  // Chrome
+                        window.getSelection().empty();
+                    } else if (window.getSelection().removeAllRanges) {  // Firefox
+                        window.getSelection().removeAllRanges();
+                    }
+                } else if (document.selection) {  // IE?
+                    document.selection.empty();
+                }
+            }
+        }
+
+        document.addEventListener('mouseup', handleMouseUp);
+
+        return () => {
+            document.removeEventListener('mouseup', handleMouseUp);
+        }
+    }, []);
+
     function getFileType(selectedDocument) {
         return selectedDocument && selectedDocument.name.split(".").pop();
     }
