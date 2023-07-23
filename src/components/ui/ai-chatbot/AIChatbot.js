@@ -57,7 +57,11 @@ const AIChatbot = (props) => {
                 question: inputText,
                 collection_name: props.selectedDatabaseColl || props.selectedDatabase,
                 locale: savedLocale,
-                translate_chunks: Cookies.get("scrapalot-translate-chunks") === "true" || false,
+                filter_options: {
+                    filter_document: askThisDocument,
+                    filter_document_name: props.selectedDocument ? props.selectedDocument.name : null,
+                    translate_chunks: Cookies.get("scrapalot-translate-chunks") === "true" || false,
+                }
             };
 
             try {
