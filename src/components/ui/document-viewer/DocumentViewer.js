@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from "react";
+import React, {forwardRef, useContext, useEffect, useRef, useState} from "react";
 import {SpecialZoomLevel, Tooltip, Viewer, Worker} from "@react-pdf-viewer/core";
 import {Button as BootstrapButton, Modal, OverlayTrigger} from 'react-bootstrap';
 import {defaultLayoutPlugin} from '@react-pdf-viewer/default-layout';
@@ -36,12 +36,11 @@ const renderTooltip = (props, message) => (
 );
 
 // Create a version of the Button component that forwards the ref it receives
-const BootstrapButtonWithRef = React.forwardRef((props, ref) => (
+const BootstrapButtonWithRef = forwardRef((props, ref) => (
     <BootstrapButton ref={ref} {...props}>{props.children}</BootstrapButton>
 ));
 
-
-const ViewerWrapper = ({fileUrl, initialPage, theme, renderHighlightTarget}) => {
+const ViewerWrapper = ({fileUrl, initialPage, theme, renderHighlightTarget, footnoteHighlightedText}) => {
 
     const renderToolbar = (Toolbar) => (
         <Toolbar>
@@ -103,8 +102,25 @@ const ViewerWrapper = ({fileUrl, initialPage, theme, renderHighlightTarget}) => 
         </Toolbar>
     );
 
+    // Split the footnoteHighlightedText into words because formatting is not the same
+    let searchKeywords = [];
+    if (footnoteHighlightedText) {
+        const words = footnoteHighlightedText.split(' ');
+        for (let i = 0; i < words.length - 1; i++) {
+            searchKeywords.push(words[i] + ' ' + words[i + 1] + ' ' + words[i + 2]);
+        }
+    }
+
     const defaultLayoutPluginInstance = defaultLayoutPlugin({
         renderToolbar,
+        toolbarPlugin: {
+            searchPlugin: {
+                keyword: searchKeywords,
+                onHighlightKeyword: (props) => {
+                    props.highlightEle.style.backgroundColor = 'rgba(253, 196, 70, 0.1)';
+                },
+            },
+        },
         thumbnailPlugin: {
             thumbnailWidth: 150,
         }
@@ -123,7 +139,7 @@ const ViewerWrapper = ({fileUrl, initialPage, theme, renderHighlightTarget}) => 
     );
 };
 
-function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument, selectedDocumentInitialPage, setSelectedText, darkMode}) {
+function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument, selectedDocumentInitialPage, footnoteHighlightedText, setManuallySelectedTextFromDocument, darkMode}) {
 
     // file type state
     const [fileType, setFileType] = useState(null);
@@ -238,7 +254,7 @@ function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument
                 if (text !== '') {
                     text = text.replace(/\n/g, ' ');  // Replace newline characters with spaces
                     text = text.replace(/-\s/g, ''); // Replace hyphen followed by space with nothing (joining the word parts)
-                    setSelectedText(text);  // Set the selected text
+                    setManuallySelectedTextFromDocument(text);  // Set the selected text
                 }
             }
         }
@@ -296,6 +312,7 @@ function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument
                                 initialPage={selectedDocumentInitialPage}
                                 theme={darkMode ? "dark" : "light"}
                                 renderHighlightTarget={(props) => renderHighlightTarget(props, handleTranslate, handleSpeak, handleCite)}
+                                footnoteHighlightedText={footnoteHighlightedText}
                             />
                         </Worker>
                     )}

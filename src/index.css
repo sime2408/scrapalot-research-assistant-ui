@@ -37,6 +37,10 @@ a {
 
 /* react-pdf-viewer */
 
+.rpv-search__highlights {
+  top: 10px;
+}
+
 .rpv-default-layout__toolbar {
   height: 2.6rem;
 }

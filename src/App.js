@@ -181,13 +181,15 @@ function App() {
         localStorage.removeItem('scrapalot-chat-messages');
     };
 
-    // Add a new state variable to track if a footnote has been clicked
+    // track if a footnote has been clicked
     const [footnoteClicked, setFootnoteClicked] = useState(false);
+    const [footnoteHighlightedText, setFootnoteHighlightedText] = useState('');
 
     const handleFootnoteClick = (content, pageNumber, index, selectedDatabase, selectedDocument) => {
         setFootnoteClicked(true);
         handleSelectDatabase(selectedDatabase) // pass the triggeredBy parameter
         handleSelectDocument(selectedDocument)
+        setFootnoteHighlightedText(content) // the chunk coming from the search
         setSelectedDocumentInitialPage(pageNumber + 1); // Assuming pageNumber is zero-based
     };
 
@@ -239,7 +241,7 @@ function App() {
         setIsScratchpadVisible(!isScratchpadVisible)
     }
 
-    const [selectedText, setSelectedText] = useState('');
+    const [manuallySelectedTextFromDocument, setManuallySelectedTextFromDocument] = useState('');
 
     // state for managing DocumentViewer and Scratchpad heights.
     const [isResizing, setIsResizing] = useState(false);
@@ -337,7 +339,8 @@ function App() {
                                         selectedDocument={selectedDocument}
                                         setSelectedDocument={handleSelectDocument}
                                         selectedDocumentInitialPage={selectedDocumentInitialPage}
-                                        setSelectedText={setSelectedText}
+                                        footnoteHighlightedText={footnoteHighlightedText}
+                                        setManuallySelectedTextFromDocument={setManuallySelectedTextFromDocument}
                                         darkMode={darkMode}
                                     />
                                 </div>
@@ -355,7 +358,7 @@ function App() {
                                         style={{flexGrow: 1}}>
                                         <Scratchpad
                                             documentViewerHeight={documentViewerHeight}
-                                            selectedText={selectedText}
+                                            selectedText={manuallySelectedTextFromDocument}
                                             selectedDocument={selectedDocument}
                                             darkMode={darkMode}/>
                                     </div>
