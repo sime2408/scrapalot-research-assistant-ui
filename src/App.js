@@ -1,5 +1,5 @@
 import React, {useCallback, useContext, useEffect, useReducer, useState} from "react";
-import {Button, Tab, Tabs} from 'react-bootstrap';
+import {Tab, Tabs} from 'react-bootstrap';
 import debounce from 'lodash.debounce';
 import Cookies from 'js-cookie';
 

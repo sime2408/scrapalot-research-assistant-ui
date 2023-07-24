@@ -126,6 +126,13 @@ const ViewerWrapper = ({fileUrl, initialPage, theme, renderHighlightTarget, foot
         }
     });
 
+    const {toolbarPluginInstance} = defaultLayoutPluginInstance;
+    const {searchPluginInstance} = toolbarPluginInstance;
+    const {setTargetPages} = searchPluginInstance;
+
+    // Only search in page we selected
+    setTargetPages((targetPage) => targetPage.pageIndex === initialPage);
+
     const highlightPluginInstance = highlightPlugin({
         renderHighlightTarget,
     });
