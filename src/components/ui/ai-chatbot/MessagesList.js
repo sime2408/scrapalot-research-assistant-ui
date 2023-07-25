@@ -22,12 +22,8 @@ const MessagesList = (props) => {
         localStorage.setItem("scrapalot-chat-messages", JSON.stringify(newMessages));
     };
 
-    const handleCopyToClipboard = (text) => {
-        navigator.clipboard.writeText(text).then(() => {
-            console.log('Text copied to clipboard');
-        }).catch(err => {
-            console.error('Could not copy text to clipboard: ', err);
-        });
+    const handleRepeatQuestion = () => {
+        props.handleRepeatQuestion();
     };
 
     const {speak} = useContext(SpeakContext);
@@ -99,16 +95,18 @@ const MessagesList = (props) => {
                             <i className="bi bi-trash" onClick={() => handleDeleteMessage(index)}></i>
                         </OverlayTrigger>
 
-                        <OverlayTrigger
-                            placement="top"
-                            overlay={
-                                <Tooltip id={`tooltip-bottom`}>
-                                    Copy to Clipboard
-                                </Tooltip>
-                            }
-                        >
-                            <i className="bi bi-clipboard" onClick={() => handleCopyToClipboard(message.answer)}></i>
-                        </OverlayTrigger>
+                        {message["source"] === "user" && (
+                            <OverlayTrigger
+                                placement="top"
+                                overlay={
+                                    <Tooltip id={`tooltip-bottom`}>
+                                        Repeat Question
+                                    </Tooltip>
+                                }
+                            >
+                                <i className="bi bi-arrow-repeat" onClick={() => handleRepeatQuestion()}></i>
+                            </OverlayTrigger>
+                        )}
 
                         <OverlayTrigger
                             placement="top"

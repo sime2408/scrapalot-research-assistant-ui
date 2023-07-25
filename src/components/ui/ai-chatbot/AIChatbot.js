@@ -37,12 +37,14 @@ const AIChatbot = (props) => {
         return () => window.removeEventListener("storage", handleStorageChange);
     }, [props.locale]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const sendMessage = async () => {
-        // Declare and assign the value for savedLocale here
+    const sendMessage = async (messageText) => {
+        // If messageText is not provided, use inputText
+        const text = messageText !== undefined ? messageText : inputText;
+
         const savedLocale = Cookies.get("scrapalot-locale") || "en";
 
-        if (inputText.trim() !== "") {
-            const newMessage = {answer: inputText, source: "user", language: props.locale};
+        if (text.trim() !== "") {
+            const newMessage = {answer: text, source: "user", language: props.locale};
 
             props.setMessages((prevMessages) => {
                 const newMessages = [...prevMessages, newMessage];
@@ -54,7 +56,7 @@ const AIChatbot = (props) => {
 
             const requestBody = {
                 database_name: props.selectedDatabase,
-                question: inputText,
+                question: text,
                 collection_name: props.selectedDatabaseColl || props.selectedDatabase,
                 locale: savedLocale,
                 filter_options: {
@@ -95,7 +97,22 @@ const AIChatbot = (props) => {
         // Add this condition to handle 'Tab' key press
         if (event.key === "Tab") {
             event.preventDefault(); // Prevent the default action
-            sendButtonRef.current.focus(); // Focus on the send button
+            sendButtonRef.current.focus(); // Focus on the 'send' button
+        }
+    };
+
+    // repeat the question if the user is not satisfied with the answer
+    const handleRepeatQuestion = async () => {
+        // Get the last user message
+        const lastUserMessage = props.messages.filter(message => message.source === "user").slice(-1)[0];
+        if (lastUserMessage) {
+            // Remove the last user message from the messages array
+            const newMessages = props.messages.filter((message, index) => index !== props.messages.indexOf(lastUserMessage));
+            props.setMessages(newMessages);
+            localStorage.setItem("scrapalot-chat-messages", JSON.stringify(newMessages));
+
+            // Call sendMessage to send the question to the backend API
+            await sendMessage(lastUserMessage.answer);
         }
     };
 
@@ -249,6 +266,7 @@ const AIChatbot = (props) => {
                         messages={props.messages}
                         setMessages={props.setMessages}
                         handleFootnoteClick={handleFootnoteClick}
+                        handleRepeatQuestion={handleRepeatQuestion}
                         footnoteContent={footnoteContent}
                         darkMode={props.darkMode}
                     />
