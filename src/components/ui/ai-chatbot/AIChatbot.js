@@ -43,8 +43,6 @@ const AIChatbot = (props) => {
 
         const savedLocale = Cookies.get("scrapalot-locale") || "en";
 
-        console.log(typeof text)
-
         if (typeof text === 'string' && text.trim() !== "") {
             const newMessage = {answer: text, source: "user", language: props.locale};
 
