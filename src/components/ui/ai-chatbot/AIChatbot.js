@@ -37,13 +37,15 @@ const AIChatbot = (props) => {
         return () => window.removeEventListener("storage", handleStorageChange);
     }, [props.locale]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const sendMessage = async (messageText) => {
+    const sendMessage = async (messageText: string) => {
         // If messageText is not provided, use inputText
-        const text = messageText !== undefined ? messageText : inputText;
+        const text = typeof messageText === 'string' ? messageText : inputText;
 
         const savedLocale = Cookies.get("scrapalot-locale") || "en";
 
-        if (text.trim() !== "") {
+        console.log(typeof text)
+
+        if (typeof text === 'string' && text.trim() !== "") {
             const newMessage = {answer: text, source: "user", language: props.locale};
 
             props.setMessages((prevMessages) => {
