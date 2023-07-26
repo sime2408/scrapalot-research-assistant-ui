@@ -37,6 +37,10 @@ a {
 
 /* react-pdf-viewer */
 
+.rpv-core__annotation--link {
+  margin-top: 8px;
+}
+
 .rpv-search__highlights {
   top: 10px;
 }
