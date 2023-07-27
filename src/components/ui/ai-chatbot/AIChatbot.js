@@ -54,20 +54,32 @@ const AIChatbot = (props) => {
 
             setIsLoading(true);
 
-            const requestBody = {
-                database_name: props.selectedDatabase,
-                question: text,
-                collection_name: props.selectedDatabaseColl || props.selectedDatabase,
-                locale: savedLocale,
-                filter_options: {
-                    filter_document: askThisDocument,
-                    filter_document_name: props.selectedDocument ? props.selectedDocument.name : null,
-                    translate_chunks: Cookies.get("scrapalot-translate-chunks") === "true" || false,
-                }
-            };
+            let uriPath;
+            let requestBody;
+            if (askWiki) {
+                uriPath = '/query-wiki';
+                requestBody = {
+                    question: text,
+                    locale: savedLocale,
+                };
+            } else {
+                uriPath = '/query-llm';
+                requestBody = {
+                    database_name: props.selectedDatabase,
+                    question: text,
+                    collection_name: props.selectedDatabaseColl || props.selectedDatabase,
+                    locale: savedLocale,
+                    filter_options: {
+                        filter_document: askThisDocument,
+                        filter_document_name: props.selectedDocument ? props.selectedDocument.name : null,
+                        translate_chunks: Cookies.get("scrapalot-translate-chunks") === "true" || false,
+                    }
+                };
+            }
 
             try {
-                const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/query`, requestBody);
+                const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}${uriPath}`, requestBody);
+
                 response.data["source"] = "ai"; // source property is now AI
                 response.data["language"] = savedLocale
 
@@ -145,10 +157,15 @@ const AIChatbot = (props) => {
         </Tooltip>
     );
 
-
     const renderAskThisDocument = (props) => (
         <Tooltip id="button-tooltip" {...props}>
             ask this document
+        </Tooltip>
+    );
+
+    const renderAskWiki = (props) => (
+        <Tooltip id="button-tooltip" {...props}>
+            ask wikipedia
         </Tooltip>
     );
 
@@ -173,8 +190,12 @@ const AIChatbot = (props) => {
 
     const [askThisDocument, setAskThisDocument] = useState(false);
     const handleAskThisDocument = () => {
-        // Toggle the state of askThisDocument
         setAskThisDocument(prevState => !prevState);
+    }
+
+    const [askWiki, setAskWiki] = useState(false)
+    const handleAskWiki = () => {
+        setAskWiki(prevState => !prevState);
     }
 
     return (
@@ -237,6 +258,19 @@ const AIChatbot = (props) => {
                         </button>
                     </OverlayTrigger>
                 )}
+                <OverlayTrigger
+                    style={{cursor: 'pointer'}}
+                    placement="bottom"
+                    overlay={renderAskWiki}
+                >
+                    <button onClick={handleAskWiki} style={{border: 'none', background: 'none'}}>
+                        {
+                            askWiki
+                                ? <i className="bi bi-wikipedia" style={{color: '#44abb6'}}></i>
+                                : <i className="bi bi-wikipedia"></i>
+                        }
+                    </button>
+                </OverlayTrigger>
 
                 <span className={styles.aiChatbotTranslateChunks}>
                     <ScrapalotCookieSwitch toggleLabel={"translate footnotes"} cookieKey={"scrapalot-translate-chunks"}/>
