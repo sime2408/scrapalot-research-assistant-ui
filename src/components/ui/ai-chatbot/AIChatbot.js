@@ -57,7 +57,7 @@ const AIChatbot = (props) => {
             let uriPath;
             let requestBody;
             if (askWiki) {
-                uriPath = '/query-wiki';
+                uriPath = '/query-web';
                 requestBody = {
                     question: text,
                     locale: savedLocale,
