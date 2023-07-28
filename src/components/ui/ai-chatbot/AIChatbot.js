@@ -118,7 +118,7 @@ const AIChatbot = (props) => {
         // Get the last user message
         const lastUserMessage = props.messages.filter(message => message.source === "user").slice(-1)[0];
         if (lastUserMessage) {
-            // Remove the last user message from the messages array
+            // Remove the last user message from the message array
             const newMessages = props.messages.filter((message, index) => index !== props.messages.indexOf(lastUserMessage));
             props.setMessages(newMessages);
             localStorage.setItem("scrapalot-chat-messages", JSON.stringify(newMessages));
@@ -303,6 +303,7 @@ const AIChatbot = (props) => {
                         handleRepeatQuestion={handleRepeatQuestion}
                         footnoteContent={footnoteContent}
                         darkMode={props.darkMode}
+                        askWeb={askWeb}
                     />
                 </ScrapalotSpeechSynthesis>
                 <div className={styles.aiChatbotInputMessageContainer}>
