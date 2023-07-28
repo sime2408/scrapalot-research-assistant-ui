@@ -56,7 +56,7 @@ const AIChatbot = (props) => {
 
             let uriPath;
             let requestBody;
-            if (askWiki) {
+            if (askWeb) {
                 uriPath = '/query-web';
                 requestBody = {
                     question: text,
@@ -163,9 +163,9 @@ const AIChatbot = (props) => {
         </Tooltip>
     );
 
-    const renderAskWiki = (props) => (
+    const renderAskWeb = (props) => (
         <Tooltip id="button-tooltip" {...props}>
-            ask wikipedia
+            ask web
         </Tooltip>
     );
 
@@ -193,9 +193,9 @@ const AIChatbot = (props) => {
         setAskThisDocument(prevState => !prevState);
     }
 
-    const [askWiki, setAskWiki] = useState(false)
-    const handleAskWiki = () => {
-        setAskWiki(prevState => !prevState);
+    const [askWeb, setAskWeb] = useState(false)
+    const handleAskWeb = () => {
+        setAskWeb(prevState => !prevState);
     }
 
     return (
@@ -261,13 +261,13 @@ const AIChatbot = (props) => {
                 <OverlayTrigger
                     style={{cursor: 'pointer'}}
                     placement="bottom"
-                    overlay={renderAskWiki}
+                    overlay={renderAskWeb}
                 >
-                    <button onClick={handleAskWiki} style={{border: 'none', background: 'none'}}>
+                    <button onClick={handleAskWeb} style={{border: 'none', background: 'none'}}>
                         {
-                            askWiki
-                                ? <i className="bi bi-wikipedia" style={{color: '#44abb6'}}></i>
-                                : <i className="bi bi-wikipedia"></i>
+                            askWeb
+                                ? <i className="bi bi-globe" style={{color: '#44abb6'}}></i>
+                                : <i className="bi bi-globe"></i>
                         }
                     </button>
                 </OverlayTrigger>
