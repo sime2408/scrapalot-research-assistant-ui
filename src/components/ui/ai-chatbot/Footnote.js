@@ -1,13 +1,9 @@
 import React from 'react';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 
-function Footnote({index, link, content, page, handleFootnoteClick, footnoteLastClickedIndex, setFootnoteLastClickedIndex, messageIndex, askWeb}) {
+function Footnote({index, link, content, page, handleFootnoteClick, footnoteLastClickedIndex, setFootnoteLastClickedIndex, messageIndex}) {
 
     const handleClick = (databaseName, fileName, page) => {
-        if (askWeb) {
-            // If askWeb is true, we don't want to execute handleClick
-            return;
-        }
         const selectedDocument = {name: fileName};
         handleFootnoteClick(content, page, messageIndex, databaseName, selectedDocument);
         setFootnoteLastClickedIndex({messageIndex: messageIndex, footnoteIndex: index});
@@ -32,10 +28,6 @@ function Footnote({index, link, content, page, handleFootnoteClick, footnoteLast
                     <a href="#" style={footnoteLastClickedIndex && index === footnoteLastClickedIndex.footnoteIndex && messageIndex === footnoteLastClickedIndex.messageIndex ? {color: '#fdc446'} : {}}
                        onClick={(e) => {
                            e.preventDefault()
-                           // If askWeb is true, we don't want to change the URL
-                           if (askWeb) {
-                               e.stopPropagation();
-                           }
                        }}>[{index}]</a>
                 </OverlayTrigger>
             </sup>

@@ -19,8 +19,10 @@ function BrowseDocumentsSidebar({onSearch, setSelectedDocument, onSelectDatabase
 
     // this one refreshes the database if it's selected from other components
     useEffect(() => {
-        if (selectedDatabase) {
+        if (selectedDatabase && selectedDatabase !== "undefined") {
             fetchDatabaseDocuments(selectedDatabase);
+        } else {
+            console.log('selectedDatabase is undefined, skipping fetch.');
         }
         // Clean up function
         return () => {
@@ -29,6 +31,10 @@ function BrowseDocumentsSidebar({onSearch, setSelectedDocument, onSelectDatabase
     }, [selectedDatabase, databases]);
 
     const fetchDatabaseDocuments = useCallback((databaseName, clearExisting = true, retryCount = 5, interval = 2000) => {
+        if (!databaseName || databaseName === "undefined") {
+            console.log('databaseName is undefined or "undefined", skipping fetch.');
+            return;
+        }
         let currentPage = page;
         let currentDocuments = documents;
         if (clearExisting) {

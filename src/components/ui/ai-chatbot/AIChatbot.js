@@ -130,7 +130,9 @@ const AIChatbot = (props) => {
 
     const handleFootnoteClick = (content, pageNumber, messageIndex, selectedDatabase, selectedDocument) => {
         setFootnoteContent({content, messageIndex});
-        props.handleFootnoteClick(content, pageNumber - 1, messageIndex, selectedDatabase, selectedDocument); // subtract 1 because PDF.js uses zero-based index
+        if (!askWeb) {
+            props.handleFootnoteClick(content, pageNumber - 1, messageIndex, selectedDatabase, selectedDocument); // subtract 1 because PDF.js uses zero-based index
+        }
     };
 
     // dark theme backgrounds

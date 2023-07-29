@@ -64,7 +64,6 @@ const MessagesList = (props) => {
                                                 footnoteLastClickedIndex={footnoteLastClickedIndex}
                                                 setFootnoteLastClickedIndex={setFootnoteLastClickedIndex}
                                                 messageIndex={index}
-                                                askWeb={props.askWeb}
                                             />
                                         ))}
                                 </div>
