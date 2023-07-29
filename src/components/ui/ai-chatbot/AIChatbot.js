@@ -193,11 +193,13 @@ const AIChatbot = (props) => {
     const [askThisDocument, setAskThisDocument] = useState(false);
     const handleAskThisDocument = () => {
         setAskThisDocument(prevState => !prevState);
+        setAskWeb(false);
     }
 
     const [askWeb, setAskWeb] = useState(false)
     const handleAskWeb = () => {
         setAskWeb(prevState => !prevState);
+        setAskThisDocument(false);
     }
 
     return (
