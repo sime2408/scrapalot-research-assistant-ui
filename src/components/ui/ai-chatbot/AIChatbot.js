@@ -37,60 +37,56 @@ const AIChatbot = (props) => {
         return () => window.removeEventListener("storage", handleStorageChange);
     }, [props.locale]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const sendMessage = async (messageText: string) => {
-        // If messageText is not provided, use inputText
-        const text = typeof messageText === 'string' ? messageText : inputText;
+    // Function to update messages
+    const updateMessages = (newMessage) => {
+        props.setMessages((prevMessages) => {
+            const newMessages = [...prevMessages, newMessage];
+            localStorage.setItem("scrapalot-chat-messages", JSON.stringify(newMessages));
+            return newMessages;
+        });
+    };
 
+    // Function to prepare request body
+    const prepareRequestBody = (text, savedLocale) => {
+        const filterOptions = {
+            filter_document: askThisDocument,
+            filter_document_name: props.selectedDocument ? props.selectedDocument.name : null,
+            translate_chunks: Cookies.get("scrapalot-translate-chunks") === "true" || false,
+        };
+
+        return askWeb ? {
+            database_name: "web",
+            collection_name: "web",
+            question: text,
+            locale: savedLocale,
+            filter_options: filterOptions,
+        } : {
+            database_name: props.selectedDatabase,
+            collection_name: props.selectedDatabaseColl || props.selectedDatabase,
+            question: text,
+            locale: savedLocale,
+            filter_options: filterOptions,
+        };
+    };
+
+    const sendMessage = async (messageText: string) => {
+        const text = typeof messageText === 'string' ? messageText : inputText;
         const savedLocale = Cookies.get("scrapalot-locale") || "en";
 
         if (typeof text === 'string' && text.trim() !== "") {
-            const newMessage = {answer: text, source: "user", language: props.locale};
-
-            props.setMessages((prevMessages) => {
-                const newMessages = [...prevMessages, newMessage];
-                localStorage.setItem("scrapalot-chat-messages", JSON.stringify(newMessages));
-                return newMessages;
-            });
+            const userMessage = {answer: text, source: "user", language: props.locale};
+            updateMessages(userMessage);
 
             setIsLoading(true);
 
-            let uriPath;
-            let requestBody;
-            if (askWeb) {
-                uriPath = '/query-web';
-                requestBody = {
-                    question: text,
-                    locale: savedLocale,
-                    filter_options: {
-                        translate_chunks: Cookies.get("scrapalot-translate-chunks") === "true" || false,
-                    }
-                };
-            } else {
-                uriPath = '/query-llm';
-                requestBody = {
-                    database_name: props.selectedDatabase,
-                    question: text,
-                    collection_name: props.selectedDatabaseColl || props.selectedDatabase,
-                    locale: savedLocale,
-                    filter_options: {
-                        filter_document: askThisDocument,
-                        filter_document_name: props.selectedDocument ? props.selectedDocument.name : null,
-                        translate_chunks: Cookies.get("scrapalot-translate-chunks") === "true" || false,
-                    }
-                };
-            }
+            const uriPath = askWeb ? '/query-web' : '/query-llm';
+            const requestBody = prepareRequestBody(text, savedLocale);
 
             try {
                 const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}${uriPath}`, requestBody);
 
-                response.data["source"] = "ai"; // source property is now AI
-                response.data["language"] = savedLocale
-
-                props.setMessages((prevMessages) => {
-                    const newMessages = [...prevMessages, response.data];
-                    localStorage.setItem("scrapalot-chat-messages", JSON.stringify(newMessages));
-                    return newMessages;
-                });
+                const aiMessage = {...response.data, source: "ai", language: savedLocale};
+                updateMessages(aiMessage);
             } catch (error) {
                 console.error("Failed to send message:", error);
                 setInputValid(false);
