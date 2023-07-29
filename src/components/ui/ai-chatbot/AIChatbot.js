@@ -189,13 +189,13 @@ const AIChatbot = (props) => {
         Cookies.set('scrapalot-locale', newLocale.id, {expires: 30});
     };
 
-    const [askThisDocument, setAskThisDocument] = useState(() => Cookies.get("scrapalot-ask-web") === "true" || false);
+    const [askThisDocument, setAskThisDocument] = useState(false);
     const handleAskThisDocument = () => {
         setAskThisDocument(prevState => !prevState);
         setAskWeb(false);
     }
 
-    const [askWeb, setAskWeb] = useState(false)
+    const [askWeb, setAskWeb] = useState(() => Cookies.get("scrapalot-ask-web") === "true" || false);
     const handleAskWeb = () => {
         const newState = !askWeb
         Cookies.set('scrapalot-ask-web', newState.toString());

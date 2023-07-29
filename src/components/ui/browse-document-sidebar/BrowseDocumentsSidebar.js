@@ -19,7 +19,7 @@ function BrowseDocumentsSidebar({onSearch, setSelectedDocument, onSelectDatabase
 
     // this one refreshes the database if it's selected from other components
     useEffect(() => {
-        if (selectedDatabase && selectedDatabase !== "undefined") {
+        if (selectedDatabase) {
             fetchDatabaseDocuments(selectedDatabase);
         } else {
             console.log('selectedDatabase is undefined, skipping fetch.');
@@ -62,16 +62,12 @@ function BrowseDocumentsSidebar({onSearch, setSelectedDocument, onSelectDatabase
                 }
             })
             .catch(error => {
-                if (retryCount > 0) {
-                    console.log(`Retrying in ${interval}ms... (${retryCount} tries left)`);
-                    setTimeout(() => fetchDatabaseDocuments(databaseName, retryCount - 1, interval), interval);
+                if (error.name === 'AbortError') {
+                    console.log('Fetch cancelled');
                 } else {
-                    if (error.name === 'AbortError') {
-                        console.log('Fetch cancelled');
-                    } else {
-                        console.error('Error after all retries: ', error);
-                    }
+                    console.error('Error after all retries: ', error);
                 }
+
             });
     }, [databases, onSelectDatabase, abortController.signal]);
 
