@@ -190,7 +190,7 @@ const AIChatbot = (props) => {
         Cookies.set('scrapalot-locale', newLocale.id, {expires: 30});
     };
 
-    const [askThisDocument, setAskThisDocument] = useState(false);
+    const [askThisDocument, setAskThisDocument] = useState(() => Cookies.get("scrapalot-ask-web") === "true" || false);
     const handleAskThisDocument = () => {
         setAskThisDocument(prevState => !prevState);
         setAskWeb(false);
@@ -198,7 +198,10 @@ const AIChatbot = (props) => {
 
     const [askWeb, setAskWeb] = useState(false)
     const handleAskWeb = () => {
-        setAskWeb(prevState => !prevState);
+        setAskWeb(prevState => {
+            const newState = !prevState
+            Cookies.set('scrapalot-ask-web', newState.toString());
+        });
         setAskThisDocument(false);
     }
 

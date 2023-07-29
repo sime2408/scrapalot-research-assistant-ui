@@ -129,7 +129,7 @@ function App() {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedDocumentInitialPage, setSelectedDocumentInitialPage] = useState(0);
 
-    const fetchDatabasesAndCollections = useCallback(async (url, retryCount = 5, interval = 2000) => {
+    const fetchDatabasesAndCollections = useCallback(async (url, retryCount = 5, interval = 5000) => {
         for (let i = 0; i < retryCount; i++) {
             setLoading(true);
             try {
