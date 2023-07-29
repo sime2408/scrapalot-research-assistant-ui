@@ -30,7 +30,7 @@ function BrowseDocumentsSidebar({onSearch, setSelectedDocument, onSelectDatabase
         };
     }, [selectedDatabase, databases]);
 
-    const fetchDatabaseDocuments = useCallback((databaseName, clearExisting = true, retryCount = 5, interval = 5000) => {
+    const fetchDatabaseDocuments = useCallback((databaseName, clearExisting = true) => {
         if (!databaseName || databaseName === "undefined") {
             console.log('databaseName is undefined or "undefined", skipping fetch.');
             return;
