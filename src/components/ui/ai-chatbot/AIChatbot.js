@@ -198,10 +198,9 @@ const AIChatbot = (props) => {
 
     const [askWeb, setAskWeb] = useState(false)
     const handleAskWeb = () => {
-        setAskWeb(prevState => {
-            const newState = !prevState
-            Cookies.set('scrapalot-ask-web', newState.toString());
-        });
+        const newState = !askWeb
+        Cookies.set('scrapalot-ask-web', newState.toString());
+        setAskWeb(newState);
         setAskThisDocument(false);
     }
 
