@@ -61,6 +61,9 @@ const AIChatbot = (props) => {
                 requestBody = {
                     question: text,
                     locale: savedLocale,
+                    filter_options: {
+                        translate_chunks: Cookies.get("scrapalot-translate-chunks") === "true" || false,
+                    }
                 };
             } else {
                 uriPath = '/query-llm';
