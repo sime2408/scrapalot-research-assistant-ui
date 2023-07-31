@@ -19,7 +19,7 @@
 .leftSidebar {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 122px);
+  height: calc(100vh - 116px);
 }
 
 .leftSidebarDocItems {

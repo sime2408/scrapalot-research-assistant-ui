@@ -46,17 +46,17 @@ const ViewerWrapper = ({fileUrl, initialPage, theme, renderHighlightTarget, foot
         <Toolbar>
             {(slots) => {
                 const {
-                    CurrentPageInput,
-                    Download,
-                    EnterFullScreen,
-                    GoToNextPage,
-                    GoToPreviousPage,
-                    NumberOfPages,
-                    Print,
                     ShowSearchPopover,
+                    ZoomOut,
                     Zoom,
                     ZoomIn,
-                    ZoomOut,
+                    GoToPreviousPage,
+                    CurrentPageInput,
+                    NumberOfPages,
+                    GoToNextPage,
+                    EnterFullScreen,
+                    Download,
+                    Print,
                 } = slots;
                 return (
                     <div
@@ -112,6 +112,11 @@ const ViewerWrapper = ({fileUrl, initialPage, theme, renderHighlightTarget, foot
     }
 
     const defaultLayoutPluginInstance = defaultLayoutPlugin({
+        sidebarTabs: (defaultTabs) => [
+            // Remove the attachments tab (\`defaultTabs[2]\`)
+            defaultTabs[0], // Bookmarks tab
+            defaultTabs[1], // Thumbnails tab
+        ],
         renderToolbar,
         toolbarPlugin: {
             searchPlugin: {

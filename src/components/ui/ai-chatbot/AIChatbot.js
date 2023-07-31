@@ -88,7 +88,7 @@ const AIChatbot = (props) => {
                 const aiMessage = {...response.data, source: "ai", language: savedLocale};
                 updateMessages(aiMessage);
             } catch (error) {
-                console.error("Failed to send message:", error);
+                console.error("Failed to send message:", error.message);
                 setInputValid(false);
             } finally {
                 setIsLoading(false);

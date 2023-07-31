@@ -212,9 +212,9 @@ function App() {
     const [isDocumentBrowserVisible, setIsDocumentBrowserVisible] = useState(true);
 
     const [columnClasses, setColumnClasses] = useState({
-        left: 'col-2',
-        middle: 'col-7',
-        right: 'col-3'
+        left: 'col-3 col-sm-3 col-md-3 col-lg-2',
+        middle: 'col-6 col-sm-6 col-md-6 col-lg-7',
+        right: 'col-3 col-sm-3 col-md-3 col-lg-3'
     });
 
     const handleExpandSidebar = () => {
@@ -247,11 +247,11 @@ function App() {
     const [isResizing, setIsResizing] = useState(false);
     const [documentViewerHeight, setDocumentViewerHeight] = useState("50%");
 
-    const handleMouseDown = e => {
+    const handleMouseDown = () => {
         setIsResizing(true);
     };
 
-    const handleMouseUp = e => {
+    const handleMouseUp = () => {
         setIsResizing(false);
     };
 
@@ -275,7 +275,7 @@ function App() {
             <div className={`container-fluid ${styles.appContainerFluid}`}
                  onMouseMove={handleMouseMove}
                  onMouseUp={handleMouseUp}>
-                <div className="row">
+                <div className="row" style={{maxHeight: '100vh'}}>
                     {isDocumentBrowserVisible && (
                         <div className={`${columnClasses.left} ${styles.appLeftSidebarColumn} ${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemePrimary}`}
                              style={darkMode ?
@@ -366,7 +366,7 @@ function App() {
                             </div>
                         </ScrapalotSpeechSynthesis>
                     </div>
-                    <div className={`${columnClasses.right} ${darkMode ? themes.darkThemeSecondary : themes.lightThemePrimary}`}
+                    <div className={`${columnClasses.right} ${styles.appRightSidebarColumn} ${darkMode ? themes.darkThemeSecondary : themes.lightThemePrimary}`}
                          style={
                              {
                                  borderLeft: darkMode ? "1px solid #41494d" : "1px solid rgb(229 229 229)",
