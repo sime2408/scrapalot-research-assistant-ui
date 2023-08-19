@@ -3,12 +3,15 @@ import styles from './AIChatbot.module.css';
 import Footnote from './Footnote';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 import {SpeakContext} from '../../utils/ScrapalotSpeechSynthesis';
+import {useTheme} from '../../themes/ScrapalotThemeContext';
 
 const MessagesList = (props) => {
 
-    const userBgColor = props.darkMode ? 'rgb(65 73 77)' : 'rgba(79, 181, 185, 0.1)';
-    const aiBgColor = props.darkMode ? 'rgb(92 102 108)' : '#f8f9fa';
-    const textColor = props.darkMode ? 'rgb(244 244 244)' : '#212529';
+    const { darkMode } = useTheme();
+
+    const userBgColor = darkMode ? 'rgb(65 73 77)' : 'rgba(79, 181, 185, 0.1)';
+    const aiBgColor = darkMode ? 'rgb(92 102 108)' : '#f8f9fa';
+    const textColor = darkMode ? 'rgb(244 244 244)' : '#212529';
 
     const [footnoteShowFullContent, setFootnoteShowFullContent] = useState(false);
     const [footnoteLastClickedIndex, setFootnoteLastClickedIndex] = useState({messageIndex: null, footnoteIndex: null});

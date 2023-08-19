@@ -5,13 +5,16 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import {ScrapalotLoadingProvider} from './components/utils/ScrapalotLoadingContext';
+import {ScrapalotThemeProvider} from './components/themes/ScrapalotThemeContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
-        <ScrapalotLoadingProvider>
-            <App/>
-        </ScrapalotLoadingProvider>
+        <ScrapalotThemeProvider>
+            <ScrapalotLoadingProvider>
+                <App/>
+            </ScrapalotLoadingProvider>
+        </ScrapalotThemeProvider>
     </React.StrictMode>
 );
 

@@ -9,6 +9,7 @@ import {SpeakContext} from '../../utils/ScrapalotSpeechSynthesis';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import themes from '../../themes/CustomThemeProvider.module.css';
+import {useTheme} from '../../themes/ScrapalotThemeContext';
 
 // Handlers for the button actions
 const handleCopyToClipboard = () => {
@@ -151,7 +152,9 @@ const ViewerWrapper = ({fileUrl, initialPage, theme, renderHighlightTarget, foot
     );
 };
 
-function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument, selectedDocumentInitialPage, footnoteHighlightedText, setManuallySelectedTextFromDocument, darkMode}) {
+function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument, selectedDocumentInitialPage, footnoteHighlightedText, setManuallySelectedTextFromDocument}) {
+
+    const { darkMode } = useTheme();
 
     // file type state
     const [fileType, setFileType] = useState(null);

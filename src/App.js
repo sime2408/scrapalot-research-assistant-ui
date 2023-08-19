@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useEffect, useReducer, useState} from "react";
+import React, {useCallback, useContext, useEffect, useState} from "react";
 import {Tab, Tabs} from 'react-bootstrap';
 import debounce from 'lodash.debounce';
 import Cookies from 'js-cookie';
@@ -15,21 +15,7 @@ import themes from './components/themes/CustomThemeProvider.module.css';
 import {ScrapalotLoadingContext} from './components/utils/ScrapalotLoadingContext';
 import ScrapalotSpinner from './components/utils/ScrapalotSpinner';
 import ScrapalotSpeechSynthesis from './components/utils/ScrapalotSpeechSynthesis';
-
-const initialThemeState = {
-    darkMode: Cookies.get('scrapalot-dark-mode') === 'true', // Convert the cookie value to a boolean
-};
-
-function themeReducer(state, action) {
-    switch (action.type) {
-        case 'TOGGLE_THEME':
-            const updatedDarkMode = !state.darkMode;
-            Cookies.set('scrapalot-dark-mode', updatedDarkMode.toString()); // Convert to string before setting the cookie
-            return {...state, darkMode: updatedDarkMode};
-        default:
-            throw new Error(`Unsupported action type: ${action.type}`);
-    }
-}
+import {useTheme} from './components/themes/ScrapalotThemeContext';
 
 function App() {
 
@@ -37,12 +23,7 @@ function App() {
     const {setLoading} = useContext(ScrapalotLoadingContext);
 
     // application theme
-    const [state, dispatch] = useReducer(themeReducer, initialThemeState);
-    const {darkMode} = state;
-
-    const toggleTheme = () => {
-        dispatch({type: 'TOGGLE_THEME'});
-    };
+    const { darkMode } = useTheme();
 
     useEffect(() => {
         Cookies.set('scrapalot-dark-mode', darkMode.toString()); // Convert to string before setting the cookie
@@ -270,8 +251,7 @@ function App() {
                 selectedDatabase={selectedDatabase}
                 selectedDocument={selectedDocument}
                 databases={databases}
-                toggleTheme={toggleTheme}
-                darkMode={darkMode}/>
+                />
             <div className={`container-fluid ${styles.appContainerFluid}`}
                  onMouseMove={handleMouseMove}
                  onMouseUp={handleMouseUp}>
@@ -311,7 +291,7 @@ function App() {
                                         setSelectedDocumentInitialPage={setSelectedDocumentInitialPage}
                                         handleExpandSidebar={handleExpandSidebar}
                                         isDocumentBrowserVisible={isDocumentBrowserVisible}
-                                        darkMode={darkMode}
+
                                     />
                                 </Tab>
                                 <Tab eventKey="search" title="search web">
@@ -341,7 +321,6 @@ function App() {
                                         selectedDocumentInitialPage={selectedDocumentInitialPage}
                                         footnoteHighlightedText={footnoteHighlightedText}
                                         setManuallySelectedTextFromDocument={setManuallySelectedTextFromDocument}
-                                        darkMode={darkMode}
                                     />
                                 </div>
                                 <div
@@ -360,7 +339,7 @@ function App() {
                                             documentViewerHeight={documentViewerHeight}
                                             selectedText={manuallySelectedTextFromDocument}
                                             selectedDocument={selectedDocument}
-                                            darkMode={darkMode}/>
+                                            />
                                     </div>
                                 )}
                             </div>
@@ -389,7 +368,6 @@ function App() {
                             handleExpandSidebar={handleExpandSidebar}
                             isScratchpadVisible={isScratchpadVisible}
                             handleExpandScratchpad={handleExpandScratchpad}
-                            darkMode={darkMode}
                         />
                     </div>
                 </div>

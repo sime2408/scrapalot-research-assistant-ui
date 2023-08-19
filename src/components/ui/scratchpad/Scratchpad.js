@@ -6,8 +6,12 @@ import TurndownService from 'turndown';
 
 import styles from './Scratchpad.module.css';
 import themes from '../../themes/CustomThemeProvider.module.css';
+import {useTheme} from '../../themes/ScrapalotThemeContext';
 
 const Scratchpad = (props) => {
+
+    const { darkMode } = useTheme();
+
     const {selectedText, selectedDocument} = props;
 
     const [modalShow, setModalShow] = useState(false);
@@ -159,12 +163,12 @@ const Scratchpad = (props) => {
     }, [props.documentViewerHeight]);
 
     return (
-        <div style={{padding: '8px 12px 8px 12px', borderTop: props.darkMode ? '1px black solid' : '1px #c4c4c4 solid'}}>
+        <div style={{padding: '8px 12px 8px 12px', borderTop: darkMode ? '1px black solid' : '1px #c4c4c4 solid'}}>
             <MenuBar editor={editor}/>
             <div className={styles.scratchpad}>
                 <div className={styles.scratchpadTextEditor}
                      style={
-                         props.darkMode ? {
+                         darkMode ? {
                              backgroundColor: '#5c676c',
                              padding: '8px',
                              borderRadius: '4px',
@@ -208,10 +212,10 @@ const Scratchpad = (props) => {
             </div>
             <div>
                 <Modal show={modalShow} onHide={() => setModalShow(false)}>
-                    <Modal.Header style={{borderRadius: '0'}} closeButton className={`${props.darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemeDefault}`}>
+                    <Modal.Header style={{borderRadius: '0'}} closeButton className={`${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemeDefault}`}>
                         <Modal.Title>Export to file</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body className={`${props.darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemePrimary}`}>
+                    <Modal.Body className={`${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemePrimary}`}>
                         <Form.Group as={Row}>
                             <Col sm={10}>
                                 <div style={{display: "flex", justifyContent: "space-between"}}>
@@ -249,7 +253,7 @@ const Scratchpad = (props) => {
                             </Col>
                         </Form.Group>
                     </Modal.Body>
-                    <Modal.Footer style={{borderRadius: '0'}} className={`${props.darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemeDefault}`}>
+                    <Modal.Footer style={{borderRadius: '0'}} className={`${darkMode ? themes.darkThemeWithBottomBorderDefault : themes.lightThemeDefault}`}>
                         <Button variant="secondary" onClick={() => setModalShow(false)}>
                             <i className="bi bi-x-circle"></i> close
                         </Button>

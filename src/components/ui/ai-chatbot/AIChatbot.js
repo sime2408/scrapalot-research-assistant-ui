@@ -13,8 +13,11 @@ import croatianFlag from '../../../static/img/flags/hr.svg';
 import ScrapalotCookieSwitch from '../../utils/ScrapalotCookieSwitch';
 import MessagesList from './MessagesList';
 import ScrapalotSpeechSynthesis from '../../utils/ScrapalotSpeechSynthesis';
+import {useTheme} from '../../themes/ScrapalotThemeContext';
 
 const AIChatbot = (props) => {
+
+    const { darkMode } = useTheme();
 
     const [inputText, setInputText] = useState("");
     const [inputValid, setInputValid] = useState(true);
@@ -135,7 +138,7 @@ const AIChatbot = (props) => {
     };
 
     // dark theme backgrounds
-    const spinnerVariant = props.darkMode ? 'light' : 'dark';
+    const spinnerVariant = darkMode ? 'light' : 'dark';
 
 
     // toolbar
@@ -307,7 +310,6 @@ const AIChatbot = (props) => {
                         handleFootnoteClick={handleFootnoteClick}
                         handleRepeatQuestion={handleRepeatQuestion}
                         footnoteContent={footnoteContent}
-                        darkMode={props.darkMode}
                         askWeb={askWeb}
                     />
                 </ScrapalotSpeechSynthesis>
@@ -319,18 +321,18 @@ const AIChatbot = (props) => {
                                      onChange={(e) => setInputText(e.target.value)}
                                      onKeyDown={handleKeyDown} // Use onKeyDown event
                                      ref={inputRef}
-                                     style={props.darkMode ? {backgroundColor: 'rgb(92 102 108)', color: 'white', borderColor: '#212529'} : {backgroundColor: ''}}
+                                     style={darkMode ? {backgroundColor: 'rgb(92 102 108)', color: 'white', borderColor: '#212529'} : {backgroundColor: ''}}
                         />
 
                         <InputGroup.Text
-                            style={props.darkMode ? {backgroundColor: 'rgb(92 102 108)', color: 'white', borderColor: '#212529'} : {backgroundColor: ''}}
-                            className={`${styles.aiChatbotInputSendButton} ${props.darkMode ? `${themes.darkThemeInputGroup} ${themes.darkThemeButtons}` : ''}`} onClick={sendMessage}>
+                            style={darkMode ? {backgroundColor: 'rgb(92 102 108)', color: 'white', borderColor: '#212529'} : {backgroundColor: ''}}
+                            className={`${styles.aiChatbotInputSendButton} ${darkMode ? `${themes.darkThemeInputGroup} ${themes.darkThemeButtons}` : ''}`} onClick={sendMessage}>
 
                             <button ref={sendButtonRef} style={{border: "none", background: 'none'}}>
                                 {isLoading ? (
                                     <Spinner animation="border" variant={spinnerVariant} size="sm"/>
                                 ) : (
-                                    <i style={props.darkMode ? {color: 'white', borderColor: '#212529'} : {color: 'black'}} className="bi bi-cursor-fill"></i>
+                                    <i style={darkMode ? {color: 'white', borderColor: '#212529'} : {color: 'black'}} className="bi bi-cursor-fill"></i>
                                 )}
                             </button>
                         </InputGroup.Text>

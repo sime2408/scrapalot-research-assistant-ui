@@ -3,8 +3,11 @@ import {Accordion, Card, FormControl, InputGroup, ListGroup, Overlay, OverlayTri
 import styles from "./BrowseDocumentsSidebar.module.css";
 import ScrapalotToggle from '../../utils/ScrapalotToggle';
 import themes from '../../themes/CustomThemeProvider.module.css';
+import {useTheme} from '../../themes/ScrapalotThemeContext';
 
-function BrowseDocumentsSidebar({onSearch, setSelectedDocument, onSelectDatabase, selectedDatabase, searchTerm, databases, setSelectedDocumentInitialPage, darkMode}) {
+function BrowseDocumentsSidebar({onSearch, setSelectedDocument, onSelectDatabase, selectedDatabase, searchTerm, databases, setSelectedDocumentInitialPage}) {
+
+    const { darkMode } = useTheme();
 
     // what happens when you click on the sidebar database/collection name
     const [openDatabase, setOpenDatabase] = useState('0');
