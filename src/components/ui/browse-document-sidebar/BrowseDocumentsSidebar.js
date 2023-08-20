@@ -7,7 +7,7 @@ import {useTheme} from '../../themes/ScrapalotThemeContext';
 
 function BrowseDocumentsSidebar({onSearch, setSelectedDocument, onSelectDatabase, selectedDatabase, searchTerm, databases, setSelectedDocumentInitialPage}) {
 
-    const { darkMode } = useTheme();
+    const {darkMode} = useTheme();
 
     // what happens when you click on the sidebar database/collection name
     const [openDatabase, setOpenDatabase] = useState('0');

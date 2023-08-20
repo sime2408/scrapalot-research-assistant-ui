@@ -7,7 +7,7 @@ import {useTheme} from '../../themes/ScrapalotThemeContext';
 
 const MessagesList = (props) => {
 
-    const { darkMode } = useTheme();
+    const {darkMode} = useTheme();
 
     const userBgColor = darkMode ? 'rgb(65 73 77)' : 'rgba(79, 181, 185, 0.1)';
     const aiBgColor = darkMode ? 'rgb(92 102 108)' : '#f8f9fa';

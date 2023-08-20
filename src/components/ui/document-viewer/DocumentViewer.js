@@ -154,7 +154,7 @@ const ViewerWrapper = ({fileUrl, initialPage, theme, renderHighlightTarget, foot
 
 function DocumentViewer({selectedDatabase, selectedDocument, setSelectedDocument, selectedDocumentInitialPage, footnoteHighlightedText, setManuallySelectedTextFromDocument}) {
 
-    const { darkMode } = useTheme();
+    const {darkMode} = useTheme();
 
     // file type state
     const [fileType, setFileType] = useState(null);

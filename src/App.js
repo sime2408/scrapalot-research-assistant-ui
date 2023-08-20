@@ -23,7 +23,7 @@ function App() {
     const {setLoading} = useContext(ScrapalotLoadingContext);
 
     // application theme
-    const { darkMode } = useTheme();
+    const {darkMode} = useTheme();
 
     useEffect(() => {
         Cookies.set('scrapalot-dark-mode', darkMode.toString()); // Convert to string before setting the cookie
@@ -251,7 +251,7 @@ function App() {
                 selectedDatabase={selectedDatabase}
                 selectedDocument={selectedDocument}
                 databases={databases}
-                />
+            />
             <div className={`container-fluid ${styles.appContainerFluid}`}
                  onMouseMove={handleMouseMove}
                  onMouseUp={handleMouseUp}>
@@ -339,7 +339,7 @@ function App() {
                                             documentViewerHeight={documentViewerHeight}
                                             selectedText={manuallySelectedTextFromDocument}
                                             selectedDocument={selectedDocument}
-                                            />
+                                        />
                                     </div>
                                 )}
                             </div>

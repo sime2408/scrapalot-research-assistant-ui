@@ -17,7 +17,7 @@ import {useTheme} from '../../themes/ScrapalotThemeContext';
 
 const AIChatbot = (props) => {
 
-    const { darkMode } = useTheme();
+    const {darkMode} = useTheme();
 
     const [inputText, setInputText] = useState("");
     const [inputValid, setInputValid] = useState(true);

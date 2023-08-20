@@ -10,7 +10,7 @@ import {useTheme} from '../../themes/ScrapalotThemeContext';
 
 const Scratchpad = (props) => {
 
-    const { darkMode } = useTheme();
+    const {darkMode} = useTheme();
 
     const {selectedText, selectedDocument} = props;
 

@@ -12,7 +12,7 @@ import {useTheme} from '../../themes/ScrapalotThemeContext';
 
 function MainHeader({onSelectDatabase, selectedDatabase, selectedDocument, databases}) {
 
-    const { darkMode, toggleTheme } = useTheme();
+    const {darkMode, toggleTheme} = useTheme();
 
     // loading
     const {loading, setLoading} = useContext(ScrapalotLoadingContext);
